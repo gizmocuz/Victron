@@ -2,10 +2,13 @@
 #Domoticz Enphase->MQTT
 @Author: PA1DVB
 @Date: 10 April 2024
-@Version: 1.01
+@Version: 1.02
 
 needed libraries
 pip3 install requests paho-mqtt
+
+History
+1.02 - Sending data every 10 seconds
 """
 from helpers import *
 from mqtt_helper import MQTTHelper
@@ -28,6 +31,8 @@ broker_port              = 1883
 broker_username          = "domoticz"
 broker_password          = "123domoticz"
 broker_public_base_topic = "enphase/envoy-s/meters"
+
+have_data = False
 
 def handle_mqtt_connect(client):
     print("Connected to MQTT broker!")
@@ -56,6 +61,8 @@ def publish_value(value):
     mqtt.publish(broker_public_base_topic, value)
 
 def get_enphase_details():
+    global ojson
+    global have_data
     power = -1
     total_kwh = -1
     last_update = ""
@@ -70,6 +77,7 @@ def get_enphase_details():
         last_update = result[0]['LastUpdate']
     except Exception as ex:
         print(f"Get Domoticz Enphase data  Exception: {ex}")
+        have_data = False
         return
     
     if power != -1:
@@ -85,7 +93,7 @@ def get_enphase_details():
           }
         }
         
-        publish_value(json.dumps(ojson))
+        have_data = True
 
 mqtt = MQTTHelper()
 mqtt.on_message = handle_mqtt_message
@@ -115,6 +123,10 @@ while True:
     if sec_counter % poll_interval == 0:
         if mqtt.isConnected():
             get_enphase_details()
+    if sec_counter % 10 == 0:
+        if mqtt.isConnected():
+            if have_data == True:
+                publish_value(json.dumps(ojson))
   
     time.sleep(0.1)
 
