@@ -11,8 +11,8 @@ Configuration is done by editing the python file.
 Required information: BMS serial port, InfluxDB parameters
 
 ### Example
-![screenshot_1](images/screenshot1)
-![screenshot_2](images/screenshot2)
+![screenshot_1](images/screenshot1.jpg)
+![screenshot_2](images/screenshot2.jpg)
 
 ### This python plugin can run in the background as a service.
 Let's assume this script is installed in /home/dietpi/basen_bms.py
