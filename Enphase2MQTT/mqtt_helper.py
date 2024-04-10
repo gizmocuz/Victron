@@ -51,7 +51,7 @@ class MQTTHelper():
     def connect_to_mqtt(self):
         mqtt.Client.connected_flag=False
         mqtt.Client.disconnect_flag=False
-        client = mqtt.Client("kia-connect")
+        client = mqtt.Client("enphase2mqtt")
         client.on_connect=self.on_mqtt_connect
         client.on_disconnect=self.on_mqtt_disconnect
         client.on_message = self.on_mqtt_message
