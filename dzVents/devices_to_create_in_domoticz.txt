@@ -1,0 +1,36 @@
+Most devices are created by the NodeRED initialization script (MQTT Auto Discovery)
+
+Hardware->Dummy->Add Device:
+
+Battery Plan -> Text Sensor
+
+Settings->more options->User Variables
+
+ChargeToday -> String -> 00.30
+ChargeTomorrow -> String -> 00.30
+
+DischargeToday -> String -> 00.30
+DischargeTomorrow -> String -> 00.30
+
+ChargeRate -> Interger -> zetten op 3000*num batteries //90.7% see efficiency chart 
+DischargeRate -> Interger -> zetten op -4126*num batteries //90.8, 4750 = 89.6
+
+IdleRate -> integer -> zetten op 60 Watt
+
+batt_kwh -> float -> 0, berekend met hoeveel euro er gevuld word?
+
+today_soc_target -> float
+today_charge_kwh -> float
+today_discharge_kwh -> float
+
+tomorrow_soc_target -> float
+tomorrow_charge_kwh -> float
+tomorrow_discharge_kwh -> float
+
+BattEfficiency -> float -> 0.8
+
+min_soc_level -> Integer -> 10
+max_soc_level -> Integer -> 100 (see smartshunt usage, 100 is actually 90)
+
+BattTest -> On/Off switch, om script (BattControl.lua) te testen
+BattScheduleRefresh -> On/Off switch, om script (BattScheduleNew.lua) te testen
