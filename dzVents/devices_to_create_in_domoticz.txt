@@ -17,6 +17,8 @@ DischargeRate -> Interger -> zetten op -4126*num batteries //90.8, 4750 = 89.6
 
 IdleRate -> integer -> zetten op 60 Watt
 
+batt_max_grid_usage -> Integer -> 5500
+
 batt_kwh -> float -> 0, berekend met hoeveel euro er gevuld word?
 
 today_soc_target -> float
