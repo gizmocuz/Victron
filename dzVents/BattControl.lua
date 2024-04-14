@@ -42,11 +42,10 @@ return {
 			-- handle Battery Mode changes: Charge, Discharge
 			-- Balance has a separate script (BattBalance) and Manual needs nothing
 			if (batt_mode.state == 'Off') then
-                print('Battery Mode: Off')
                 batt_sp.cancelQueuedCommands()
                 batt_sp.updateSetPoint(0)
-			elseif (batt_mode.state == 'Idle') then 
-                print('Battery Mode: Idle')
+			elseif (batt_mode.state == 'Idle') or (batt_mode.state == 'Manual') then 
+                batt_sp.cancelQueuedCommands()
 		        batt_sp.updateSetPoint(idle_rate.value)    
 		    elseif (batt_mode.state == 'IQ Smart Mode') or (batt_mode.state == 'Grid Balance') or (batt_mode.state == 'Solar Charge') then
 		        --start at IDLE rate
