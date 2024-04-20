@@ -1,4 +1,3 @@
--- will be changed completely (WIP, mostly c++ code for testing now)
 --
 -- check dayrates to find the best slots for charging and discharging
 -- assumes a 3hr slot for charge/discharge

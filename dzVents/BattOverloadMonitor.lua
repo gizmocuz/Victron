@@ -19,16 +19,13 @@ return {
 		local max_usage = dz.variables('batt_max_grid_usage').value
         local current_usage = dz.devices('Grid L3 Watt').actualWatt
 
-		local charge_rate = dz.variables('ChargeRate').value
-		local discharge_rate = dz.variables('DischargeRate').value
-
 	    local batt_sp = dz.devices('ESS Setpoint')
 	    local batt_sp_value = batt_sp.setPoint
 
 		local batt_mode = dz.devices('Battery Mode')
 		local batt_state = dz.devices('Battery State')
 		
-	    local idle_rate = dz.variables('IdleRate').value
+	    local idle_rate = dz.variables('batt_idle_rate').value
 
 		if (dev.isDevice) then
 			if (dev.name == 'Battery Mode') then
