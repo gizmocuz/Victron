@@ -20,19 +20,8 @@
         },
         "nodes": [
             "ee7542bcad3b216c",
-            "461779b798082700",
-            "d24ac4ac5d7cf1bc",
-            "20f707492c82966f",
-            "3baf8a53531f10a2",
-            "98ecf261a7928dc6",
-            "d4b02bce43756997",
-            "acd64929ece05cee",
-            "95ddb670395e9477",
-            "ea55e77545d579b0",
-            "099f87601890015d",
             "2db89dacc5a82bb4",
             "8da1b120b4eec60b",
-            "9fed7a6abe7cf7ec",
             "7e6bb5e97122dcb5",
             "b233b5bf79af5971",
             "be72015e9017285b",
@@ -53,27 +42,38 @@
             "fbf67a6f4252ba21",
             "49c367a2ee0ccd43",
             "73c8292b08ced613",
-            "a2d463a8f9cf11c8",
             "e697e78dd2476445",
-            "5c6e9aebbc772954",
             "f684634197238553",
             "b586e0714822d972",
             "0412be036a91403a",
             "91a580366739c078",
             "9de1aeb7cd6a05fc",
             "0ad09ce64e47abdc",
-            "e15da211f2ca7c58",
             "0cc4ffd6af2c92ed",
             "45117e09372083fa",
             "9afa29835011a413",
             "57447ed22f5a3c27",
             "c375d87f6ea3bb74",
             "f6bbde458a85b6c6",
-            "98bf197cd74736c4",
-            "984366e9999912de",
             "0e11460ee019f369",
-            "e230bef9d49d5fe6",
-            "8f777363329b46d5"
+            "404abbe7e621dc1f",
+            "60ddd275525b3f49",
+            "c08db8232c5fd37d",
+            "e0aa73f0d9258546",
+            "7d54a1b3cffc67b4",
+            "175c74606259bb38",
+            "426454ccf5f41ce9",
+            "44af7ae1d270db90",
+            "d3d3bb4f0f6580d2",
+            "e47dc594821908f6",
+            "581f56ae065b75ef",
+            "b56ef4d4767031c5",
+            "37ea20bd42d9fef6",
+            "379778cec535f398",
+            "7b96f665eb122495",
+            "615522e20c187a0e",
+            "07067fa9860f9e2f",
+            "2fde97888a47cbe5"
         ],
         "x": 14,
         "y": 179,
@@ -453,30 +453,9 @@
         "y": 220,
         "wires": [
             [
-                "461779b798082700",
                 "f6ccfa7a490be396",
-                "e81ad5b0626f8dda"
-            ]
-        ]
-    },
-    {
-        "id": "461779b798082700",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "Setpoint",
-        "func": "msg.topic = \"ess_setpoint\";\nmsg.sendnow = true;\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 560,
-        "y": 220,
-        "wires": [
-            [
-                "0cc4ffd6af2c92ed"
+                "e81ad5b0626f8dda",
+                "7d54a1b3cffc67b4"
             ]
         ]
     },
@@ -585,195 +564,6 @@
         "wires": []
     },
     {
-        "id": "d24ac4ac5d7cf1bc",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "SOC",
-        "func": "msg.sendnow = true;\nmsg.topic = \"batt_soc\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 570,
-        "y": 260,
-        "wires": [
-            [
-                "0cc4ffd6af2c92ed"
-            ]
-        ]
-    },
-    {
-        "id": "20f707492c82966f",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "Voltage",
-        "func": "msg.topic = \"batt_voltage\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 560,
-        "y": 340,
-        "wires": [
-            [
-                "0cc4ffd6af2c92ed"
-            ]
-        ]
-    },
-    {
-        "id": "3baf8a53531f10a2",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "Amps",
-        "func": "msg.topic = \"batt_amps\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 570,
-        "y": 380,
-        "wires": [
-            [
-                "0cc4ffd6af2c92ed"
-            ]
-        ]
-    },
-    {
-        "id": "98ecf261a7928dc6",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "Watt",
-        "func": "msg.topic = \"grid_l1_w\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 570,
-        "y": 600,
-        "wires": [
-            [
-                "0cc4ffd6af2c92ed"
-            ]
-        ]
-    },
-    {
-        "id": "d4b02bce43756997",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "Watt",
-        "func": "msg.topic = \"grid_l3_w\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 570,
-        "y": 680,
-        "wires": [
-            [
-                "0cc4ffd6af2c92ed"
-            ]
-        ]
-    },
-    {
-        "id": "acd64929ece05cee",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "Watt",
-        "func": "msg.topic = \"grid_l2_w\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 570,
-        "y": 640,
-        "wires": [
-            [
-                "0cc4ffd6af2c92ed"
-            ]
-        ]
-    },
-    {
-        "id": "95ddb670395e9477",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "Temp1",
-        "func": "msg.topic = \"temp_1\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 570,
-        "y": 720,
-        "wires": [
-            [
-                "0cc4ffd6af2c92ed"
-            ]
-        ]
-    },
-    {
-        "id": "ea55e77545d579b0",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "Temp2",
-        "func": "msg.topic = \"temp_2\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 570,
-        "y": 760,
-        "wires": [
-            [
-                "0cc4ffd6af2c92ed"
-            ]
-        ]
-    },
-    {
-        "id": "099f87601890015d",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "Temp3",
-        "func": "msg.topic = \"temp_3\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 570,
-        "y": 800,
-        "wires": [
-            [
-                "0cc4ffd6af2c92ed"
-            ]
-        ]
-    },
-    {
         "id": "2db89dacc5a82bb4",
         "type": "function",
         "z": "11c15729dad50c39",
@@ -809,27 +599,6 @@
         "libs": [],
         "x": 550,
         "y": 880,
-        "wires": [
-            [
-                "0cc4ffd6af2c92ed"
-            ]
-        ]
-    },
-    {
-        "id": "9fed7a6abe7cf7ec",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "BTemp",
-        "func": "msg.topic = \"batt_temp\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 560,
-        "y": 560,
         "wires": [
             [
                 "0cc4ffd6af2c92ed"
@@ -896,9 +665,9 @@
         "y": 280,
         "wires": [
             [
-                "d24ac4ac5d7cf1bc",
                 "57b85b918dc8b58a",
-                "f684634197238553"
+                "f684634197238553",
+                "175c74606259bb38"
             ]
         ]
     },
@@ -926,9 +695,9 @@
         "y": 340,
         "wires": [
             [
-                "20f707492c82966f",
                 "45921ca6fe73540e",
-                "49c367a2ee0ccd43"
+                "49c367a2ee0ccd43",
+                "404abbe7e621dc1f"
             ]
         ]
     },
@@ -956,7 +725,7 @@
         "y": 380,
         "wires": [
             [
-                "3baf8a53531f10a2"
+                "60ddd275525b3f49"
             ]
         ]
     },
@@ -983,7 +752,7 @@
         "y": 600,
         "wires": [
             [
-                "98ecf261a7928dc6"
+                "d3d3bb4f0f6580d2"
             ]
         ]
     },
@@ -1010,7 +779,7 @@
         "y": 680,
         "wires": [
             [
-                "d4b02bce43756997"
+                "581f56ae065b75ef"
             ]
         ]
     },
@@ -1037,7 +806,7 @@
         "y": 640,
         "wires": [
             [
-                "acd64929ece05cee"
+                "e47dc594821908f6"
             ]
         ]
     },
@@ -1064,7 +833,7 @@
         "y": 720,
         "wires": [
             [
-                "95ddb670395e9477"
+                "b56ef4d4767031c5"
             ]
         ]
     },
@@ -1091,7 +860,7 @@
         "y": 760,
         "wires": [
             [
-                "ea55e77545d579b0"
+                "37ea20bd42d9fef6"
             ]
         ]
     },
@@ -1118,7 +887,7 @@
         "y": 800,
         "wires": [
             [
-                "099f87601890015d"
+                "379778cec535f398"
             ]
         ]
     },
@@ -1218,7 +987,7 @@
         "y": 560,
         "wires": [
             [
-                "9fed7a6abe7cf7ec"
+                "2fde97888a47cbe5"
             ]
         ]
     },
@@ -1827,28 +1596,7 @@
         "y": 960,
         "wires": [
             [
-                "a2d463a8f9cf11c8"
-            ]
-        ]
-    },
-    {
-        "id": "a2d463a8f9cf11c8",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "Basen SOC",
-        "func": "msg.topic = \"basenvt_soc\";\nmsg.sendnow = true;\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 550,
-        "y": 960,
-        "wires": [
-            [
-                "0cc4ffd6af2c92ed"
+                "7b96f665eb122495"
             ]
         ]
     },
@@ -1876,28 +1624,7 @@
         "y": 1000,
         "wires": [
             [
-                "5c6e9aebbc772954"
-            ]
-        ]
-    },
-    {
-        "id": "5c6e9aebbc772954",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "Basen Voltage",
-        "func": "msg.topic = \"basenvt_voltage\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 540,
-        "y": 1000,
-        "wires": [
-            [
-                "0cc4ffd6af2c92ed"
+                "615522e20c187a0e"
             ]
         ]
     },
@@ -2062,28 +1789,7 @@
         "y": 1040,
         "wires": [
             [
-                "e15da211f2ca7c58"
-            ]
-        ]
-    },
-    {
-        "id": "e15da211f2ca7c58",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "Amps",
-        "func": "msg.topic = \"basenvt_amps\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 570,
-        "y": 1040,
-        "wires": [
-            [
-                "0cc4ffd6af2c92ed"
+                "07067fa9860f9e2f"
             ]
         ]
     },
@@ -2362,7 +2068,7 @@
         "y": 420,
         "wires": [
             [
-                "98bf197cd74736c4"
+                "c08db8232c5fd37d"
             ]
         ]
     },
@@ -2390,7 +2096,7 @@
         "y": 460,
         "wires": [
             [
-                "984366e9999912de"
+                "e0aa73f0d9258546"
             ]
         ]
     },
@@ -2423,18 +2129,115 @@
         ]
     },
     {
-        "id": "98bf197cd74736c4",
+        "id": "0e11460ee019f369",
         "type": "function",
         "z": "11c15729dad50c39",
         "g": "538434f8ada5abb4",
-        "name": "Charged kWh",
-        "func": "msg.topic = \"batt_charged_kwh\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
+        "name": "PwrDist",
+        "func": "let msg2 = RED.util.cloneMessage(msg);\nmsg2.payload = 0;\nif (msg.payload < 0)\n{\n    msg2.payload = Math.abs(msg.payload);\n    msg.payload = 0;\n}\nreturn [msg, msg2];",
+        "outputs": 2,
+        "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
+        "x": 380,
+        "y": 500,
+        "wires": [
+            [
+                "426454ccf5f41ce9"
+            ],
+            [
+                "44af7ae1d270db90"
+            ]
+        ]
+    },
+    {
+        "id": "3f96fb98555546bc",
+        "type": "comment",
+        "z": "11c15729dad50c39",
+        "name": "Version 1.07",
+        "info": "Last edited: 2024-04-27\n- Fixed Basen Batt Temp",
+        "x": 890,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "404abbe7e621dc1f",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Voltage",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_voltage",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 340,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "60ddd275525b3f49",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Amps",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_amps",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 380,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "c08db8232c5fd37d",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Charged kWh",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_charged_kwh",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
         "x": 540,
         "y": 420,
         "wires": [
@@ -2444,19 +2247,26 @@
         ]
     },
     {
-        "id": "984366e9999912de",
-        "type": "function",
+        "id": "e0aa73f0d9258546",
+        "type": "change",
         "z": "11c15729dad50c39",
         "g": "538434f8ada5abb4",
-        "name": "Disharged kWh",
-        "func": "msg.topic = \"batt_discharged_kwh\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 540,
+        "name": "T=Disharged kWh",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_discharged_kwh",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 530,
         "y": 460,
         "wires": [
             [
@@ -2465,43 +2275,114 @@
         ]
     },
     {
-        "id": "0e11460ee019f369",
-        "type": "function",
+        "id": "7d54a1b3cffc67b4",
+        "type": "change",
         "z": "11c15729dad50c39",
         "g": "538434f8ada5abb4",
-        "name": "PowerDist",
-        "func": "let msg2 = RED.util.cloneMessage(msg);\nmsg2.payload = 0;\nif (msg.payload < 0)\n{\n    msg2.payload = Math.abs(msg.payload);\n    msg.payload = 0;\n}\nreturn [msg, msg2];",
-        "outputs": 2,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 390,
-        "y": 500,
+        "name": "T=Setpoint",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "ess_setpoint",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "sendnow",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 220,
         "wires": [
             [
-                "e230bef9d49d5fe6"
-            ],
-            [
-                "8f777363329b46d5"
+                "0cc4ffd6af2c92ed"
             ]
         ]
     },
     {
-        "id": "e230bef9d49d5fe6",
-        "type": "function",
+        "id": "175c74606259bb38",
+        "type": "change",
         "z": "11c15729dad50c39",
         "g": "538434f8ada5abb4",
-        "name": "Charged W",
-        "func": "msg.topic = \"batt_charged_w\";\nreturn msg;\n",
+        "name": "T=SOC",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_soc",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "sendnow",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 260,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "d24ac4ac5d7cf1bc",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "name": "SOC",
+        "func": "msg.topic = \"batt_soc\";\nmsg.sendnow = true;\nreturn msg;\n",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 550,
+        "x": 1079.199951171875,
+        "y": 469.1999816894531,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "426454ccf5f41ce9",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Charged W",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_charged_w",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 540,
         "y": 500,
         "wires": [
             [
@@ -2510,20 +2391,314 @@
         ]
     },
     {
-        "id": "8f777363329b46d5",
-        "type": "function",
+        "id": "44af7ae1d270db90",
+        "type": "change",
         "z": "11c15729dad50c39",
         "g": "538434f8ada5abb4",
-        "name": "Discharged W",
-        "func": "msg.topic = \"batt_discharged_w\";\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 540,
+        "name": "T=Dischardwd W",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_discharged_w",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 530,
         "y": 520,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "d3d3bb4f0f6580d2",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Watt L1",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "grid_l1_w",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 600,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "e47dc594821908f6",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Watt L2",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "grid_l2_w",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 640,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "581f56ae065b75ef",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Watt L3",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "grid_l3_w",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 680,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "b56ef4d4767031c5",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Temp 1",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "temp_1",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 720,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "37ea20bd42d9fef6",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Temp 2",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "temp_2",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 760,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "379778cec535f398",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Temp 3",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "temp_3",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 800,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "7b96f665eb122495",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Basen SOC",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "basenvt_soc",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "sendnow",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 540,
+        "y": 960,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "615522e20c187a0e",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Basen Voltage",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "basenvt_voltage",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 530,
+        "y": 1000,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "07067fa9860f9e2f",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Basen Amps",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "basenvt_amps",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 540,
+        "y": 1040,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "2fde97888a47cbe5",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=BTemp",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_temp",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 560,
         "wires": [
             [
                 "0cc4ffd6af2c92ed"
