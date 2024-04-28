@@ -11,7 +11,7 @@ return {
 		level = domoticz.LOG_INFO,
 		marker = 'batt_solar_and_balance',
 	},
-	execute = function(dz, timer)
+	execute = function(dz, dev)
 		local batt_mode = dz.devices('Battery Mode')
 		if (batt_mode.state == 'Solar Charge') or (batt_mode.state == 'Grid Balance') then
     		local car_charging = dz.devices('Laadpaal Charging').active
