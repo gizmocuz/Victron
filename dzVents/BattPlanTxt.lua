@@ -38,7 +38,7 @@ return {
                     end
                     today_str = today_str .. string.format("TD: %02d:00 %s", v.iHour, v.hour_type)
                 else
-                    today_str = today_str .. string.format(" -> %02d:00", v.iHour)
+                    today_str = today_str .. string.format(" -> %02d:00 (%.2f%%)", v.iHour, v.battery_capacity_percentage)
                 end
                 last_state = v.hour_type
             end
@@ -55,7 +55,7 @@ return {
                             end
                             today_str = today_str .. string.format("TM: %02d:00 %s", v.iHour, v.hour_type)
                         else
-                            today_str = today_str .. string.format(" -> %02d:00", v.iHour)
+                            today_str = today_str .. string.format(" -> %02d:00 (%.2f%%)", v.iHour, v.battery_capacity_percentage)
                         end
                         last_state = v.hour_type
                     end
@@ -69,9 +69,8 @@ return {
             final_str = final_str .. tomorrow_str
         end
 
-        print (final_str)
-
 		dz.devices('Battery Plan').updateText(final_str)
         
 	end
 }
+
