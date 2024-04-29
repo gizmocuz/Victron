@@ -1,5 +1,4 @@
 return {
-	active = true,
 	logging = { level = domoticz.LOG_NORMAL, marker = "batt_control" },
 	on = {
 		devices = {
@@ -15,14 +14,14 @@ return {
 		local batt_mode = dz.devices('Battery Mode')
 		local batt_state = dz.devices('Battery State')
 
-		local idle_rate = dz.variables('batt_idle_rate')
+		local idle_rate = dz.variables('batt_idle_rate').value
 		local charge_rate = dz.variables('batt_charge_rate').value
 		local discharge_rate = dz.variables('batt_discharge_rate').value
 		
 		local batt_soc = dz.devices('Battery SOC').percentage
 		local car_charging = dz.devices('Laadpaal Charging').active
 		--if dev.isDevice then
-		--	print("called by "..dev.name)
+		--	dz.log("called by "..dev.name)
 		--end
 		
         if dev.name == 'Laadpaal Charging' then
@@ -31,9 +30,9 @@ return {
                 --is yes, disable charge/discharge, so switch to idle mode
                 if (batt_state.state ~= 'Off') or (batt_state.state ~= 'Idle') then
                     -- store previous batt_sp
-                    print('Car is charging... switching to Idle mode')
+                    dz.log('Car is charging... switching to Idle mode')
                     batt_sp.cancelQueuedCommands()
-                    batt_sp.updateSetPoint(idle_rate.value)    
+                    batt_sp.updateSetPoint(idle_rate)    
     			end
     		else
     		        --restore previous state?
@@ -46,36 +45,36 @@ return {
                 batt_sp.updateSetPoint(0)
 			elseif (batt_mode.state == 'Idle') or (batt_mode.state == 'Manual') then 
                 batt_sp.cancelQueuedCommands()
-		        batt_sp.updateSetPoint(idle_rate.value)    
+		        batt_sp.updateSetPoint(idle_rate)    
 		    elseif (batt_mode.state == 'IQ Smart Mode') or (batt_mode.state == 'Grid Balance') or (batt_mode.state == 'Solar Charge') then
 		        --start at IDLE rate
                 batt_sp.cancelQueuedCommands()
-                batt_sp.updateSetPoint(idle_rate.value)
+                batt_sp.updateSetPoint(idle_rate)
 		    elseif (batt_mode.state == 'Charge') then
 		        if (car_charging) then
-	                print('Car is charging! Not switching to Charge mode!')
+	                dz.log('Car is charging! Not switching to Charge mode!')
 		        else
     		        if (batt_soc < max_soc_level) then
-                        print('Battery Mode: Charge')
+                        dz.log('Battery Mode: Charge')
                         batt_sp.cancelQueuedCommands()
-                        batt_sp.updateSetPoint(charge_rate.value)
+                        batt_sp.updateSetPoint(charge_rate)
                     end
                 end
 		    elseif (batt_mode.state == 'Disharge') then
 		        if (car_charging) then
-	                print('Car is charging! Not switching to Discharge mode!')
+	                dz.log('Car is charging! Not switching to Discharge mode!')
 		        else
     		        if (batt_soc > min_soc_level) then
-                        print('Battery Mode: Discharge')
+                        dz.log('Battery Mode: Discharge')
                         batt_sp.cancelQueuedCommands()
-                        batt_sp.updateSetPoint(discharge_rate.value)
+                        batt_sp.updateSetPoint(discharge_rate)
                     end
                 end
 			end
         elseif dev.name == 'ESS Setpoint' then
             if (batt_sp_value == 0) and (batt_state.state ~= 'Off') then
                 batt_state.switchSelector('Off')
-	        elseif (batt_sp_value == idle_rate.value) and (batt_state.state ~= 'Idle') then
+	        elseif (batt_sp_value == idle_rate) and (batt_state.state ~= 'Idle') then
 	            batt_state.switchSelector('Idle')
 	        elseif (batt_sp_value > 0) and (batt_state.state ~= 'Charging') then
 	            batt_state.switchSelector('Charging')
@@ -84,13 +83,19 @@ return {
 	        end
 		elseif dev.name == 'ESS Charge State' and dev.text == 'Float' and batt_state.state == 'Charging' then 
 			-- Batt finished absorpsion and has entered float state so charge is done
-			print("MP2 entered Float state so let's switch to idle state")
-	        batt_sp.updateSetPoint(idle_rate.value)
+			dz.log("MP2 entered Float state so let's switch to idle state")
+			if (batt_sp_value ~= idle_rate) then
+                batt_sp.cancelQueuedCommands()
+	            batt_sp.updateSetPoint(idle_rate)
+	        end
         elseif dev.name == 'Battery SOC' then
             if (batt_mode.state ~= 'Idle') then
-                if (batt_soc <= min_soc_level) or (batt_soc >= max_soc_level) then
-        			print("SOC target reached, switching to idle mode")
-    	            batt_sp.updateSetPoint(idle_rate.value)
+                if (batt_soc <= min_soc_level) or (batt_soc > max_soc_level) then
+        			dz.log("SOC target reached, switching to idle mode")
+        			if (batt_sp_value ~= idle_rate) then
+                        batt_sp.cancelQueuedCommands()
+    	                batt_sp.updateSetPoint(idle_rate)
+    	            end
     	        end
     	    end
 	   end

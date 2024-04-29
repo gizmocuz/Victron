@@ -6,12 +6,6 @@ Battery Plan -> Text Sensor
 
 Settings->more options->User Variables
 
-ChargeToday -> String -> 00.30
-ChargeTomorrow -> String -> 00.30
-
-DischargeToday -> String -> 00.30
-DischargeTomorrow -> String -> 00.30
-
 batt_charge_rate -> Interger -> zetten op 3000*num batteries //90.7% see efficiency chart 
 batt_discharge_rate -> Interger -> zetten op -4126*num batteries //90.8, 4750 = 89.6
 batt_idle_rate -> integer -> zetten op 60 Watt
@@ -28,10 +22,8 @@ tomorrow_soc_target -> float
 tomorrow_charge_kwh -> float
 tomorrow_discharge_kwh -> float
 
-BattEfficiency -> float -> 0.8
-
 batt_min_soc_level -> Integer -> 10
 batt_max_soc_level -> Integer -> 100 (see smartshunt usage, 100 is actually 90)
 
-BattTest -> On/Off switch, om script (BattControl.lua) te testen
-BattScheduleRefresh -> On/Off switch, om script (BattScheduleNew.lua) te testen
+BattTest -> On/Off switch (PUSH), om scripts te testen
+
