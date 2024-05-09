@@ -49,19 +49,23 @@
             "c42e7aa67ec2e4bb",
             "749a21cc94a1ebbf",
             "4d3b28b1877b256f",
-            "ab68555239e66347"
+            "ab68555239e66347",
+            "1825a28e2baf5001",
+            "92197c7fdfd3207b",
+            "cd57ea74581a137c",
+            "17a8978ec5472aef"
         ],
         "x": 14,
         "y": 159,
         "w": 1072,
-        "h": 162
+        "h": 222
     },
     {
         "id": "32490ec1b6da4126",
         "type": "inject",
         "z": "4e0718b1.2af2a8",
         "g": "8f977b51f47b77d6",
-        "name": "@00:01 and start",
+        "name": "@00:01",
         "props": [
             {
                 "p": "payload"
@@ -78,11 +82,12 @@
         "topic": "",
         "payload": "1",
         "payloadType": "str",
-        "x": 150,
+        "x": 120,
         "y": 200,
         "wires": [
             [
-                "98865198e42da528"
+                "98865198e42da528",
+                "1825a28e2baf5001"
             ]
         ]
     },
@@ -200,7 +205,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 140,
         "y": 240,
         "wires": [
             []
@@ -300,28 +305,24 @@
         "type": "inject",
         "z": "4e0718b1.2af2a8",
         "g": "8f977b51f47b77d6",
-        "name": "@15:00 and start",
+        "name": "Between 14:00 - 1600",
         "props": [
             {
                 "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
             }
         ],
         "repeat": "",
-        "crontab": "00 14 * * *",
+        "crontab": "*/10 14-15 * * *",
         "once": true,
         "onceDelay": "1",
         "topic": "",
         "payload": "1",
         "payloadType": "str",
-        "x": 150,
+        "x": 170,
         "y": 280,
         "wires": [
             [
-                "b300d2073540b6f4"
+                "92197c7fdfd3207b"
             ]
         ]
     },
@@ -337,11 +338,11 @@
         "homeId": "49bf2e0e-83cf-4388-b0d5-a03a407a3cc0",
         "energyResolution": "HOURLY",
         "lastCount": 10,
-        "x": 360,
-        "y": 280,
+        "x": 400,
+        "y": 340,
         "wires": [
             [
-                "492ef7f87a24e4d1"
+                "cd57ea74581a137c"
             ]
         ]
     },
@@ -403,7 +404,7 @@
         "z": "4e0718b1.2af2a8",
         "g": "b28104102d3ba63a",
         "name": "Global Variables",
-        "func": "context.flow.batt_capacity = 14300; //14.3 kWh\ncontext.flow.batt_charge_rate = 3000; //Watt\ncontext.flow.batt_discharge_rate = 4000;\ncontext.flow.batt_soc_min = 10;\ncontext.flow.batt_soc_max = 90;\n\ncontext.flow.price_min_sell_difference= 0.06; //6 cents\ncontext.flow.price_percentage_sell_difference = 23; //%\ncontext.flow.price_percentage_sell_efficiency = 0.8; //80%\n\ncontext.flow.calculation_method = \"price\"; //price, percentage_difference, percentage_efficiency\n\ncontext.flow.batt_min_charged = context.flow.batt_capacity * context.flow.batt_soc_min / 100;\ncontext.flow.batt_charged_capacity = context.flow.batt_capacity * (context.flow.batt_soc_max - context.flow.batt_soc_min) / 100;\n\ncontext.flow.ground = function(/** @type {number} */ value)\n{\n    return parseInt(value + 0.5);\n}\n\ncontext.flow.hours_2_charge = parseFloat(context.flow.batt_charged_capacity) / parseFloat(context.flow.batt_charge_rate);\ncontext.flow.tot_hours_2_charge_full = context.flow.ground(context.flow.hours_2_charge);\ncontext.flow.hours_2_discharge = parseFloat(context.flow.batt_charged_capacity) / parseFloat(context.flow.batt_discharge_rate)\ncontext.flow.tot_hours_2_discharge_full = context.flow.ground(context.flow.hours_2_discharge);\n\nlet debug = false;\n\nfunction printBasicInfo()\n{\n    var gstr = \"\";\n    gstr +=\"Battery Capacity: \" + context.flow.batt_capacity + \" Watt\";\n    gstr +=\"\\nCharged Capacity: \" + context.flow.batt_charged_capacity + \" Watt\";\n    gstr +=\"\\nmin-soc: \" + context.flow.batt_soc_min + \" %\";\n    gstr +=\"\\nmax-soc: \" + context.flow.batt_soc_max + \" %\";\n    gstr +=\"\\nCharge-Rate: \" + context.flow.batt_charge_rate + \" Watt\";\n    gstr +=\"\\nDischarge-Rate: \" + context.flow.batt_discharge_rate + \" Watt\";\n\n    gstr +=\"\\nHours to charge battery to full: \" + context.flow.tot_hours_2_charge_full + \"(\" +  context.flow.hours_2_charge.toFixed(2) + \")\";\n    gstr +=\"\\nHours to discharge battery to full: \" + context.flow.tot_hours_2_discharge_full + \"(\" + context.flow.hours_2_discharge.toFixed(2) + \")\";\n    gstr +=\"\\nCalculation method used: \";\n    switch (context.flow.calculation_method) {\n        case \"price\":\n            gstr +=\"\\nprice difference\";\n            break;\n        case \"percentage_difference\":\n            gstr +=\"\\npercentage difference\";\n            break;\n        case \"percentage_efficiency\":\n            gstr +=\"\\npercentage efficiency\";\n            break;\n    }\n    node.warn((gstr));\n}\n\n// @ts-ignore\nif (debug == true) {\n    printBasicInfo();\n}\n\nreturn msg;",
+        "func": "context.flow.batt_capacity = 14300; //14.3 kWh\ncontext.flow.batt_charge_rate = 3000; //Watt\ncontext.flow.batt_discharge_rate = 4000;\ncontext.flow.batt_soc_min = 10;\ncontext.flow.batt_soc_max = 90;\n\ncontext.flow.price_min_sell_difference= 0.06; //6 cents\ncontext.flow.price_percentage_sell_difference = 23; //%\ncontext.flow.price_percentage_sell_efficiency = 0.8; //80%\n\ncontext.flow.calculation_method = \"price\"; //price, percentage_difference, percentage_efficiency\n\ncontext.flow.batt_min_charged = context.flow.batt_capacity * context.flow.batt_soc_min / 100;\ncontext.flow.batt_charged_capacity = context.flow.batt_capacity * (context.flow.batt_soc_max - context.flow.batt_soc_min) / 100;\n\nflow.set('afternoon_received', false);\n\ncontext.flow.ground = function(/** @type {number} */ value)\n{\n    return parseInt(value + 0.5);\n}\n\ncontext.flow.hours_2_charge = parseFloat(context.flow.batt_charged_capacity) / parseFloat(context.flow.batt_charge_rate);\ncontext.flow.tot_hours_2_charge_full = context.flow.ground(context.flow.hours_2_charge);\ncontext.flow.hours_2_discharge = parseFloat(context.flow.batt_charged_capacity) / parseFloat(context.flow.batt_discharge_rate)\ncontext.flow.tot_hours_2_discharge_full = context.flow.ground(context.flow.hours_2_discharge);\n\nlet debug = false;\n\nfunction printBasicInfo()\n{\n    var gstr = \"\";\n    gstr +=\"Battery Capacity: \" + context.flow.batt_capacity + \" Watt\";\n    gstr +=\"\\nCharged Capacity: \" + context.flow.batt_charged_capacity + \" Watt\";\n    gstr +=\"\\nmin-soc: \" + context.flow.batt_soc_min + \" %\";\n    gstr +=\"\\nmax-soc: \" + context.flow.batt_soc_max + \" %\";\n    gstr +=\"\\nCharge-Rate: \" + context.flow.batt_charge_rate + \" Watt\";\n    gstr +=\"\\nDischarge-Rate: \" + context.flow.batt_discharge_rate + \" Watt\";\n\n    gstr +=\"\\nHours to charge battery to full: \" + context.flow.tot_hours_2_charge_full + \"(\" +  context.flow.hours_2_charge.toFixed(2) + \")\";\n    gstr +=\"\\nHours to discharge battery to full: \" + context.flow.tot_hours_2_discharge_full + \"(\" + context.flow.hours_2_discharge.toFixed(2) + \")\";\n    gstr +=\"\\nCalculation method used: \";\n    switch (context.flow.calculation_method) {\n        case \"price\":\n            gstr +=\"\\nprice difference\";\n            break;\n        case \"percentage_difference\":\n            gstr +=\"\\npercentage difference\";\n            break;\n        case \"percentage_efficiency\":\n            gstr +=\"\\npercentage efficiency\";\n            break;\n    }\n    node.warn((gstr));\n}\n\n// @ts-ignore\nif (debug == true) {\n    printBasicInfo();\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -454,6 +455,109 @@
         "wires": [
             [
                 "749a21cc94a1ebbf"
+            ]
+        ]
+    },
+    {
+        "id": "1825a28e2baf5001",
+        "type": "change",
+        "z": "4e0718b1.2af2a8",
+        "g": "8f977b51f47b77d6",
+        "name": "Set AfterRecv = False",
+        "rules": [
+            {
+                "t": "set",
+                "p": "afternoon_received",
+                "pt": "flow",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 380,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "92197c7fdfd3207b",
+        "type": "switch",
+        "z": "4e0718b1.2af2a8",
+        "g": "8f977b51f47b77d6",
+        "name": "If AfterRecv = False",
+        "property": "afternoon_received",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 190,
+        "y": 340,
+        "wires": [
+            [
+                "b300d2073540b6f4"
+            ]
+        ]
+    },
+    {
+        "id": "17a8978ec5472aef",
+        "type": "change",
+        "z": "4e0718b1.2af2a8",
+        "g": "8f977b51f47b77d6",
+        "name": "Set AfterRecv = True",
+        "rules": [
+            {
+                "t": "set",
+                "p": "afternoon_received",
+                "pt": "flow",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cd57ea74581a137c",
+        "type": "switch",
+        "z": "4e0718b1.2af2a8",
+        "g": "8f977b51f47b77d6",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "jsonata_exp",
+                "v": "($count(payload))=24",
+                "vt": "jsonata"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 570,
+        "y": 340,
+        "wires": [
+            [
+                "492ef7f87a24e4d1",
+                "17a8978ec5472aef"
             ]
         ]
     },
