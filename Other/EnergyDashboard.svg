@@ -1,0 +1,62 @@
+<svg width="100%" height="100%" version="1.1" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+  <defs/>
+  <path id="NetToHome" d="m17 30h26" fill="#f0f" stroke="#77eaea" stroke-width=".6"/>
+  <path id="NetToHome-flow" d="m17 30h26" fill="#f0f" stroke="#f00" stroke-linecap="round" stroke-width=".2"/>
+  <path id="pathIconHome" d="m50 27v-1.4h0.8v1.4h1v-1.9h0.6l-2-2.1-2 2.1h0.6v1.9z" stroke-width=".22"/>
+  <path id="pathIconNet" d="m9.1 24-0.45-0.18 0.32-0.51h2.1l0.32 0.51-0.45 0.18-0.18-0.29h-1.5l-0.18 0.29m2.6 0.51h-1.1l-0.2-0.6h-0.66l-0.2 0.6h-1.1l-0.32 0.51 0.45 0.18 0.18-0.29h2.7l0.18 0.29 0.45-0.18-0.32-0.51m-0.22 2.8h-0.52l-0.061-0.18-0.88-1-0.88 1-0.058 0.18h-0.52l0.73-2.2h0.52l-0.091 0.27 0.3 0.35 0.29-0.35-0.089-0.27h0.52l0.73 2.2m-1.6-1.4-0.23-0.27-0.3 0.9 0.53-0.63m0.83 0.62-0.3-0.9-0.23 0.27z" stroke-width=".23"/>
+  <g id="groupGrid">
+    <text id="textActualNet" x="6.5" y="31.999989" fill="#333333" font-size="1.6px" text-align="center" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="6.5" y="31.999989">ActualNet</tspan></text>
+    <text id="textDayNetUsage" x="5.2" y="28.999989" fill="#4d4d4d" font-size="1.6px" text-align="center" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="5.2" y="28.999989">DayNetUsage</tspan></text>
+  </g>
+  <g font-family="Arial" stroke-linecap="round" stroke-width=".38" text-anchor="middle">
+    <text id="textActualNetToHome" x="30" y="32" fill="#4d4d4d" font-size="1.1px" text-align="center" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="30" y="32">ActualNetToHome</tspan></text>
+    <text id="textHomeToday" x="50" y="29" fill="#333333" font-size="1.6px" text-align="center" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="50" y="29">HomeToday</tspan></text>
+    <text id="textHomeActual" x="50" y="32" fill="#333333" font-size="1.6px" text-align="center" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="50" y="32">HomeActual</tspan></text>
+  </g>
+  <g id="groupSolar">
+    <text id="textDayNetDeliv" x="10" y="35.000023" fill="#ba88ff" font-family="Arial" font-size="1.6px" stroke-linecap="round" stroke-width=".38" text-align="center" text-anchor="middle" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="10" y="35.000023">DayNetDeliv</tspan></text>
+    <text id="textActualSolarToHome" x="34" y="25" fill="#4d4d4d" font-family="Arial" font-size="1.1px" stroke-linecap="round" stroke-width=".38" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="34" y="25">ActualSolarToHome</tspan></text>
+    <g fill="none">
+      <path id="SolarToHome" d="m31 17c0 8 3 11 12 11" stroke="#ffd000" stroke-width=".6"/>
+      <path id="SolarToHome-flow" d="m31 17c0 8 3 11 12 11" stroke="#f00" stroke-linecap="round" stroke-width=".2"/>
+      <path id="SolarToNet" d="m29 17c0 8-3 11-12 11" stroke="#ffd000" stroke-width=".6"/>
+      <path id="SolarToNet-flow" d="m29 17c-0.011 8-3 11-12 11" stroke="#f00" stroke-linecap="round" stroke-width=".2"/>
+    </g>
+    <path id="pathIconSolar" d="m30 4v0.71l0.71-0.36-0.71-0.35m-0.2 1.2-0.49 0.49 0.75 0.25-0.26-0.74m-1.7 0.69 0.35 0.71 0.36-0.71h-0.71m1.6-1.9h-1.6v1.6c0.11 0.034 0.23 0.05 0.35 0.05 0.72 2e-3 1.3-0.58 1.3-1.3-2e-3 -0.12-0.02-0.24-0.054-0.35m1.4 4v-1.2h-0.6l1-1.8v1.2h0.6z" stroke-width=".2"/>
+    <g font-family="Arial" stroke-linecap="round" stroke-width=".38">
+      <text id="textDaySolar" x="30" y="10" fill="#333333" font-size="1.6px" text-align="center" text-anchor="middle" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="30" y="10">DaySolar</tspan></text>
+      <text id="textActualSolar" x="30" y="13" fill="#333333" font-size="1.6px" text-align="center" text-anchor="middle" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="30" y="13">ActualSolar</tspan></text>
+      <text id="textActualSolarToNet" x="26" y="25" fill="#4d4d4d" font-size="1.1px" text-align="end" text-anchor="end" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="26" y="25">ActualSolarToNet</tspan></text>
+    </g>
+    <rect id="rectSolar" x="23" y="3" width="14" height="14" ry="2" fill="none" stroke="#ffd000" stroke-linecap="round" stroke-width=".3"/>
+    <g transform="matrix(0.010483, 0, 0, 0.008335, 27.539139, 43.822114)" style="">
+      <path d="M319.089,27.221h-36.475V0h-95.27v27.221h-34.607c-22.517,0-40.829,18.317-40.829,40.832v362.946
+		c0,22.51,18.317,40.83,40.829,40.83h166.352c22.524,0,40.832-18.32,40.832-40.83V68.052
+		C359.921,45.538,341.613,27.221,319.089,27.221z M332.705,431.002c0,7.501-6.108,13.607-13.616,13.607H152.737
+		c-7.501,0-13.608-6.095-13.608-13.607V68.052c0-7.501,6.107-13.611,13.608-13.611h166.352c7.508,0,13.616,6.109,13.616,13.611
+		V431.002z M317.862,428.5H153.966v-59.719h163.896V428.5z M317.862,354.071H153.966v-59.716h163.896V354.071z M317.862,279.64
+		H153.966v-59.72h163.896V279.64z" stroke-width=".22"/>
+    </g>
+  </g>
+  <rect id="rectNet" x="3" y="22" width="14" height="14" ry="2" fill="none" stroke="#00c6da" stroke-linecap="round" stroke-width=".3"/>
+  <g id="groupBatt">
+    <g fill="none">
+      <path id="BattToHome" d="m29 43c0 -8 -3 -11 -12 -11" stroke="#ffd000" stroke-width=".6"/>
+      <path id="BattToHome-flow" d="m29 43c0 -8 -3 -11 -12 -11" stroke="#f00" stroke-linecap="round" stroke-width=".2"/>
+      <path id="BattToNet" d="m31 43c0 -8 3 -11 12 -11" stroke="#ffd000" stroke-width=".6"/>
+      <path id="BattToNet-flow" d="m31 43c0 -8 3 -11 12 -11" stroke="#f00" stroke-linecap="round" stroke-width=".2"/>
+      <rect id="rectBatt" x="23" y="43" width="14" height="14" ry="2" fill="none" stroke="#ffd000" stroke-linecap="round" stroke-width=".3"/>
+      <text id="textTotalCharge" x="30" y="50" fill="#333333" font-size="1.6px" text-align="center" text-anchor="middle" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="30" y="50">Total kWh</tspan></text>
+      <text id="textActualBatt" x="30" y="53" fill="#333333" font-size="1.6px" text-align="center" text-anchor="middle" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="30" y="53">ActualBatt</tspan></text>
+      <text id="textActualBattToNet" x="25.5" y="35" fill="#4d4d4d" font-size="1.1px" text-align="end" text-anchor="end" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="25.5" y="35">ActualBattToNet</tspan></text>
+      <text id="textActualBattToHome" x="34" y="35" fill="#4d4d4d" font-family="Arial" font-size="1.1px" stroke-linecap="round" stroke-width=".38" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="34" y="35">ActualSolarToHome</tspan></text>
+    </g>
+  </g>
+  <g id="groupGas">
+    <path id="GasToHome" d="m50 22v-5" fill="#f0f" stroke="#4d4d4d" stroke-width=".6"/>
+    <text id="textDayGas" x="50" y="10" fill="#333333" font-family="Arial" font-size="1.6px" stroke-linecap="round" stroke-width=".38" text-align="center" text-anchor="middle" style="font-variant-caps: normal; font-variant-east-asian: normal; font-variant-ligatures: normal; font-variant-numeric: normal; white-space: pre;"><tspan x="50" y="10">DayGas</tspan></text>
+    <rect id="rectGas" x="43" y="3" width="14" height="14" ry="2" fill="none" stroke="#0ff" stroke-linecap="round" stroke-width=".3"/>
+    <path id="pathIconGas" d="m51 5.8c-0.053-0.067-0.12-0.12-0.18-0.18-0.15-0.13-0.33-0.23-0.47-0.37-0.34-0.32-0.42-0.86-0.2-1.3-0.22 0.051-0.41 0.17-0.57 0.29-0.59 0.46-0.82 1.3-0.55 2 0.0092 0.022 0.018 0.044 0.018 0.073 0 0.049-0.034 0.093-0.08 0.11-0.053 0.022-0.11 0.0089-0.15-0.027-0.014-0.011-0.023-0.022-0.032-0.038-0.26-0.32-0.3-0.77-0.13-1.1-0.38 0.3-0.59 0.81-0.56 1.3 0.014 0.11 0.027 0.22 0.066 0.33 0.032 0.13 0.094 0.27 0.16 0.38 0.25 0.38 0.67 0.66 1.1 0.72 0.49 0.06 1-0.027 1.4-0.36 0.42-0.37 0.56-0.96 0.35-1.5l-0.03-0.058c-0.048-0.1-0.18-0.28-0.18-0.28m-0.72 1.4c-0.064 0.053-0.17 0.11-0.25 0.13-0.26 0.089-0.51-0.036-0.66-0.18 0.27-0.062 0.43-0.26 0.48-0.46 0.039-0.18-0.034-0.32-0.064-0.5-0.027-0.16-0.023-0.3 0.039-0.46 0.043 0.084 0.089 0.17 0.14 0.24 0.18 0.22 0.45 0.32 0.51 0.62 0.0092 0.031 0.014 0.062 0.014 0.096 0.0067 0.18-0.075 0.38-0.21 0.5z" stroke-width=".23"/>
+  </g>
+  <rect id="rectHome" x="43" y="22" width="14" height="14" ry="2" fill="none" stroke="#ff7bff" stroke-linecap="round" stroke-width=".3"/>
+</svg>
