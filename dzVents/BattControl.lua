@@ -40,6 +40,8 @@ return {
 		elseif dev.name == 'Battery Mode' then
 			-- handle Battery Mode changes: Charge, Discharge
 			-- Balance has a separate script (BattBalance) and Manual needs nothing
+			dz.globalData.shouldGridBalance = false
+
 			if (batt_mode.state == 'Off') then
                 batt_sp.cancelQueuedCommands()
                 batt_sp.updateSetPoint(0)
@@ -47,7 +49,7 @@ return {
                 batt_sp.cancelQueuedCommands()
 		        batt_sp.updateSetPoint(idle_rate)    
 		    elseif (batt_mode.state == 'IQ Smart Mode') or (batt_mode.state == 'Grid Balance') or (batt_mode.state == 'Solar Charge') then
-		        --start at IDLE rate
+		        --start at IDLE rate. Giz: Should this be done or handled in their scripts? (balance/iqmode)
                 batt_sp.cancelQueuedCommands()
                 batt_sp.updateSetPoint(idle_rate)
 		    elseif (batt_mode.state == 'Charge') then

@@ -12,6 +12,8 @@ batt_idle_rate -> integer -> zetten op 60 Watt
 
 batt_max_grid_usage -> Integer -> 5500
 
+batt_solar_min -> Inteter -> 250 (IQ Mode, min solar forecast value to switch to 'Balance Grid' mode in Idle block)
+
 batt_kwh -> float -> 0, berekend met hoeveel euro er gevuld word?
 
 today_soc_target -> float

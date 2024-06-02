@@ -14,7 +14,7 @@ return {
 	},
 	data =
     {
-        GridPowerHistory = { history = true, maxMinutes = 5 },
+        GridPowerHistory = { history = true, maxMinutes = 1 },
 	    last_max_adjusted = { initial = 0 },
     },
 	execute = function(dz, dev)
@@ -22,8 +22,11 @@ return {
 	        power = dz.devices('Elektra Meter').usage - dz.devices('Elektra Meter').usageDelivered
 	        dz.data.GridPowerHistory.add(power)
 	    elseif ( (dev.isTimer) or (dev.name == 'Battery Mode') ) then
-    		local batt_mode = dz.devices('Battery Mode')
-    		if (batt_mode.state == 'Solar Charge') or (batt_mode.state == 'Grid Balance') then
+    		local batt_mode = dz.devices('Battery Mode').state
+	        if (dev.name == 'Battery Mode') and (batt_mode == 'Grid Balance') then
+	            dz.globalData.shouldGridBalance = false
+            end
+    		if (batt_mode == 'Solar Charge') or (batt_mode == 'Grid Balance') or (dz.globalData.shouldGridBalance == true) then
         		local car_charging = dz.devices('Laadpaal Charging').active
                 if (car_charging == true) then
                 	do return end
@@ -38,7 +41,7 @@ return {
     
             	local new_setpoint = batt_sp_value
             	
-            	local bIsSolarChargeMode = (batt_mode.state == 'Solar Charge')
+            	local bIsSolarChargeMode = (batt_mode == 'Solar Charge')
                 if (bIsSolarChargeMode) and (batt_soc >= max_soc_level) then
                 	dz.log('we aleady have reached max soc')
                 	do return end
@@ -61,7 +64,7 @@ return {
 
             	    --new_setpoint = batt_sp_value - (grid_power/2) --not sure if still need to do this as we are already averaging!
             	    new_setpoint = math.floor(batt_sp_value - grid_power + 0.5)
-            	    --dz.log("new_setpoint: " .. new_setpoint)
+            	    --dz.log("grid: " .. grid_power .. ". new_setpoint: " .. new_setpoint)
 
             	    if (bIsSolarChargeMode) then
                         if (new_setpoint < idle_rate) then
@@ -91,7 +94,7 @@ return {
                         new_setpoint = charge_rate
                     end
     
-                    if ((new_setpoint < 0) and (batt_soc <=min_soc_level)) or ((new_setpoint > 0) and (batt_soc >= max_soc_level)) then
+                    if ((new_setpoint < 0) and (batt_soc <=min_soc_level)) or ((new_setpoint > 0) and (batt_soc > max_soc_level)) then
                         --Also handled in batt_control script
                          new_setpoint = idle_rate
                     end
