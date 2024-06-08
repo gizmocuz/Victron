@@ -44,10 +44,6 @@
             "73c8292b08ced613",
             "e697e78dd2476445",
             "f684634197238553",
-            "b586e0714822d972",
-            "0412be036a91403a",
-            "91a580366739c078",
-            "9de1aeb7cd6a05fc",
             "0ad09ce64e47abdc",
             "0cc4ffd6af2c92ed",
             "45117e09372083fa",
@@ -78,7 +74,7 @@
         "x": 14,
         "y": 179,
         "w": 752,
-        "h": 1022
+        "h": 942
     },
     {
         "id": "89166bbe87877070",
@@ -120,7 +116,7 @@
             "7a446c7d181c7c70"
         ],
         "x": 14,
-        "y": 1219,
+        "y": 1479,
         "w": 972,
         "h": 122
     },
@@ -137,12 +133,13 @@
         "nodes": [
             "83b22b4dba8cc16b",
             "3531f89a0fac36ef",
-            "ec8aec609d3dbf27"
+            "ec8aec609d3dbf27",
+            "4265710cca04214d"
         ],
         "x": 814,
         "y": 19,
-        "w": 452,
-        "h": 82
+        "w": 642,
+        "h": 122
     },
     {
         "id": "46934fd70a864e7d",
@@ -161,7 +158,7 @@
             "44e9c7638da28eda"
         ],
         "x": 14,
-        "y": 1359,
+        "y": 1619,
         "w": 632,
         "h": 122
     },
@@ -189,7 +186,7 @@
             "b6dfbbd90ef362fd"
         ],
         "x": 14,
-        "y": 1499,
+        "y": 1759,
         "w": 832,
         "h": 162
     },
@@ -209,7 +206,7 @@
             "48e8905972378ed1"
         ],
         "x": 14,
-        "y": 1699,
+        "y": 1939,
         "w": 632,
         "h": 82
     },
@@ -239,6 +236,35 @@
         "h": 182
     },
     {
+        "id": "4294fa5adf1d40cc",
+        "type": "group",
+        "z": "11c15729dad50c39",
+        "name": "AC-In Power Usage",
+        "style": {
+            "stroke": "#a4a4a4",
+            "fill": "#7fb7df",
+            "label": true,
+            "color": "#ffffff"
+        },
+        "nodes": [
+            "7b60dc31a2076b1f",
+            "b586e0714822d972",
+            "11f92e80b464a1d6",
+            "2ec063d33b8a7f84",
+            "c0976c39fde7935c",
+            "e473f1d46fb5501d",
+            "6bd89a5474aadd23",
+            "95d5a72a62e48b55",
+            "e658be2b36231f2a",
+            "50b5220643150202",
+            "bb2045292b7784e9"
+        ],
+        "x": 14,
+        "y": 1139,
+        "w": 752,
+        "h": 202
+    },
+    {
         "id": "c6dec17afbbc8ee9",
         "type": "function",
         "z": "11c15729dad50c39",
@@ -252,7 +278,7 @@
         "finalize": "",
         "libs": [],
         "x": 460,
-        "y": 1260,
+        "y": 1520,
         "wires": [
             []
         ]
@@ -280,7 +306,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 140,
-        "y": 1260,
+        "y": 1520,
         "wires": [
             [
                 "c6dec17afbbc8ee9",
@@ -308,7 +334,7 @@
         "name": "",
         "onlyChanges": false,
         "x": 820,
-        "y": 1280,
+        "y": 1540,
         "wires": []
     },
     {
@@ -326,7 +352,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 100,
-        "y": 1400,
+        "y": 1660,
         "wires": [
             [
                 "44e9c7638da28eda"
@@ -348,7 +374,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 470,
-        "y": 1440,
+        "y": 1700,
         "wires": []
     },
     {
@@ -377,7 +403,7 @@
         "name": "",
         "onlyChanges": false,
         "x": 500,
-        "y": 1400,
+        "y": 1660,
         "wires": []
     },
     {
@@ -394,7 +420,7 @@
         "finalize": "",
         "libs": [],
         "x": 240,
-        "y": 1400,
+        "y": 1660,
         "wires": [
             [
                 "4a2b5c0c4430540b",
@@ -997,7 +1023,7 @@
         "z": "11c15729dad50c39",
         "g": "118adc3f7ab8b995",
         "name": "Startup Function",
-        "func": "let discovery_topic = \"homeassistant\";\nlet root_topic = \"my_victron\";\ncontext.flow.batt_capacity = 14300; //Wh\ncontext.flow.max_charge_setpoint = 3500; //3000=90.7% see efficiency chart \ncontext.flow.max_discharge_setpoint = 4126; //4126=90.8, 4750 = 89.6\ncontext.flow.number_of_multiplus = 1;\ncontext.flow.min_soc = 10;\ncontext.flow.max_soc = 100; //Because we use a smartshunt and specified 55.2V as 100% (=90%)\ncontext.flow.data = {};\n\nlet pobject = [\n    //\"name\": [\"object_type\", \"varname\", \"unique_id\", \"payload_on/unit\", \"payload_off\", \"step\"],\n\n    //Setpoint\n    { \"ESS Setpoint\": [\"climate\", \"ess_setpoint\", \"0x8000000002\", \"Watt\", \"-5000|5000\", 100] },\n\n    //Switches\n    { \"ESS Control Mode\": [\"select\", \"ess_mode\", \"0x8000000001\", \"Mode 1|Mode 2\", \"\", 0] },\n    { \"Battery Mode\": [\"select\", \"batt_mode\", \"0x800000000E\", \"Off|Idle|IQ Smart Mode|Grid Balance|Solar Charge|Charge|Discharge|Manual\", \"\", 0] },\n    { \"Battery State\": [\"select\", \"batt_state\", \"0x8000000014\", \"Off|Idle|Charging|Discharging\", \"\", 0] },\n    { \"MP2 On/Off state\": [\"switch\", \"mp2_switch_position\", \"0x800000000F\", \"On\", \"Off\", 0] },\n\n    //Sensors\n    { \"Battery Percentage\": [\"sensor\", \"batt_soc\", \"0x8000000003\", \"%\", \"\", 0] },\n    { \"Battery Voltage\": [\"sensor\", \"batt_voltage\", \"0x8000000004\", \"V\", \"\", 0] },\n    { \"Battery Amps\": [\"sensor\", \"batt_amps\", \"0x8000000005\", \"A\", \"\", 0] },\n    { \"Battery Temperature\": [\"sensor\", \"batt_temp\", \"0x800000000D\", \"\\u00b0c\", \"\", 0] },\n    { \"Grid L1 Watt\": [\"sensor\", \"grid_l1_w\", \"0x8000000006\", \"W\", \"\", 0] },\n    { \"Grid L2 Watt\": [\"sensor\", \"grid_l2_w\", \"0x8000000007\", \"W\", \"\", 0] },\n    { \"Grid L3 Watt\": [\"sensor\", \"grid_l3_w\", \"0x8000000008\", \"W\", \"\", 0] },\n    { \"BasenVT Percentage\": [\"sensor\", \"basenvt_soc\", \"0x8000000010\", \"%\", \"\", 0] },\n    { \"BasenVT Voltage\": [\"sensor\", \"basenvt_voltage\", \"0x8000000011\", \"V\", \"\", 0] },\n    { \"BasenVT Amps\": [\"sensor\", \"basenvt_amps\", \"0x8000000013\", \"A\", \"\", 0] },\n    { \"Battery Capacity\": [\"sensor\", \"batt_capacity\", \"0x8000000012\", \"w\", \"\", 0] },\n    { \"Battery Charged kWh\": [\"sensor\", \"batt_charged_kwh\", \"0x8000000015_power\", \"kWh\", \"\", 0] },\n    { \"Battery Charged W\": [\"sensor\", \"batt_charged_w\", \"0x8000000015_energy\", \"W\", \"\", 0] },\n    { \"Battery Discharged kWh\": [\"sensor\", \"batt_discharged_kwh\", \"0x8000000016_power\", \"kWh\", \"\", 0] },\n    { \"Battery Discharged W\": [\"sensor\", \"batt_discharged_w\", \"0x8000000016_energy\", \"W\", \"\", 0] },\n\n    //Temperatures\n    { \"Temp 1\": [\"sensor\", \"temp_1\", \"0x8000000009\", \"\\u00b0c\", \"\", 0] },\n    { \"Temp 2\": [\"sensor\", \"temp_2\", \"0x800000000A\", \"\\u00b0c\", \"\", 0] },\n    { \"Temp 3\": [\"sensor\", \"temp_3\", \"0x800000000B\", \"\\u00b0c\", \"\", 0] },\n    \n    //Text\n    { \"ESS Charge State\": [\"sensor\", \"charge_state\", \"0x800000000C\", \"text\", \"\", 0] },\n\n    //0x8000000017\n    //{ \"ev_driving_range\": [\"sensor\", \"random2\", \"0x800000000C\", \"km\", \"\", 1] },\n\n    //some other types\n    //{ \"is_locked\": [\"switch\", \"is_locked\", \"0x8000000001\", \"true\", \"false\", 0] },\n    //{ \"charge_door_open\": [\"binary_sensor\", \"ev_charge_port_door_is_open\", \"0x8000000002\", \"true\", \"false\", 0] },\n    //{ \"hood_open\": [\"binary_sensor\", \"hood_is_open\", \"0x8000000003\", \"true\", \"false\", 0] },\n    //{ \"air_temperature\": [\"sensor\", \"air_temperature\", \"0x8000000006\", \"\\u00b0c\", \"\", 1] },\n\n    //config objects, see Domoticz->Hardware->MQTT-AD->Setup\n    //{ \"ev_charge_limits_ac\": [\"number\", \"ev_charge_limits_ac\", \"0x8000001001\", \"\", \"\", 1] },\n    //{ \"ev_charge_limits_dc\": [\"number\", \"ev_charge_limits_ac\", \"0x8000001002\", \"\", \"\", 1] },\n];\n\nfunction createBinaryObject(root, name, varname, unique_id, payload_on = \"ON\", payload_off = \"OFF\")\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    \n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"payload_on\"] = payload_on;\n    vjson[\"payload_off\"] = payload_off;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson;\n}\n\nfunction createLightObject(root, name, varname, unique_id, payload_on = \"ON\", payload_off = \"OFF\")\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    \n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"payload_on\"] = payload_on;\n    vjson[\"payload_off\"] = payload_off;\n    vjson[\"cmd_t\"] = \"~/set/\" + varname;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson;\n}\n\nfunction createSelectObject(root, name, varname, unique_id, select_options)\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    \n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n\n    vjson[\"options\"] = [];\n    select_options.split(\"|\").forEach(function (item) {\n        vjson[\"options\"].push(item);\n    });\n    vjson[\"cmd_t\"] = \"~/set/\" + varname;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson;\n}\n\nfunction createNumberObject(root, name, varname, unique_id, step = 1)\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    \n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"step\"] = step;\n    vjson[\"cmd_t\"] = \"~/set/\" + varname;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson;\n}\n\nfunction createSensorObject(root, name, varname, unique_id, unit_of_measurement)\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    \n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"unit_of_meas\"] = unit_of_measurement;\n    vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson\n}\n\nfunction createClimateObject(root, name, varname, unique_id, unit_of_measurement, min_value = 6.5, max_value = 35.0, step_size = 1.0)\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    \n    let vjson = {\n        \"temp_stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"temp_unit\"] = unit_of_measurement;\n    vjson[\"temp_cmd_t\"] = \"~/set/\" + varname;\n    vjson[\"temp_stat_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    vjson[\"temp_step\"] = step_size;\n    vjson[\"min_temp\"] = min_value;\n    vjson[\"max_temp\"] = max_value;\n    return vjson\n}\n\nnode.log(\"Flow Initialisation\");\n\npobject.forEach((vvar) => {\n    let name = Object.keys(vvar)[0];\n    let vobj = vvar[Object.keys(vvar)];\n    let object_type = vobj[0]\n    let varname = vobj[1]\n    let unique_id = vobj[2]\n\n    let jobj = null\n    if (object_type == \"light\") {\n        let payload_on = vobj[3]\n        let payload_off = vobj[4]\n        jobj = createLightObject(root_topic, name, varname, unique_id, payload_on, payload_off);\n    }\n    else if (object_type == \"switch\") {\n        let payload_on = vobj[3]\n        let payload_off = vobj[4]\n        jobj = createLightObject(root_topic, name, varname, unique_id, payload_on, payload_off);\n    }\n    else if (object_type == \"binary_sensor\") {\n        let payload_on = vobj[3]\n        let payload_off = vobj[4]\n        jobj = createBinaryObject(root_topic, name, varname, unique_id, payload_on, payload_off);\n    }\n    else if (object_type == \"select\") {\n        let soptions = vobj[3]\n        jobj = createSelectObject(root_topic, name, varname, unique_id, soptions);\n    }\n    else if (object_type == \"number\") {\n        let step = vobj[5]\n        jobj = createNumberObject(root_topic, name, varname, unique_id, step);\n    }\n    else if (object_type == \"sensor\") {\n        let unit_of_measurement = vobj[3]\n        jobj = createSensorObject(root_topic, name, varname, unique_id, unit_of_measurement);\n    }\n    else if (object_type == \"climate\") {\n        let unit_of_measurement = vobj[3]\n        let minmax = vobj[4];\n        let step_size = vobj[5]\n\n        let min_value = 6.5;\n        let max_value = 35;\n        let sresults = minmax.split(\"|\");\n        if (sresults.length == 2) {\n            min_value = parseFloat(sresults[0]);\n            max_value = parseFloat(sresults[1]);\n        }\n\n        jobj = createClimateObject(root_topic, name, varname, unique_id, unit_of_measurement, min_value, max_value, step_size);\n    }\n\n    if (jobj != null) {\n        if (unique_id.indexOf(\"_\") != -1)\n        {\n            unique_id = unique_id.split(\"_\")[0];\n        }\n        let dtopic = discovery_topic + \"/\" + object_type + \"/\" + unique_id + \"/\" + varname + \"/config\"\n        //node.log(\"publishing config ->: \" + dtopic);\n\n        msg.payload = jobj;\n        msg.topic = dtopic;\n        msg.retain = true;\n        node.send(msg);\n    }\n});\nreturn null;",
+        "func": "let discovery_topic = \"homeassistant\";\nlet root_topic = \"my_victron\";\ncontext.flow.batt_capacity = 14300; //Wh\ncontext.flow.max_charge_setpoint = 3500; //3000=90.7% see efficiency chart \ncontext.flow.max_discharge_setpoint = 4126; //4126=90.8, 4750 = 89.6\ncontext.flow.number_of_multiplus = 1;\ncontext.flow.min_soc = 10;\ncontext.flow.max_soc = 100; //Because we use a smartshunt and specified 55.2V as 100% (=90%)\ncontext.flow.data = {};\n\nlet pobject = [\n    //\"name\": [\"object_type\", \"varname\", \"unique_id\", \"payload_on/unit\", \"payload_off\", \"step\"],\n\n    //Setpoint\n    { \"ESS Setpoint\": [\"climate\", \"ess_setpoint\", \"0x8000000002\", \"Watt\", \"-5000|5000\", 100] },\n\n    //Switches\n    { \"ESS Control Mode\": [\"select\", \"ess_mode\", \"0x8000000001\", \"Mode 1|Mode 2\", \"\", 0] },\n    { \"Battery Mode\": [\"select\", \"batt_mode\", \"0x800000000E\", \"Off|Idle|IQ Smart Mode|Grid Balance|Solar Charge|Charge|Discharge|Manual\", \"\", 0] },\n    { \"Battery State\": [\"select\", \"batt_state\", \"0x8000000014\", \"Off|Idle|Charging|Discharging\", \"\", 0] },\n    { \"MP2 On/Off state\": [\"switch\", \"mp2_switch_position\", \"0x800000000F\", \"On\", \"Off\", 0] },\n\n    //Sensors\n    { \"Battery Percentage\": [\"sensor\", \"batt_soc\", \"0x8000000003\", \"%\", \"\", 0] },\n    { \"Battery Voltage\": [\"sensor\", \"batt_voltage\", \"0x8000000004\", \"V\", \"\", 0] },\n    { \"Battery Amps\": [\"sensor\", \"batt_amps\", \"0x8000000005\", \"A\", \"\", 0] },\n    { \"Battery Temperature\": [\"sensor\", \"batt_temp\", \"0x800000000D\", \"\\u00b0c\", \"\", 0] },\n    { \"Grid L1 Watt\": [\"sensor\", \"grid_l1_w\", \"0x8000000006\", \"W\", \"\", 0] },\n    { \"Grid L2 Watt\": [\"sensor\", \"grid_l2_w\", \"0x8000000007\", \"W\", \"\", 0] },\n    { \"Grid L3 Watt\": [\"sensor\", \"grid_l3_w\", \"0x8000000008\", \"W\", \"\", 0] },\n    { \"BasenVT Percentage\": [\"sensor\", \"basenvt_soc\", \"0x8000000010\", \"%\", \"\", 0] },\n    { \"BasenVT Voltage\": [\"sensor\", \"basenvt_voltage\", \"0x8000000011\", \"V\", \"\", 0] },\n    { \"BasenVT Amps\": [\"sensor\", \"basenvt_amps\", \"0x8000000013\", \"A\", \"\", 0] },\n    { \"Battery Capacity\": [\"sensor\", \"batt_capacity\", \"0x8000000012\", \"w\", \"\", 0] },\n    { \"Battery Charged kWh\": [\"sensor\", \"batt_charged_kwh\", \"0x8000000015_power\", \"kWh\", \"\", 0] },\n    { \"Battery Charged W\": [\"sensor\", \"batt_charged_w\", \"0x8000000015_energy\", \"W\", \"\", 0] },\n    { \"Battery Discharged kWh\": [\"sensor\", \"batt_discharged_kwh\", \"0x8000000016_power\", \"kWh\", \"\", 0] },\n    { \"Battery Discharged W\": [\"sensor\", \"batt_discharged_w\", \"0x8000000016_energy\", \"W\", \"\", 0] },\n    { \"MP2 AC-In kWh\": [\"sensor\", \"inv_acin_kwh\", \"0x8000000017_power\", \"kWh\", \"\", 0] },\n    { \"MP2 AC-In Charged W\": [\"sensor\", \"inv_acin_w\", \"0x8000000017_energy\", \"W\", \"\", 0] },\n\n    //Temperatures\n    { \"Temp 1\": [\"sensor\", \"temp_1\", \"0x8000000009\", \"\\u00b0c\", \"\", 0] },\n    { \"Temp 2\": [\"sensor\", \"temp_2\", \"0x800000000A\", \"\\u00b0c\", \"\", 0] },\n    { \"Temp 3\": [\"sensor\", \"temp_3\", \"0x800000000B\", \"\\u00b0c\", \"\", 0] },\n    \n    //Text\n    { \"ESS Charge State\": [\"sensor\", \"charge_state\", \"0x800000000C\", \"text\", \"\", 0] },\n\n    //0x8000000018\n    //{ \"ev_driving_range\": [\"sensor\", \"random2\", \"0x800000000C\", \"km\", \"\", 1] },\n\n    //some other types\n    //{ \"is_locked\": [\"switch\", \"is_locked\", \"0x8000000001\", \"true\", \"false\", 0] },\n    //{ \"charge_door_open\": [\"binary_sensor\", \"ev_charge_port_door_is_open\", \"0x8000000002\", \"true\", \"false\", 0] },\n    //{ \"hood_open\": [\"binary_sensor\", \"hood_is_open\", \"0x8000000003\", \"true\", \"false\", 0] },\n    //{ \"air_temperature\": [\"sensor\", \"air_temperature\", \"0x8000000006\", \"\\u00b0c\", \"\", 1] },\n\n    //config objects, see Domoticz->Hardware->MQTT-AD->Setup\n    //{ \"ev_charge_limits_ac\": [\"number\", \"ev_charge_limits_ac\", \"0x8000001001\", \"\", \"\", 1] },\n    //{ \"ev_charge_limits_dc\": [\"number\", \"ev_charge_limits_ac\", \"0x8000001002\", \"\", \"\", 1] },\n];\n\nfunction createBinaryObject(root, name, varname, unique_id, payload_on = \"ON\", payload_off = \"OFF\")\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    \n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"payload_on\"] = payload_on;\n    vjson[\"payload_off\"] = payload_off;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson;\n}\n\nfunction createLightObject(root, name, varname, unique_id, payload_on = \"ON\", payload_off = \"OFF\")\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    \n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"payload_on\"] = payload_on;\n    vjson[\"payload_off\"] = payload_off;\n    vjson[\"cmd_t\"] = \"~/set/\" + varname;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson;\n}\n\nfunction createSelectObject(root, name, varname, unique_id, select_options)\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    \n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n\n    vjson[\"options\"] = [];\n    select_options.split(\"|\").forEach(function (item) {\n        vjson[\"options\"].push(item);\n    });\n    vjson[\"cmd_t\"] = \"~/set/\" + varname;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson;\n}\n\nfunction createNumberObject(root, name, varname, unique_id, step = 1)\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    \n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"step\"] = step;\n    vjson[\"cmd_t\"] = \"~/set/\" + varname;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson;\n}\n\nfunction createSensorObject(root, name, varname, unique_id, unit_of_measurement)\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    \n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"unit_of_meas\"] = unit_of_measurement;\n    vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson\n}\n\nfunction createClimateObject(root, name, varname, unique_id, unit_of_measurement, min_value = 6.5, max_value = 35.0, step_size = 1.0)\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    \n    let vjson = {\n        \"temp_stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"temp_unit\"] = unit_of_measurement;\n    vjson[\"temp_cmd_t\"] = \"~/set/\" + varname;\n    vjson[\"temp_stat_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    vjson[\"temp_step\"] = step_size;\n    vjson[\"min_temp\"] = min_value;\n    vjson[\"max_temp\"] = max_value;\n    return vjson\n}\n\nnode.log(\"Flow Initialisation\");\n\npobject.forEach((vvar) => {\n    let name = Object.keys(vvar)[0];\n    let vobj = vvar[Object.keys(vvar)];\n    let object_type = vobj[0]\n    let varname = vobj[1]\n    let unique_id = vobj[2]\n\n    let jobj = null\n    if (object_type == \"light\") {\n        let payload_on = vobj[3]\n        let payload_off = vobj[4]\n        jobj = createLightObject(root_topic, name, varname, unique_id, payload_on, payload_off);\n    }\n    else if (object_type == \"switch\") {\n        let payload_on = vobj[3]\n        let payload_off = vobj[4]\n        jobj = createLightObject(root_topic, name, varname, unique_id, payload_on, payload_off);\n    }\n    else if (object_type == \"binary_sensor\") {\n        let payload_on = vobj[3]\n        let payload_off = vobj[4]\n        jobj = createBinaryObject(root_topic, name, varname, unique_id, payload_on, payload_off);\n    }\n    else if (object_type == \"select\") {\n        let soptions = vobj[3]\n        jobj = createSelectObject(root_topic, name, varname, unique_id, soptions);\n    }\n    else if (object_type == \"number\") {\n        let step = vobj[5]\n        jobj = createNumberObject(root_topic, name, varname, unique_id, step);\n    }\n    else if (object_type == \"sensor\") {\n        let unit_of_measurement = vobj[3]\n        jobj = createSensorObject(root_topic, name, varname, unique_id, unit_of_measurement);\n    }\n    else if (object_type == \"climate\") {\n        let unit_of_measurement = vobj[3]\n        let minmax = vobj[4];\n        let step_size = vobj[5]\n\n        let min_value = 6.5;\n        let max_value = 35;\n        let sresults = minmax.split(\"|\");\n        if (sresults.length == 2) {\n            min_value = parseFloat(sresults[0]);\n            max_value = parseFloat(sresults[1]);\n        }\n\n        jobj = createClimateObject(root_topic, name, varname, unique_id, unit_of_measurement, min_value, max_value, step_size);\n    }\n\n    if (jobj != null) {\n        if (unique_id.indexOf(\"_\") != -1)\n        {\n            unique_id = unique_id.split(\"_\")[0];\n        }\n        let dtopic = discovery_topic + \"/\" + object_type + \"/\" + unique_id + \"/\" + varname + \"/config\"\n        //node.log(\"publishing config ->: \" + dtopic);\n\n        msg.payload = jobj;\n        msg.topic = dtopic;\n        msg.retain = true;\n        node.send(msg);\n    }\n});\nreturn null;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -1008,7 +1034,8 @@
         "y": 60,
         "wires": [
             [
-                "ec8aec609d3dbf27"
+                "ec8aec609d3dbf27",
+                "4265710cca04214d"
             ]
         ]
     },
@@ -1220,7 +1247,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 110,
-        "y": 1540,
+        "y": 1800,
         "wires": [
             [
                 "19094210a4561364",
@@ -1252,7 +1279,7 @@
         "repair": false,
         "outputs": 2,
         "x": 280,
-        "y": 1580,
+        "y": 1840,
         "wires": [
             [
                 "e4baf8667b014c1c"
@@ -1290,7 +1317,7 @@
         "name": "",
         "onlyChanges": false,
         "x": 690,
-        "y": 1600,
+        "y": 1860,
         "wires": []
     },
     {
@@ -1307,7 +1334,7 @@
         "finalize": "",
         "libs": [],
         "x": 490,
-        "y": 1560,
+        "y": 1820,
         "wires": [
             [
                 "c7f7c335facd37dc",
@@ -1329,7 +1356,7 @@
         "finalize": "",
         "libs": [],
         "x": 490,
-        "y": 1600,
+        "y": 1860,
         "wires": [
             [
                 "c7f7c335facd37dc",
@@ -1352,7 +1379,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 700,
-        "y": 1560,
+        "y": 1820,
         "wires": []
     },
     {
@@ -1471,7 +1498,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 130,
-        "y": 1740,
+        "y": 1980,
         "wires": [
             [
                 "b5790661fb4671dd"
@@ -1492,7 +1519,7 @@
         "finalize": "",
         "libs": [],
         "x": 300,
-        "y": 1740,
+        "y": 1980,
         "wires": [
             [
                 "48e8905972378ed1"
@@ -1527,7 +1554,7 @@
         "name": "",
         "onlyChanges": false,
         "x": 510,
-        "y": 1740,
+        "y": 1980,
         "wires": []
     },
     {
@@ -1565,7 +1592,7 @@
         "finalize": "",
         "libs": [],
         "x": 290,
-        "y": 1540,
+        "y": 1800,
         "wires": [
             [
                 "88700a0ac035432a"
@@ -1650,96 +1677,6 @@
         ]
     },
     {
-        "id": "b586e0714822d972",
-        "type": "victron-input-vebus",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "service": "com.victronenergy.vebus/276",
-        "path": "/Energy/AcIn1ToInverter",
-        "serviceObj": {
-            "service": "com.victronenergy.vebus/276",
-            "name": "MultiPlus"
-        },
-        "pathObj": {
-            "path": "/Energy/AcIn1ToInverter",
-            "type": "float",
-            "name": "Energy AcIn1 to Inverter (kWh)"
-        },
-        "initial": "",
-        "name": "",
-        "onlyChanges": true,
-        "roundValues": "2",
-        "x": 200,
-        "y": 1080,
-        "wires": [
-            [
-                "0412be036a91403a"
-            ]
-        ]
-    },
-    {
-        "id": "0412be036a91403a",
-        "type": "debug",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "debug 1",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 440,
-        "y": 1080,
-        "wires": []
-    },
-    {
-        "id": "91a580366739c078",
-        "type": "victron-input-vebus",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "service": "com.victronenergy.vebus/276",
-        "path": "/Energy/InverterToAcIn1",
-        "serviceObj": {
-            "service": "com.victronenergy.vebus/276",
-            "name": "MultiPlus"
-        },
-        "pathObj": {
-            "path": "/Energy/InverterToAcIn1",
-            "type": "float",
-            "name": "Energy Inverter to AcIn1 (kWh)"
-        },
-        "initial": "",
-        "name": "",
-        "onlyChanges": true,
-        "roundValues": "2",
-        "x": 200,
-        "y": 1120,
-        "wires": [
-            [
-                "9de1aeb7cd6a05fc"
-            ]
-        ]
-    },
-    {
-        "id": "9de1aeb7cd6a05fc",
-        "type": "debug",
-        "z": "11c15729dad50c39",
-        "g": "538434f8ada5abb4",
-        "name": "debug 2",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 440,
-        "y": 1120,
-        "wires": []
-    },
-    {
         "id": "3ec85e9cbf9159e7",
         "type": "delay",
         "z": "11c15729dad50c39",
@@ -1818,7 +1755,8 @@
             "65effef794282240",
             "88700a0ac035432a",
             "e2d3436b021427b3",
-            "b6dfbbd90ef362fd"
+            "b6dfbbd90ef362fd",
+            "bb2045292b7784e9"
         ],
         "x": 855,
         "y": 160,
@@ -1839,7 +1777,7 @@
             "04b33f5ed2e152e1"
         ],
         "x": 395,
-        "y": 1540,
+        "y": 1800,
         "wires": []
     },
     {
@@ -1929,7 +1867,7 @@
         "finalize": "",
         "libs": [],
         "x": 560,
-        "y": 1160,
+        "y": 1080,
         "wires": [
             [
                 "0cc4ffd6af2c92ed"
@@ -1958,8 +1896,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 290,
-        "y": 1160,
+        "x": 370,
+        "y": 1080,
         "wires": [
             [
                 "45117e09372083fa"
@@ -1980,7 +1918,7 @@
         "finalize": "",
         "libs": [],
         "x": 470,
-        "y": 1300,
+        "y": 1560,
         "wires": [
             [
                 "186a96fe60498683"
@@ -2002,7 +1940,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 110,
-        "y": 1620,
+        "y": 1880,
         "wires": [
             [
                 "26c547fb7bc88cee"
@@ -2023,7 +1961,7 @@
         "finalize": "",
         "libs": [],
         "x": 290,
-        "y": 1620,
+        "y": 1880,
         "wires": [
             [
                 "b6dfbbd90ef362fd"
@@ -2041,7 +1979,7 @@
             "04b33f5ed2e152e1"
         ],
         "x": 395,
-        "y": 1620,
+        "y": 1880,
         "wires": []
     },
     {
@@ -2156,8 +2094,8 @@
         "id": "3f96fb98555546bc",
         "type": "comment",
         "z": "11c15729dad50c39",
-        "name": "Version 1.07",
-        "info": "Last edited: 2024-04-27\n- Fixed Basen Batt Temp",
+        "name": "Version 1.08",
+        "info": "2024-06-08\n- Added Multiplus AC-In Power/Energy sensor\n\n2024-04-27\n- Fixed Basen Batt Temp",
         "x": 890,
         "y": 360,
         "wires": []
@@ -2342,24 +2280,6 @@
             [
                 "0cc4ffd6af2c92ed"
             ]
-        ]
-    },
-    {
-        "id": "d24ac4ac5d7cf1bc",
-        "type": "function",
-        "z": "11c15729dad50c39",
-        "name": "SOC",
-        "func": "msg.topic = \"batt_soc\";\nmsg.sendnow = true;\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1079.199951171875,
-        "y": 469.1999816894531,
-        "wires": [
-            []
         ]
     },
     {
@@ -2704,6 +2624,311 @@
                 "0cc4ffd6af2c92ed"
             ]
         ]
+    },
+    {
+        "id": "b586e0714822d972",
+        "type": "victron-input-vebus",
+        "z": "11c15729dad50c39",
+        "g": "4294fa5adf1d40cc",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Ac/ActiveIn/L1/P",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Ac/ActiveIn/L1/P",
+            "type": "float",
+            "name": "Input power phase 1 (W)"
+        },
+        "initial": "",
+        "name": "Input Phase 1 (W)",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 130,
+        "y": 1180,
+        "wires": [
+            [
+                "e473f1d46fb5501d"
+            ]
+        ]
+    },
+    {
+        "id": "7b60dc31a2076b1f",
+        "type": "victron-input-vebus",
+        "z": "11c15729dad50c39",
+        "g": "4294fa5adf1d40cc",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Energy/AcIn1ToInverter",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Energy/AcIn1ToInverter",
+            "type": "float",
+            "name": "Energy AcIn1 to Inverter (kWh)"
+        },
+        "initial": "",
+        "name": "Input (kWh)",
+        "onlyChanges": true,
+        "roundValues": "3",
+        "x": 110,
+        "y": 1300,
+        "wires": [
+            [
+                "50b5220643150202"
+            ]
+        ]
+    },
+    {
+        "id": "11f92e80b464a1d6",
+        "type": "join",
+        "z": "11c15729dad50c39",
+        "g": "4294fa5adf1d40cc",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": true,
+        "timeout": "",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 450,
+        "y": 1220,
+        "wires": [
+            [
+                "e658be2b36231f2a"
+            ]
+        ]
+    },
+    {
+        "id": "2ec063d33b8a7f84",
+        "type": "victron-input-vebus",
+        "z": "11c15729dad50c39",
+        "g": "4294fa5adf1d40cc",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Ac/ActiveIn/L2/P",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Ac/ActiveIn/L2/P",
+            "type": "float",
+            "name": "Input power phase 2 (W)"
+        },
+        "initial": "",
+        "name": "Input Phase 2 (W)",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 130,
+        "y": 1220,
+        "wires": [
+            [
+                "6bd89a5474aadd23"
+            ]
+        ]
+    },
+    {
+        "id": "c0976c39fde7935c",
+        "type": "victron-input-vebus",
+        "z": "11c15729dad50c39",
+        "g": "4294fa5adf1d40cc",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Ac/ActiveIn/L3/P",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Ac/ActiveIn/L3/P",
+            "type": "float",
+            "name": "Input power phase 3 (W)"
+        },
+        "initial": "",
+        "name": "Input Phase 3 (W)",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 130,
+        "y": 1260,
+        "wires": [
+            [
+                "95d5a72a62e48b55"
+            ]
+        ]
+    },
+    {
+        "id": "e473f1d46fb5501d",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "4294fa5adf1d40cc",
+        "name": "T=phase_1",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "phase_1",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 1180,
+        "wires": [
+            [
+                "11f92e80b464a1d6"
+            ]
+        ]
+    },
+    {
+        "id": "6bd89a5474aadd23",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "4294fa5adf1d40cc",
+        "name": "T=phase_2",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "phase_2",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 1220,
+        "wires": [
+            [
+                "11f92e80b464a1d6"
+            ]
+        ]
+    },
+    {
+        "id": "95d5a72a62e48b55",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "4294fa5adf1d40cc",
+        "name": "T=phase_3",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "phase_3",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 1260,
+        "wires": [
+            [
+                "11f92e80b464a1d6"
+            ]
+        ]
+    },
+    {
+        "id": "e658be2b36231f2a",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "4294fa5adf1d40cc",
+        "name": "Combine",
+        "func": "let total = 0;\nif (msg.payload.phase_1 != null) {\n    total += msg.payload.phase_1;\n}\nif (msg.payload.phase_2 != null) {\n    total += msg.payload.phase_2;\n}\nif (msg.payload.phase_3 != null) {\n    total += msg.payload.phase_3;\n}\nmsg.topic = \"inv_acin_w\"\nmsg.payload = total;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 1220,
+        "wires": [
+            [
+                "bb2045292b7784e9"
+            ]
+        ]
+    },
+    {
+        "id": "50b5220643150202",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "4294fa5adf1d40cc",
+        "name": "T=inv_acin_kwh",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "inv_acin_kwh",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 1300,
+        "wires": [
+            [
+                "bb2045292b7784e9"
+            ]
+        ]
+    },
+    {
+        "id": "bb2045292b7784e9",
+        "type": "link out",
+        "z": "11c15729dad50c39",
+        "g": "4294fa5adf1d40cc",
+        "name": "ToMQTT",
+        "mode": "link",
+        "links": [
+            "04b33f5ed2e152e1"
+        ],
+        "x": 725,
+        "y": 1260,
+        "wires": []
+    },
+    {
+        "id": "4265710cca04214d",
+        "type": "debug",
+        "z": "11c15729dad50c39",
+        "g": "118adc3f7ab8b995",
+        "name": "debug 58",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1350,
+        "y": 100,
+        "wires": []
     },
     {
         "id": "ee1bb25c871ce5fc",
