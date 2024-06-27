@@ -15,11 +15,12 @@ from mqtt_helper import MQTTHelper
 
 import json
 import time
+import math
 import signal
 import sys
 import requests
 
-poll_interval = 60 #same as defined in the Enphase hardware setup in Domoticz
+poll_interval = 30 #same as defined in the Enphase hardware setup in Domoticz
 
 #Domoticz Settings
 enphase_idx = 10298
@@ -72,7 +73,7 @@ def get_enphase_details():
         ijson = r.json()
         result = ijson.get('result')
         #print(result)
-        power = abs(float(result[0]['Usage'].split(' ')[0]))
+        power = abs(math.ceil(float(result[0]['Usage'].split(' ')[0])))
         total_kwh = float(result[0]['Data'].split(' ')[0])
         last_update = result[0]['LastUpdate']
     except Exception as ex:
@@ -128,6 +129,7 @@ while True:
     if sec_counter % 10 == 0:
         if mqtt.isConnected():
             if have_data == True:
+                ojson['pv']['last_update'] = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
                 publish_value(json.dumps(ojson))
 
 mqtt.close()
