@@ -22,7 +22,7 @@ import requests
 poll_interval = 60 #same as defined in the Enphase hardware setup in Domoticz
 
 #Domoticz Settings
-enphase_idx = 8023
+enphase_idx = 10298
 domoticz_url              = str("http://192.168.0.90:8080/json.htm?type=command&param=getdevices&rid=") + str(enphase_idx)
 
 #MQTT Settings
@@ -72,7 +72,7 @@ def get_enphase_details():
         ijson = r.json()
         result = ijson.get('result')
         #print(result)
-        power = float(result[0]['Usage'].split(' ')[0])
+        power = abs(float(result[0]['Usage'].split(' ')[0]))
         total_kwh = float(result[0]['Data'].split(' ')[0])
         last_update = result[0]['LastUpdate']
     except Exception as ex:
@@ -111,6 +111,8 @@ ltime = int(time.time())
 sec_counter = poll_interval - 2
 
 while True:
+    time.sleep(0.2)
+
     if handler.SIGINT:
         break
     mqtt.loop()
@@ -127,8 +129,6 @@ while True:
         if mqtt.isConnected():
             if have_data == True:
                 publish_value(json.dumps(ojson))
-  
-    time.sleep(0.1)
 
 mqtt.close()
 
