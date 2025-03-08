@@ -1,15 +1,704 @@
 [
     {
-        "id": "f8acf16219409257",
+        "id": "481b42546729112e",
+        "type": "subflow",
+        "name": "Solar forecast",
+        "info": "This subflow uses the http request node to fetch solar forecasts for geographical positions, using the API from https://forecast.solar/. Please check their website and consider getting a paid account.\n\nDo note that, on a free account, you are limited in the number of requests to do. Also note that the data only gets updated once every 15 minutes, so there is no reason to query more often. There is rate limiting built in the subflow not to perform requests more than once every 15 minutes.\n\n# Configuration\n\nIt uses the parameters as described on: http://doc.forecast.solar/doku.php\n\n - `:apikey` - personal API key for registered users\n - `:lat` - latitude of location, -90 (south) … 90 (north); Internal precission is 0.0001 or abt. 10 m\n - `:lon` - longitude of location, -180 (west) … 180 (east); Internal precission is 0.0001 or abt. 10 m\n - `:dec` - plane declination, 0 (horizontal) … 90 (vertical); Internal precission is integer\n - `:az` - plane azimuth, -180 … 180 (-180 = north, -90 = east, 0 = south, 90 = west, 180 = north); Internal precission is integer\n - `:kwp` - installed modules power in kilo watt peak (kWp)\n\nYou can choose between 3 different type of requests. Note that only `estimate` is available on the free plan.\n\n- `estimate` - this is the forecasted estimate that your panels should produce (given the right parameter settings)\n- `history` - historycal data\n- `clear sky` - estimate given if there would be a clear sky tomorrow\n\nIn case of estimates, one of the following options can be selected:\n- `watts` - Watts (power) average for the period\n- `watthours/period` - Watt hours (energy) for the period\n- `watthours` - Watt hours (energy) summarized over the day\n- `watthours/day` - Watt hours (energy) summarized for each day\n\nFor the graph output there are some extra settings available:\n\n- _Output in kWh_ - when checked output can be set to kWh instead of Wh\n- _Show todays forecast_ - whether or not to include todays forecast\n- _Days to forecast_ - the number of days to forecast (excluding today). Note that you can not get more days forecasted than your API key allows.\n- _Widen graph_ - widen the graph to only show non-zero values\n- _Show day instead of date_ - Show the day instead of the date in the series and labels\n\nThe optional _horizon_ field can be filled out in case an object blocks\nyour solar panels from the sun. See the description [here](https://doc.forecast.solar/horizon)\non what numbers to fill out.\nLeave it empty if you have no objects blocking your panels.\n\n# Input \n\nThe input is for triggering the solar forecast request. \nIt triggers when injecting a message into the node.\n\n# Output\n\nThere are two outputs. The first output is an object with the result and a status message stored into the `msg.payload`.\n\nMost important is the `msg.payload.result`, which contains the estimated production of the panels. E.g.:\n\n```\npayload: object\n  result: object\n    2022-11-28: 23\n    2022-11-29: 35\n```\n\nThe `msg.payload.message` gives information on how successful the query was, the exitcode of the query and the status of the rate limit (how many queries you have left).\n\nThe **second** output can be directly linked to a line or a bar chart, quickly giving a once-glance overview for the predicted forecast.\n\n# Status\n\nInitially the status of the note will be a blue dot, showing \"_Unknown limit_\", as it is unaware of the set ratelmits. After the first request, the returned ratelimit will be put in the text in the form of `remaining/limit`. If more than half the limit is remaining, the dot will be green. If less then half the limit is remaining, the dot will be yellow. If no limit is left, the dot will turn red.\nPlease keep in mind that the ratelimit will be reset after one hour, so you can send a new request after that hour.\n\nIf something is wrong in the API request, the dot will turn red\nand the message will contain the msg.payload with the error. This\nhappens typically when the API is temporally down for maintenance.",
+        "category": "",
+        "in": [
+            {
+                "x": 240,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "096ac1e73d64ec13"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 760,
+                "y": 260,
+                "wires": [
+                    {
+                        "id": "1f9426b7b979cee1",
+                        "port": 0
+                    },
+                    {
+                        "id": "1ddc734f3070afa0",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "latitude",
+                "type": "num",
+                "value": "51.3",
+                "ui": {
+                    "icon": "font-awesome/fa-location-arrow",
+                    "label": {
+                        "en-US": "Latitude"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "num"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "longitude",
+                "type": "num",
+                "value": "5.6",
+                "ui": {
+                    "icon": "font-awesome/fa-location-arrow",
+                    "label": {
+                        "en-US": "Longitude"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "num"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "declination",
+                "type": "num",
+                "value": "37",
+                "ui": {
+                    "icon": "font-awesome/fa-chevron-up",
+                    "label": {
+                        "en-US": "Declination"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "num"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "azimuth",
+                "type": "num",
+                "value": "0",
+                "ui": {
+                    "icon": "font-awesome/fa-compass",
+                    "label": {
+                        "en-US": "Azimuth"
+                    },
+                    "type": "spinner",
+                    "opts": {
+                        "min": -180,
+                        "max": 180
+                    }
+                }
+            },
+            {
+                "name": "modules power",
+                "type": "num",
+                "value": "1",
+                "ui": {
+                    "icon": "font-awesome/fa-power-off",
+                    "label": {
+                        "en-US": "Modules power (kWp)"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "num"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "apikey",
+                "type": "cred",
+                "ui": {
+                    "icon": "font-awesome/fa-key",
+                    "label": {
+                        "en-US": "API key"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "cred"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "type",
+                "type": "str",
+                "value": "estimate",
+                "ui": {
+                    "label": {
+                        "en-US": "Type"
+                    },
+                    "type": "select",
+                    "opts": {
+                        "opts": [
+                            {
+                                "l": {
+                                    "en-US": "Estimate"
+                                },
+                                "v": "estimate"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "History"
+                                },
+                                "v": "history"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "Clear sky"
+                                },
+                                "v": "clearsky"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "watt",
+                "type": "str",
+                "value": "watts",
+                "ui": {
+                    "icon": "font-awesome/fa-question-circle-o",
+                    "label": {
+                        "en-US": "Watt"
+                    },
+                    "type": "select",
+                    "opts": {
+                        "opts": [
+                            {
+                                "l": {
+                                    "en-US": "Watts (power) average for the period"
+                                },
+                                "v": "watts"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "Watt hours (energy) for the period"
+                                },
+                                "v": "watthours/period"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "Watt hours (energy) summarized over the day"
+                                },
+                                "v": "watthours"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "Watt hours (energy) summarized for each day"
+                                },
+                                "v": "watthours/day"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "kwhoutput",
+                "type": "bool",
+                "value": "false",
+                "ui": {
+                    "label": {
+                        "en-US": "Output in kWh (in the graph)"
+                    },
+                    "type": "checkbox"
+                }
+            },
+            {
+                "name": "showtoday",
+                "type": "bool",
+                "value": "true",
+                "ui": {
+                    "label": {
+                        "en-US": "Show todays forecast"
+                    },
+                    "type": "checkbox"
+                }
+            },
+            {
+                "name": "daystoforecast",
+                "type": "str",
+                "value": "-1",
+                "ui": {
+                    "label": {
+                        "en-US": "Days to forecast"
+                    },
+                    "type": "select",
+                    "opts": {
+                        "opts": [
+                            {
+                                "l": {
+                                    "en-US": "Max"
+                                },
+                                "v": "-1"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "0"
+                                },
+                                "v": "0"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "1"
+                                },
+                                "v": "1"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "2"
+                                },
+                                "v": "2"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "3"
+                                },
+                                "v": "3"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "4"
+                                },
+                                "v": "4"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "5"
+                                },
+                                "v": "5"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "6"
+                                },
+                                "v": "6"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "widengraph",
+                "type": "bool",
+                "value": "true",
+                "ui": {
+                    "label": {
+                        "en-US": "Widen graph"
+                    },
+                    "type": "checkbox"
+                }
+            },
+            {
+                "name": "showday",
+                "type": "bool",
+                "value": "false",
+                "ui": {
+                    "label": {
+                        "en-US": "Show day instead of date"
+                    },
+                    "type": "checkbox"
+                }
+            },
+            {
+                "name": "horizon",
+                "type": "str",
+                "value": "",
+                "ui": {
+                    "icon": "font-awesome/fa-tree",
+                    "label": {
+                        "en-US": "(optional) horizon"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            }
+        ],
+        "meta": {
+            "module": "Solar Forecast",
+            "version": "0.0.14",
+            "author": "dfaber@victronenergy.com",
+            "desc": "Get solar forecasting per location",
+            "keywords": "solar,forecast,api",
+            "license": "GPL-3.0"
+        },
+        "color": "#FFCC66",
+        "inputLabels": [
+            "trigger"
+        ],
+        "outputLabels": [
+            "output",
+            "graph",
+            ""
+        ],
+        "icon": "font-awesome/fa-sun-o",
+        "status": {
+            "x": 700,
+            "y": 460,
+            "wires": [
+                {
+                    "id": "07149d8d71dff11e",
+                    "port": 0
+                },
+                {
+                    "id": "8a583c51d336775e",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "5726694de195109f",
+        "type": "http request",
+        "z": "481b42546729112e",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 390,
+        "y": 180,
+        "wires": [
+            [
+                "7884fdf66931c555"
+            ]
+        ]
+    },
+    {
+        "id": "096ac1e73d64ec13",
+        "type": "function",
+        "z": "481b42546729112e",
+        "name": "create forecast.solar url",
+        "func": "msg.url = 'https://api.forecast.solar/';\n\nif (env.get('apikey')) {\n    msg.url += env.get('apikey') + '/';\n    }\n\nmsg.url += env.get('type') + '/';\n\nmsg.url += env.get('watt') + '/';\n\nmsg.url += env.get('latitude') + '/' +\n           env.get('longitude') + '/' +\n           env.get('declination') + '/' +\n           env.get('azimuth') + '/' +\n           env.get('modules power');\n\nif (env.get('horizon')) {\n    msg.url += '?horizon=' + env.get('horizon')\n}\nmsg.topic = 'solar forecast: '+(env.get('type') || '');\nmsg.topic += (' '+env.get('watt') || '');\nif (env.get('kwhoutput')) {\n    msg.topic += ' (kWh)';\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 100,
+        "wires": [
+            [
+                "24bc9c8665678f59"
+            ]
+        ]
+    },
+    {
+        "id": "7884fdf66931c555",
+        "type": "json",
+        "z": "481b42546729112e",
+        "name": "Convert to json",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 680,
+        "y": 180,
+        "wires": [
+            [
+                "a1cdf6e6a3a96be1"
+            ]
+        ]
+    },
+    {
+        "id": "bc4a4177924fef16",
+        "type": "function",
+        "z": "481b42546729112e",
+        "name": "update ratelimit",
+        "func": "var remaining = msg.payload.message.ratelimit.remaining || 0;\nvar limit = msg.payload.message.ratelimit.limit;\n\nflow.set('forecast.solar.ratelimit.remaining', remaining)\nflow.set('forecast.solar.ratelimit.limit', limit)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 380,
+        "wires": [
+            [
+                "522529554126d3b5"
+            ]
+        ]
+    },
+    {
+        "id": "a1cdf6e6a3a96be1",
+        "type": "link out",
+        "z": "481b42546729112e",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "9baea1642621f8ac",
+            "59083f23c4f10495"
+        ],
+        "x": 815,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "59083f23c4f10495",
+        "type": "link in",
+        "z": "481b42546729112e",
+        "name": "link in 1",
+        "links": [
+            "a1cdf6e6a3a96be1"
+        ],
+        "x": 405,
+        "y": 380,
+        "wires": [
+            [
+                "bc4a4177924fef16"
+            ]
+        ]
+    },
+    {
+        "id": "9baea1642621f8ac",
+        "type": "link in",
+        "z": "481b42546729112e",
+        "name": "link in 2",
+        "links": [
+            "a1cdf6e6a3a96be1"
+        ],
+        "x": 225,
+        "y": 260,
+        "wires": [
+            [
+                "1ddc734f3070afa0"
+            ]
+        ]
+    },
+    {
+        "id": "3ddaf128e6c97938",
+        "type": "inject",
+        "z": "481b42546729112e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 550,
+        "y": 340,
+        "wires": [
+            [
+                "522529554126d3b5"
+            ]
+        ]
+    },
+    {
+        "id": "07149d8d71dff11e",
+        "type": "function",
+        "z": "481b42546729112e",
+        "name": "update status",
+        "func": "var remaining = flow.get('forecast.solar.ratelimit.remaining') || -1;\nvar limit = flow.get('forecast.solar.ratelimit.limit') || -1\n\nvar text = remaining.toString() + '/' + limit.toString();\nvar fill = \"green\";\n\nif (remaining == 0) {\n    fill = \"red\";\n    text = \"Limit used\";\n}\n\nif (remaining > 0 && remaining < limit / 2) {\n    fill = \"yellow\"\n}\n\nif (remaining == -1 ) {\n    fill = \"blue\"\n    text = \"Limits unknown\"\n}\n\nmsg.payload = ({ fill: fill, text: text });\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "24bc9c8665678f59",
+        "type": "link out",
+        "z": "481b42546729112e",
+        "name": "link out 7",
+        "mode": "link",
+        "links": [
+            "dc22d91dddb12797"
+        ],
+        "x": 805,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "dc22d91dddb12797",
+        "type": "link in",
+        "z": "481b42546729112e",
+        "name": "link in 18",
+        "links": [
+            "24bc9c8665678f59"
+        ],
+        "x": 245,
+        "y": 180,
+        "wires": [
+            [
+                "5726694de195109f"
+            ]
+        ]
+    },
+    {
+        "id": "eee05cbf111c228c",
+        "type": "catch",
+        "z": "481b42546729112e",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 280,
+        "y": 340,
+        "wires": [
+            [
+                "7e22fb1ce267ce1e"
+            ]
+        ]
+    },
+    {
+        "id": "522529554126d3b5",
+        "type": "link out",
+        "z": "481b42546729112e",
+        "name": "link out 8",
+        "mode": "link",
+        "links": [
+            "2b784cd8cf4d6f54"
+        ],
+        "x": 705,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "2b784cd8cf4d6f54",
+        "type": "link in",
+        "z": "481b42546729112e",
+        "name": "link in 19",
+        "links": [
+            "522529554126d3b5"
+        ],
+        "x": 405,
+        "y": 480,
+        "wires": [
+            [
+                "07149d8d71dff11e"
+            ]
+        ]
+    },
+    {
+        "id": "7e22fb1ce267ce1e",
+        "type": "link out",
+        "z": "481b42546729112e",
+        "name": "link out 9",
+        "mode": "link",
+        "links": [
+            "ec2a6da31af488af",
+            "1f9426b7b979cee1"
+        ],
+        "x": 395,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "ec2a6da31af488af",
+        "type": "link in",
+        "z": "481b42546729112e",
+        "name": "link in 20",
+        "links": [
+            "7e22fb1ce267ce1e"
+        ],
+        "x": 405,
+        "y": 440,
+        "wires": [
+            [
+                "8a583c51d336775e"
+            ]
+        ]
+    },
+    {
+        "id": "8a583c51d336775e",
+        "type": "function",
+        "z": "481b42546729112e",
+        "name": "Set error status",
+        "func": "node.warn(msg.payload)\nmsg.payload = ({ fill: \"red\", text: msg.payload });\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1f9426b7b979cee1",
+        "type": "link in",
+        "z": "481b42546729112e",
+        "name": "link in 21",
+        "links": [
+            "7e22fb1ce267ce1e"
+        ],
+        "x": 665,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1ddc734f3070afa0",
+        "type": "function",
+        "z": "481b42546729112e",
+        "name": "Processed info",
+        "func": "msg.resolution = 60;\nmsg.days = 1;\nmsg.type = env.get('type');\nmsg.watt = env.get('watt');\nmsg.kwhoutput = env.get('kwhoutput');\n\nvar key1 = Object.keys(msg.payload.result)[1];\nvar key2 = Object.keys(msg.payload.result)[2];\nvar key3 = Object.keys(msg.payload.result)[Object.keys(msg.payload.result).length-1];\n\nvar d1 = new Date(key1);\nvar d2 = new Date(key2); \nvar d3 = new Date(key3);\nmsg.resolution = 3600000 / (d2.getTime() - d1.getTime());\n\nmsg.days = Math.floor((d3.getTime() - d1.getTime()) / (1000 * 3600 * 24));\n\nif (msg.watt === 'watt_hours_day' || msg.watt === 'watthours/day') {\n    msg.resolution = null;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 260,
+        "wires": [
+            []
+        ],
+        "info": "Function to process the result from forecast.solar to add\nextra information, which is handy for either graphing or\nto store in a database.\n\n\nThe extra values added:\n- `msg.resolution` - The number of measurements per hour. If\nno API key is used, this will be 1. Other values may be 2 or 4.\n- `msg.days` - The number of days in the forcast. If no API\n- key is used this will be 1. Other values may be 3 or 6."
+    },
+    {
+        "id": "edf9f455029eeb7f",
         "type": "tab",
-        "label": "Tibber",
+        "label": "Tibber-New",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "a7e0ac25b61f1fd9",
+        "id": "1a81b3b5b7840ea2",
         "type": "group",
-        "z": "f8acf16219409257",
+        "z": "edf9f455029eeb7f",
         "name": "Initialization",
         "style": {
             "fill": "#d1d1d1",
@@ -17,10 +706,10 @@
             "color": "#000000"
         },
         "nodes": [
-            "a87a6fdf3276c741",
-            "4a78850dc31160e5",
-            "9c0dd65f4a78a61c",
-            "fd6ca2e631f76c7a"
+            "122749331c478207",
+            "1c936b634fa5b6d7",
+            "9e88ca438deb4b19",
+            "14c3076dd27b816b"
         ],
         "x": 14,
         "y": 59,
@@ -28,9 +717,9 @@
         "h": 82
     },
     {
-        "id": "d15f3be7289fc5f3",
+        "id": "9fc897c32bfacc77",
         "type": "group",
-        "z": "f8acf16219409257",
+        "z": "edf9f455029eeb7f",
         "name": "Tibber Prices Today/Tomorrow",
         "style": {
             "stroke": "#0070c0",
@@ -39,39 +728,97 @@
             "fill": "#bfdbef"
         },
         "nodes": [
-            "bf430e2a12b59b31",
-            "9932716caf99a1a5",
-            "29aac9fd41c783d5",
-            "1069522a32141fa5",
-            "95395101f0637f21",
-            "20293754418bc27e",
-            "9c7ef1b39f1dead5",
-            "19032ccde1c37ef0",
-            "e32bba2eb3557959",
-            "3853080d6883a3e2",
-            "5da22a307938b06f",
-            "964c79fd1821f27f",
-            "e4934419bb9c21ea",
-            "bdb9d378b48c2087",
-            "3290978fff06dcc5",
-            "6ffb1aeabcfbc32f",
-            "249a8506a9a2ef3c",
-            "6c8a8fdb2d93dc13",
-            "0467222ee01cceaa",
-            "4cc3771509ca0c72",
-            "786766b4800fa311",
-            "bf6ac6d5e40538d3"
+            "7129e14f301fb5a7",
+            "7347ef667ed20efa",
+            "3822f057ea823e2f",
+            "940a6419ce2b4c0f",
+            "18ded7543547a3f3",
+            "28226bb08eec0b30",
+            "b657827f03345e3d",
+            "60cbc394be7a8628",
+            "2d205981144bf6be",
+            "a94b01c687825b75",
+            "97ede11f89054187",
+            "1d4ccdbd16aed160",
+            "2a77a49d4ff72143",
+            "18983c8132c11beb",
+            "b8e7d236d12fcbe8",
+            "95ef6a6364e11d89",
+            "1b6c2789468c41cc",
+            "f79ebd4ef82b18e4",
+            "7ed67c1510d458c5",
+            "cef1e6499e62a43b"
         ],
         "x": 14,
         "y": 159,
-        "w": 1332,
+        "w": 812,
         "h": 302
     },
     {
-        "id": "bf430e2a12b59b31",
+        "id": "53c4909b2cd159f9",
+        "type": "group",
+        "z": "edf9f455029eeb7f",
+        "name": "",
+        "style": {
+            "fill": "#ffefbf",
+            "label": true
+        },
+        "nodes": [
+            "9d7f474efb189328",
+            "30037a5069c38173",
+            "82633b4d062d1a13",
+            "ee7037e289888936",
+            "3e91a56b38ec890b",
+            "9213fea48881c844",
+            "6c6c80a15e1cb4be",
+            "17d5b20904010c39",
+            "0b97aa3927f7c375",
+            "c23bdedb46992b45",
+            "3933f3579ce2aad0",
+            "3dc11edd9ba338dc",
+            "098ed9195ff7a18f",
+            "58fe7bca50cdfaef"
+        ],
+        "x": 14,
+        "y": 499,
+        "w": 1202,
+        "h": 202
+    },
+    {
+        "id": "09a080a963e69d6f",
+        "type": "group",
+        "z": "edf9f455029eeb7f",
+        "name": "",
+        "style": {
+            "fill": "#ffefbf",
+            "label": true
+        },
+        "nodes": [
+            "9e4cb9245413a0c8",
+            "2267757ef11d51f0",
+            "c99527de89c75e32",
+            "57db08c51ea509f2",
+            "159fe759525d9223",
+            "2fa2476e9ee7e277",
+            "ca4017109521366e",
+            "3ebb033deb357c05",
+            "febaf0d9ca8c4d2b",
+            "6535373b1607bd1e",
+            "5333b48ce6123b27",
+            "a73a59c7a15f6a8f",
+            "9d508e53fd26ec14",
+            "e5d4cef80c1ff7da"
+        ],
+        "x": 14,
+        "y": 719,
+        "w": 1192,
+        "h": 202
+    },
+    {
+        "id": "7129e14f301fb5a7",
         "type": "inject",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
         "name": "@00:01",
         "props": [
             {
@@ -93,54 +840,32 @@
         "y": 200,
         "wires": [
             [
-                "9932716caf99a1a5",
-                "6c8a8fdb2d93dc13",
-                "e4934419bb9c21ea"
+                "18983c8132c11beb"
             ]
         ]
     },
     {
-        "id": "9932716caf99a1a5",
-        "type": "tibber-data",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
-        "name": "Get Today Prices",
-        "active": true,
-        "apiEndpointRef": "c375361050518336",
-        "queryName": "getTodaysEnergyPrices",
-        "homeId": "your-home-id-1234-b15a407a3cc0",
-        "energyResolution": "HOURLY",
-        "lastCount": 10,
-        "x": 350,
-        "y": 200,
-        "wires": [
-            [
-                "0467222ee01cceaa"
-            ]
-        ]
-    },
-    {
-        "id": "29aac9fd41c783d5",
+        "id": "7347ef667ed20efa",
         "type": "link out",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
         "name": "ToMQTT-Direct",
         "mode": "link",
         "links": [
             "032e3829752acb0f",
             "3d121fa88daf71a5"
         ],
-        "x": 1305,
-        "y": 200,
+        "x": 785,
+        "y": 380,
         "wires": []
     },
     {
-        "id": "a87a6fdf3276c741",
+        "id": "122749331c478207",
         "type": "function",
-        "z": "f8acf16219409257",
-        "g": "a7e0ac25b61f1fd9",
+        "z": "edf9f455029eeb7f",
+        "g": "1a81b3b5b7840ea2",
         "name": "Startup Function",
-        "func": "let discovery_topic = \"homeassistant\";\nlet root_topic = \"tibber_data\";\n\nlet pobject = [\n    //Text\n    { \"tibber_prices_today\": [\"sensor\", \"today\", \"0x9000000001\", \"variable\", \"\", 0] },\n    { \"tibber_prices_tomorrow\": [\"sensor\", \"tomorrow\", \"0x9000000002\", \"variable\", \"\", 0] },\n    { \"charge_scheme_today\": [\"sensor\", \"scheme_today\", \"0x9000000003\", \"variable\", \"\", 0] },\n    { \"charge_scheme_tomorrow\": [\"sensor\", \"scheme_tomorrow\", \"0x9000000004\", \"variable\", \"\", 0] },\n];\n\nfunction createSensorObject(root, name, varname, unique_id, unit_of_measurement)\n{\n    let vjson = {\n                \"stat_t\": \"~/\" + varname + \"/state\",\n                \"dev\": {\n                    \"manufacturer\": \"PA1DVB\"\n                }\n            };\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"unit_of_meas\"] = unit_of_measurement;\n    //vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson\n}\n\nnode.log(\"Flow Initialisation\");\n\npobject.forEach((vvar) => {\n    let name = Object.keys(vvar)[0];\n    let vobj = vvar[Object.keys(vvar)];\n    let object_type = vobj[0]\n    let varname = vobj[1]\n    let unique_id = vobj[2]\n\n    let jobj = null\n    if (object_type == \"sensor\") {\n        let unit_of_measurement = vobj[3]\n        jobj = createSensorObject(root_topic, name, varname, unique_id, unit_of_measurement);\n    }\n\n    if (jobj != null) {\n        if (unique_id.indexOf(\"_\") != -1)\n        {\n            unique_id = unique_id.split(\"_\")[0];\n        }\n        let dtopic = discovery_topic + \"/\" + object_type + \"/\" + unique_id + \"/\" + varname + \"/config\"\n        //node.log(\"publishing config ->: \" + dtopic);\n\n        msg.payload = jobj;\n        msg.topic = dtopic;\n        msg.retain = true;\n        node.send(msg);\n    }\n});\nreturn null;",
+        "func": "let discovery_topic = \"homeassistant\";\nlet root_topic = \"tibber_data\";\n\nlet pobject = [\n    //Text\n    { \"tibber_prices_today\": [\"sensor\", \"today\", \"0x9000000001\", \"variable\", \"\", 0] },\n    { \"tibber_prices_tomorrow\": [\"sensor\", \"tomorrow\", \"0x9000000002\", \"variable\", \"\", 0] },\n    { \"charge_scheme_today\": [\"sensor\", \"scheme_today\", \"0x9000000003\", \"variable\", \"\", 0] },\n    { \"charge_scheme_tomorrow\": [\"sensor\", \"scheme_tomorrow\", \"0x9000000004\", \"variable\", \"\", 0] },\n];\n\nfunction createSensorObject(root, name, varname, unique_id, unit_of_measurement)\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    \n    let vjson = {\n                \"stat_t\": \"~/\" + varname + \"/state\",\n                \"dev\": {\n                    \"manufacturer\": \"PA1DVB\"\n                }\n            };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"unit_of_meas\"] = unit_of_measurement;\n    //vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson\n}\n\nnode.log(\"Flow Initialisation\");\n\npobject.forEach((vvar) => {\n    let name = Object.keys(vvar)[0];\n    let vobj = vvar[Object.keys(vvar)];\n    let object_type = vobj[0]\n    let varname = vobj[1]\n    let unique_id = vobj[2]\n\n    let jobj = null\n    if (object_type == \"sensor\") {\n        let unit_of_measurement = vobj[3]\n        jobj = createSensorObject(root_topic, name, varname, unique_id, unit_of_measurement);\n    }\n\n    if (jobj != null) {\n        if (unique_id.indexOf(\"_\") != -1)\n        {\n            unique_id = unique_id.split(\"_\")[0];\n        }\n        let dtopic = discovery_topic + \"/\" + object_type + \"/\" + unique_id + \"/\" + varname + \"/config\"\n        //node.log(\"publishing config ->: \" + dtopic);\n\n        msg.payload = jobj;\n        msg.topic = dtopic;\n        msg.retain = true;\n        node.send(msg);\n    }\n});\nreturn null;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -151,15 +876,15 @@
         "y": 100,
         "wires": [
             [
-                "9c0dd65f4a78a61c"
+                "9e88ca438deb4b19"
             ]
         ]
     },
     {
-        "id": "4a78850dc31160e5",
+        "id": "1c936b634fa5b6d7",
         "type": "inject",
-        "z": "f8acf16219409257",
-        "g": "a7e0ac25b61f1fd9",
+        "z": "edf9f455029eeb7f",
+        "g": "1a81b3b5b7840ea2",
         "name": "Startup",
         "props": [
             {
@@ -181,15 +906,15 @@
         "y": 100,
         "wires": [
             [
-                "fd6ca2e631f76c7a"
+                "14c3076dd27b816b"
             ]
         ]
     },
     {
-        "id": "9c0dd65f4a78a61c",
+        "id": "9e88ca438deb4b19",
         "type": "link out",
-        "z": "f8acf16219409257",
-        "g": "a7e0ac25b61f1fd9",
+        "z": "edf9f455029eeb7f",
+        "g": "1a81b3b5b7840ea2",
         "name": "ToMQTT-Direct",
         "mode": "link",
         "links": [
@@ -201,200 +926,90 @@
         "wires": []
     },
     {
-        "id": "1069522a32141fa5",
+        "id": "3822f057ea823e2f",
         "type": "function",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
-        "name": "Test Data",
-        "func": "msg.payload = JSON.parse('{\"tibber\":[{\"total\":0.2236,\"energy\":0.0585,\"tax\":0.1651,\"startsAt\":\"2024-07-04T00:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1952,\"energy\":0.035,\"tax\":0.1602,\"startsAt\":\"2024-07-04T01:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1726,\"energy\":0.0164,\"tax\":0.1562,\"startsAt\":\"2024-07-04T02:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1649,\"energy\":0.01,\"tax\":0.1549,\"startsAt\":\"2024-07-04T03:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1618,\"energy\":0.0074,\"tax\":0.1544,\"startsAt\":\"2024-07-04T04:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1617,\"energy\":0.0074,\"tax\":0.1543,\"startsAt\":\"2024-07-04T05:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1906,\"energy\":0.0312,\"tax\":0.1594,\"startsAt\":\"2024-07-04T06:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1951,\"energy\":0.0349,\"tax\":0.1602,\"startsAt\":\"2024-07-04T07:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1926,\"energy\":0.0329,\"tax\":0.1597,\"startsAt\":\"2024-07-04T08:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1797,\"energy\":0.0222,\"tax\":0.1575,\"startsAt\":\"2024-07-04T09:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1407,\"energy\":-0.01,\"tax\":0.1507,\"startsAt\":\"2024-07-04T10:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"VERY_CHEAP\"},{\"total\":0.1096,\"energy\":-0.0357,\"tax\":0.1453,\"startsAt\":\"2024-07-04T11:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"VERY_CHEAP\"},{\"total\":0.0681,\"energy\":-0.07,\"tax\":0.1381,\"startsAt\":\"2024-07-04T12:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"VERY_CHEAP\"},{\"total\":-0.0139,\"energy\":-0.1378,\"tax\":0.1239,\"startsAt\":\"2024-07-04T13:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"VERY_CHEAP\"},{\"total\":-0.0275,\"energy\":-0.149,\"tax\":0.1215,\"startsAt\":\"2024-07-04T14:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"VERY_CHEAP\"},{\"total\":0.056,\"energy\":-0.08,\"tax\":0.136,\"startsAt\":\"2024-07-04T15:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"VERY_CHEAP\"},{\"total\":0.0907,\"energy\":-0.0513,\"tax\":0.142,\"startsAt\":\"2024-07-04T16:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"VERY_CHEAP\"},{\"total\":0.1151,\"energy\":-0.0312,\"tax\":0.1463,\"startsAt\":\"2024-07-04T17:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"VERY_CHEAP\"},{\"total\":0.1468,\"energy\":-0.005,\"tax\":0.1518,\"startsAt\":\"2024-07-04T18:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.2022,\"energy\":0.0408,\"tax\":0.1614,\"startsAt\":\"2024-07-04T19:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.2519,\"energy\":0.0819,\"tax\":0.17,\"startsAt\":\"2024-07-04T20:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.2835,\"energy\":0.108,\"tax\":0.1755,\"startsAt\":\"2024-07-04T21:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.253,\"energy\":0.0828,\"tax\":0.1702,\"startsAt\":\"2024-07-04T22:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.227,\"energy\":0.0613,\"tax\":0.1657,\"startsAt\":\"2024-07-04T23:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"}],\"forecast\":[[1720044000000,0],[1720047600000,0],[1720051200000,0],[1720054800000,0],[1720058400000,0],[1720062000000,4],[1720065600000,60],[1720069200000,146],[1720072800000,222],[1720076400000,474],[1720080000000,630],[1720083600000,778],[1720087200000,805],[1720090800000,853],[1720094400000,891],[1720098000000,827],[1720101600000,736],[1720105200000,578],[1720108800000,406],[1720112400000,245],[1720116000000,115],[1720119600000,24],[1720123200000,0],[1720126800000,0]]}');\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 140,
-        "y": 280,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "95395101f0637f21",
-        "type": "function",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
         "name": "Combine/Simplify",
-        "func": "var ret = {};\nvar json = msg.payload.tibber;\nvar varray = msg.payload.forecast;\nvar bHaveForecast = false;\nif (varray !== undefined) {\n    if (varray.length == 24) {\n        bHaveForecast = true;\n    }\n}\nif (json.length == 24)\n{\n    ret.status = true;\n    ret.datum = json[0].startsAt.substr(0,10);\n\n    var results = [];\n    for (var i = 0; i < json.length; i++)\n    {\n        var obj = json[i];\n        var tmpobj = {\n            datum: ret.datum + \" \" + obj.startsAt.substr(11,8),\n            prijsTI: obj.total,\n            level: obj.level\n        };\n        var iForecast = 0;\n        if (bHaveForecast == true) {\n             iForecast = varray[i][1];\n        }\n        tmpobj[\"forecast\"] = iForecast;\n        results.push(tmpobj);\n    }\n    ret.data = results;\n}\nelse\n    ret.status = false;\nmsg.payload = ret;\nreturn msg;",
+        "func": "var ret = {};\nvar json = msg.payload.tibber;\nvar varray = msg.payload.forecast;\nvar bHaveForecast = false;\nif (varray !== undefined) {\n    if (varray.length == 24) {\n        bHaveForecast = true;\n    }\n}\nif (json.length == 24)\n{\n    ret.status = true;\n    ret.datum = json[0].startsAt.substr(0,10);\n\n    var results = [];\n    for (var i = 0; i < json.length; i++)\n    {\n        var obj = json[i];\n        var tmpobj = {\n            datum: ret.datum + \" \" + obj.startsAt.substr(11,8),\n            prijsTI: obj.total,\n            level: obj.level\n        };\n        var iForecast = 0;\n        if (bHaveForecast == true) {\n             iForecast = varray[i];\n        }\n        tmpobj[\"forecast\"] = iForecast;\n        results.push(tmpobj);\n    }\n    ret.data = results;\n}\nelse\n    ret.status = false;\nmsg.payload = ret;\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1070,
-        "y": 220,
+        "x": 190,
+        "y": 380,
         "wires": [
             [
-                "964c79fd1821f27f",
-                "29aac9fd41c783d5"
+                "b657827f03345e3d",
+                "7347ef667ed20efa"
             ]
         ]
     },
     {
-        "id": "56ac38a086ab7e81",
+        "id": "69b33dbd0610989b",
         "type": "comment",
-        "z": "f8acf16219409257",
-        "name": "Version 1.03",
-        "info": "Last edited: 2024-04-28",
+        "z": "edf9f455029eeb7f",
+        "name": "Version 1.10",
+        "info": "Last edited: 2025-03-08\n\n1.10\n- Better compatible with HASS\n\n1.09\n- Using forcast.solar for today/tomorrow forecast\n- Simplified flow\n\n1.08\n- setting milliseconds in today date check to 0\n- \n1.07\n- Optimized OptimusPrime (only use max. to charge hour count in highPrices block)\n\n",
         "x": 90,
         "y": 20,
         "wires": []
     },
     {
-        "id": "20293754418bc27e",
+        "id": "940a6419ce2b4c0f",
         "type": "function",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
         "name": "OptimusPrime",
-        "func": "/*\nDynamic price calculaton\nV1.06\n(c) 2024 PA1DVB\n*/\nlet json = msg.payload; //JSON.parse(msg.payload);\n\nlet ProviderKey = \"prijsTI\";\n\nlet debug = false;\n\nfunction sanityCheck()\n{\n    if (json.status != true) {\n        node.error(\"Invalid Tibber result!\", msg);\n        return false;\n    }\n    var jDate = new Date(json.datum);\n    var tDate = new Date();\n    tDate.setHours(0, 0, 0);\n\n    if (jDate.getTime() < tDate.getTime()) {\n        node.error(\"Incorrect date in Tibber result!\");\n        return false;\n    }\n\n    //We should have at least 24 data items\n    let tot_results = Object.keys(json.data).length;\n    if (tot_results < 24) {\n        node.error(\"Incorrect data in Tibber result!\");\n        return false;\n    }\n    if (Object.hasOwn(json.data[0], ProviderKey) == false)\n    {\n        node.error(\"Incorrect data in Tibber result (provider not found!)\");\n        return false;\n    }\n    return true;\n}\n\n/**\n* @param {number} Old\n* @param {number} New\n*/\nfunction calcPercentageChange(Old, New)\n{\n\tlet fPer = 0;\n\tif ((0 != Old) && (0 != New)) {\n\t\tfPer = ((New - Old) * 100) / Old;\n\t}\n\treturn fPer;\n}\n\nlet ret = {\n    \"status\":  false\n};\n\nif (sanityCheck() == false) {\n    msg.payload = ret;\n    return msg;\n}\n\n//Great we have a good tibber price table, let's do some calculations\n\nlet hPrices = [];\n\nfor (var item of json.data) {\n    let hPrice = {\n        \"szDate\": item[\"datum\"].substring(0,10),\n        \"szHour\": item[\"datum\"].substring(11, 16),\n        \"Price\": parseFloat(item[ProviderKey]),\n        \"Forecast\": parseInt(item[\"forecast\"])\n    };\n    hPrices.push(hPrice);\n}\n\nlet szLowestPriceHour = \"\";\nlet dLowestPrice = 0.0;\n\nlet szHighestPriceHour = \"\";\nlet dHighestPrice = 0.0;\n\nlet dAveragePrice = 0.0;\n\nfor (var itt of hPrices)\n{\n    let price = itt.Price;\n\n    let szHour = itt.szHour;\n\n    if (szLowestPriceHour.length == 0)\n    {\n        szLowestPriceHour = szHour;\n        dLowestPrice = price;\n    }\n    else if (price < dLowestPrice)\n    {\n        szLowestPriceHour = szHour;\n        dLowestPrice = price;\n    }\n\n    //Highest price\n    if (szHighestPriceHour.length == 0)\n    {\n        szHighestPriceHour = szHour;\n        dHighestPrice = price;\n    }\n    else if (price > dHighestPrice)\n    {\n        szHighestPriceHour = szHour;\n        dHighestPrice = price;\n    }\n\n    dAveragePrice += price;\n}\n\ndAveragePrice /= hPrices.length;\nif (dAveragePrice == 0)\n    dAveragePrice = 0.000001;\n\nlet price_diff = Math.abs(dHighestPrice - dLowestPrice);\nif (price_diff < context.flow.price_min_sell_difference)\n{\n    //Not an interesting day\n    node.warn(\"Not an interesting day, price difference is too low: \" + price_diff);\n    return null;\n}\n\n// @ts-ignore\nif (debug == true) {\n    let szTmp=\"\";\n    szTmp = \"Lowest price hour: \" + szLowestPriceHour + \", price: \" + dLowestPrice.toFixed(4);\n    szTmp += \"\\nHighest price hour: \" + szHighestPriceHour + \", price: \" + dHighestPrice.toFixed(4);\n    szTmp += \"\\nAverage price: \" + dAveragePrice.toFixed(4);\n    node.warn(szTmp);\n}\n\n//calculate the price to charge and discharge\nlet iStartHour = -1;\nlet dStartPrice = 1000.0;\n\nlet totPrices = hPrices.length;\n\nlet chargeHours = [];\nlet dischargeHours = [];\n\nlet hPricesHigh = [];\nlet hPricesHighBackup = [];\n\nlet hHighPeaksBlocks = [];\n\nfor (let ii=0; ii< totPrices; ii++)\n{\n    let ittLow = hPrices[ii];\n\n    if (ittLow.Price < dStartPrice)\n    {\n        iStartHour = ii;\n        dStartPrice = ittLow.Price;\n    }\n    hPricesHighBackup = hPricesHigh;\n    hPricesHigh = [];\n    let jj = ii + 1;\n    for (jj = ii + 1; jj < totPrices; jj++)\n    {\n        let ittHigh = hPrices[jj];\n\n        let bIsHigh = false;\n        switch (context.flow.calculation_method)\n        {\n            case \"price\":\n                bIsHigh = (ittHigh.Price - dStartPrice >= context.flow.price_min_sell_difference);\n                break;\n            case \"percentage_difference\":\n                {\n                    let percDiff = Math.abs(calcPercentageChange(ittHigh.Price, dStartPrice));\n                    bIsHigh\t= (percDiff > context.flow.price_percentage_sell_difference);\n                }\n                break;\n            case \"percentage_efficiency\":\n                bIsHigh = (dStartPrice < ittHigh.Price * context.flow.price_percentage_sell_efficiency);\n                break;\n        }\n        \n        if (bIsHigh)\n        {\n            hPricesHigh.push(ittHigh);\n        }\n        else\n            break;\n    }\n    if (hPricesHighBackup.length != 0)\n    {\n        if (hPricesHigh.length > hPricesHighBackup.length)\n        {\n            hPricesHighBackup = hPricesHigh;\n        }\n        else\n        {\n            //We have a new high price block\n            hHighPeaksBlocks.push(hPricesHighBackup);\n            hPricesHighBackup = [];\n            hPricesHigh = [];\n            iStartHour = -1;\n            dStartPrice = 1000.0;\n        }\n        ii = jj - 1;\n    }\n    else if (hPricesHigh.length != 0)\n    {\n        hPricesHighBackup = hPricesHigh;\n    }\n}\n\nif (hHighPeaksBlocks.length != 0)\n{\n    //Process the high peaks blocks\n    \n    //First make sure each block is not larger than total discharge hours\n    for (let ii = 0; ii < hHighPeaksBlocks.length; ii++)\n    {\n        hHighPeaksBlocks[ii].sort((a, b) => b.Price - a.Price);\n        if (hHighPeaksBlocks[ii].length > context.flow.tot_hours_2_discharge_full) {\n            hHighPeaksBlocks[ii] = hHighPeaksBlocks[ii].slice(0, context.flow.tot_hours_2_discharge_full);\n        }\n        //Sort back on hour again\n        hHighPeaksBlocks[ii].sort((a, b) => a.iHour - b.iHour);\n    }\n    \n    let iStartChargeBlock = 0;\n    for (var ittBlock of hHighPeaksBlocks)\n    {\n        let iBlockStart = parseInt(ittBlock[0].szHour.substring(0, 2));\n        let iNextStartChargeBlock = parseInt(ittBlock[ittBlock.length - 1].szHour.substring(0, 2));\n\n        let ittBlockHighPrice = [...ittBlock];\n\n        ittBlock.sort((a, b) => a.Price - b.Price);\n        ittBlockHighPrice.sort((a, b) => b.Price - a.Price);\n\n        let dLowestBlockPrice = ittBlock[0].Price;\n\n        //add all charge hours before the block and sort them by price\n        let hPricesCharge = [];\n        for (let ii = iStartChargeBlock; ii < iBlockStart; ii++)\n        {\n            let itt = hPrices[ii];\n            hPricesCharge.push(itt);\n        }\n        hPricesCharge.sort((a, b) => a.Price - b.Price);\n\n        let iIndex = 0;\n\n        let tmp_chargeHours = [];\n        let tmp_dischargeHours = [];\n\n        for (var itt of ittBlockHighPrice)\n        {\n            if (iIndex >= hPricesCharge.length)\n                break;\n\n            let bIsHigh = false;\n            switch (context.flow.calculation_method)\n            {\n            case \"price\":\n                bIsHigh = (itt.Price - hPricesCharge[iIndex].Price >= context.flow.price_min_sell_difference);\n                break;\n            case \"percentage_difference\":\n            {\n                let percDiff = Math.abs(calcPercentageChange(itt.Price, hPricesCharge[iIndex].Price));\n                bIsHigh = (percDiff > context.flow.price_percentage_sell_difference);\n            }\n            break;\n            case \"percentage_efficiency\":\n                bIsHigh = (hPricesCharge[iIndex].Price < itt.Price * context.flow.price_percentage_sell_efficiency);\n                break;\n            }\n\n            if (bIsHigh)\n            {\n                //We have a charge hour\n                itt.iOrder = iIndex + 1;\n                hPricesCharge[iIndex].iOrder = iIndex + 1;\n                tmp_chargeHours.push(hPricesCharge[iIndex]);\n                tmp_dischargeHours.push(itt);\n            }\n            else\n            {\n                break;\n            }\n            iIndex++;\n        }\n\n        if (tmp_dischargeHours.length > context.flow.tot_hours_2_discharge_full)\n        {\n            //We have too many discharge hours\n            let extraHours = tmp_dischargeHours.length - context.flow.tot_hours_2_discharge_full;\n            for (let ii = 0; ii < extraHours; ii++)\n            {\n                tmp_dischargeHours.pop();\n            }\n        }\n\n        let tot_discharge_hours = tmp_dischargeHours.length;\n        let totWantedChargeHours = context.flow.ground(parseFloat(tot_discharge_hours * context.flow.batt_discharge_rate) / parseFloat(context.flow.batt_charge_rate));\n        if (totWantedChargeHours > context.flow.tot_hours_2_charge_full)\n            totWantedChargeHours = context.flow.tot_hours_2_charge_full;\n\n        if (totWantedChargeHours > tmp_chargeHours.length)\n        {\n            //We like some more charge hours\n            let extraHours = totWantedChargeHours - tmp_chargeHours.length;\n            for (let ii = 0; ii < extraHours; ii++)\n            {\n                if (iIndex + ii >= hPricesCharge.length)\n                    break;\n\n                let bIsHigh = false;\n\n                switch (context.flow.calculation_method)\n                {\n                case \"price\":\n                        bIsHigh = (ittBlock[0].Price - hPricesCharge[iIndex + ii].Price >= context.flow.price_min_sell_difference);\n                    break;\n                case \"percentage_difference\":\n                {\n                    let percDiff = Math.abs(calcPercentageChange(ittBlock[0].Price, hPricesCharge[iIndex + ii].Price));\n                            bIsHigh = (percDiff > context.flow.price_percentage_sell_difference);\n                }\n                break;\n                case \"percentage_efficiency\":\n                        bIsHigh = (hPricesCharge[iIndex].Price < ittBlock[0].Price * context.flow.price_percentage_sell_efficiency);\n                    break;\n                }\n\n                if (bIsHigh)\n                {\n                    hPricesCharge[iIndex + ii].iOrder = parseInt(iIndex + ii) + 1;\n                    tmp_chargeHours.push(hPricesCharge[iIndex + ii]);\n                }\n                else\n                    break;\n            }\n        }\n        if (tmp_chargeHours.length > context.flow.tot_hours_2_charge_full)\n        {\n            //We have too many charge hours\n            let extraHours = tmp_chargeHours.length- context.flow.tot_hours_2_charge_full;\n            for (let ii = 0; ii < extraHours; ii++)\n            {\n                tmp_chargeHours.pop();\n            }\n        }\n\n        chargeHours.push(tmp_chargeHours);\n        dischargeHours.push(tmp_dischargeHours);\n\n        iStartChargeBlock = iNextStartChargeBlock + 1;\n    }\n}\n\nlet  hourPricesTypes = [];\n\n//First flag all hours with their type\nfor (var itt of hPrices)\n{\n    let hPriceType = {\n        \"iHour\": parseInt(itt.szHour.substr(0, 2)),\n        \"hour_price\": itt.Price,\n        \"forecast\": itt.Forecast,\n        \"iOrder\": 0,\n        \"hour_type\": \"idle\",\n        \"battery_capacity_watt\": 0,\n        \"battery_capacity_percentage\": 0,\n        \"earned_money\": 0\n    };\n    hourPricesTypes.push(hPriceType);\n}\n\n//Merge the charge and discharge hours\nfor (var ittCh of chargeHours)\n{\n    for (var ittCh2 of ittCh)\n    {\n        let iHour = parseInt(ittCh2.szHour.substring(0, 2));\n        for (var itt2 of hourPricesTypes)\n        {\n            if (itt2.iHour == iHour)\n            {\n                itt2.iOrder = ittCh2.iOrder;\n                itt2.hour_type = \"charge\";\n                break;\n            }\n        }\n    }\n}\n\nfor (var ittDh of dischargeHours)\n{\n    for (var ittDh2 of ittDh)\n    {\n        let iHour = parseInt(ittDh2.szHour.substring(0, 2));\n        for (var itt2 of hourPricesTypes)\n        {\n            if (itt2.iHour == iHour)\n            {\n                itt2.iOrder = ittDh2[\"iOrder\"];\n                itt2.hour_type = \"discharge\";\n                break;\n            }\n        }\n    }\n}\n\n//Now calculate the battery capacity and earned money for each hour\n\n//Assume we start empty\nlet battery_capacity_start = context.flow.batt_min_charged;\n\n\nlet battery_capacity_watt = battery_capacity_start;\nlet earned_money = 0.0;\n\nfor (var ittHp of hourPricesTypes)\n{\n    if (ittHp.hour_type == \"charge\")\n    {\n        let power_2_add = context.flow.batt_charge_rate;\n        if (battery_capacity_watt + power_2_add > context.flow.batt_capacity)\n            power_2_add = context.flow.batt_capacity - battery_capacity_watt;\n\n        if (power_2_add > 0)\n        {\n            battery_capacity_watt += power_2_add;\n            earned_money -= (power_2_add / 1000) * ittHp.hour_price;\n        }\n    }\n    else if (ittHp.hour_type == \"discharge\")\n    {\n        let power_2_sub = context.flow.batt_discharge_rate;\n\n        if (battery_capacity_watt - power_2_sub < context.flow.batt_min_charged)\n        {\n            power_2_sub = battery_capacity_watt - context.flow.batt_min_charged;\n            if (power_2_sub < 0)\n                power_2_sub = 0;\n        }\n\n        if (power_2_sub > 0)\n        {\n            battery_capacity_watt -= power_2_sub;\n            earned_money += (power_2_sub / 1000) * ittHp.hour_price;\n        }\n    }\n    ittHp.battery_capacity_watt = battery_capacity_watt;\n    ittHp.battery_capacity_percentage = parseFloat(((100.0 / context.flow.batt_capacity) * ittHp.battery_capacity_watt).toFixed(2));\n    ittHp.earned_money = parseFloat(earned_money.toFixed(4));\n}\n\n// @ts-ignore\nif (debug == true) {\n    //node.warn(JSON.stringify(hourPricesTypes));\n    node.warn(hourPricesTypes);\n}\nret.status = true;\nret.datum = json.datum;\nret.data = hourPricesTypes;\nmsg.payload = ret;\nreturn msg;",
+        "func": "/*\nDynamic price calculaton\nV1.07\n(c) 2024 PA1DVB\n*/\nlet json = msg.payload; //JSON.parse(msg.payload);\n\nlet ProviderKey = \"prijsTI\";\n\nlet debug = false;\n\nfunction sanityCheck()\n{\n    if (json.status != true) {\n        node.error(\"Invalid Tibber result!\", msg);\n        return false;\n    }\n    var jDate = new Date(json.datum);\n    var tDate = new Date();\n    tDate.setHours(0, 0, 0, 0);\n\n\n    if (jDate.getTime() < tDate.getTime()) {\n        node.error(\"Incorrect date in Tibber result!\");\n        return false;\n    }\n\n    //We should have at least 24 data items\n    let tot_results = Object.keys(json.data).length;\n    if (tot_results < 24) {\n        node.error(\"Incorrect data in Tibber result!\");\n        return false;\n    }\n    if (Object.hasOwn(json.data[0], ProviderKey) == false)\n    {\n        node.error(\"Incorrect data in Tibber result (provider not found!)\");\n        return false;\n    }\n    return true;\n}\n\n/**\n* @param {number} Old\n* @param {number} New\n*/\nfunction calcPercentageChange(Old, New)\n{\n\tlet fPer = 0;\n\tif ((0 != Old) && (0 != New)) {\n\t\tfPer = ((New - Old) * 100) / Old;\n\t}\n\treturn fPer;\n}\n\nlet ret = {\n    \"status\":  false\n};\n\nif (sanityCheck() == false) {\n    msg.payload = ret;\n    return msg;\n}\n\n//Great we have a good tibber price table, let's do some calculations\n\nlet hPrices = [];\n\nfor (var item of json.data) {\n    let hPrice = {\n        \"szDate\": item[\"datum\"].substring(0,10),\n        \"szHour\": item[\"datum\"].substring(11, 16),\n        \"Price\": parseFloat(item[ProviderKey]),\n        \"Forecast\": parseInt(item[\"forecast\"])\n    };\n    hPrices.push(hPrice);\n}\n\nlet szLowestPriceHour = \"\";\nlet dLowestPrice = 0.0;\n\nlet szHighestPriceHour = \"\";\nlet dHighestPrice = 0.0;\n\nlet dAveragePrice = 0.0;\n\nfor (var itt of hPrices)\n{\n    let price = itt.Price;\n\n    let szHour = itt.szHour;\n\n    if (szLowestPriceHour.length == 0)\n    {\n        szLowestPriceHour = szHour;\n        dLowestPrice = price;\n    }\n    else if (price < dLowestPrice)\n    {\n        szLowestPriceHour = szHour;\n        dLowestPrice = price;\n    }\n\n    //Highest price\n    if (szHighestPriceHour.length == 0)\n    {\n        szHighestPriceHour = szHour;\n        dHighestPrice = price;\n    }\n    else if (price > dHighestPrice)\n    {\n        szHighestPriceHour = szHour;\n        dHighestPrice = price;\n    }\n\n    dAveragePrice += price;\n}\n\ndAveragePrice /= hPrices.length;\nif (dAveragePrice == 0)\n    dAveragePrice = 0.000001;\n\nlet price_diff = Math.abs(dHighestPrice - dLowestPrice);\nif (price_diff < context.flow.price_min_sell_difference)\n{\n    //Not an interesting day\n    node.warn(\"Not an interesting day, price difference is too low: \" + price_diff);\n    return null;\n}\n\n// @ts-ignore\nif (debug == true) {\n    let szTmp=\"\";\n    szTmp = \"Lowest price hour: \" + szLowestPriceHour + \", price: \" + dLowestPrice.toFixed(4);\n    szTmp += \"\\nHighest price hour: \" + szHighestPriceHour + \", price: \" + dHighestPrice.toFixed(4);\n    szTmp += \"\\nAverage price: \" + dAveragePrice.toFixed(4);\n    node.warn(szTmp);\n}\n\n//calculate the price to charge and discharge\nlet iStartHour = -1;\nlet dStartPrice = 1000.0;\n\nlet totPrices = hPrices.length;\n\nlet chargeHours = [];\nlet dischargeHours = [];\n\nlet hPricesHigh = [];\nlet hPricesHighBackup = [];\n\nlet hHighPeaksBlocks = [];\n\nfor (let ii=0; ii< totPrices; ii++)\n{\n    let ittLow = hPrices[ii];\n\n    if (ittLow.Price < dStartPrice)\n    {\n        iStartHour = ii;\n        dStartPrice = ittLow.Price;\n    }\n    hPricesHighBackup = hPricesHigh;\n    hPricesHigh = [];\n    let jj = ii + 1;\n    for (jj = ii + 1; jj < totPrices; jj++)\n    {\n        let ittHigh = hPrices[jj];\n\n        let bIsHigh = false;\n        switch (context.flow.calculation_method)\n        {\n            case \"price\":\n                bIsHigh = (ittHigh.Price - dStartPrice >= context.flow.price_min_sell_difference);\n                break;\n            case \"percentage_difference\":\n                {\n                    let percDiff = Math.abs(calcPercentageChange(ittHigh.Price, dStartPrice));\n                    bIsHigh\t= (percDiff > context.flow.price_percentage_sell_difference);\n                }\n                break;\n            case \"percentage_efficiency\":\n                bIsHigh = (dStartPrice < ittHigh.Price * context.flow.price_percentage_sell_efficiency);\n                break;\n        }\n        \n        if (bIsHigh)\n        {\n            hPricesHigh.push(ittHigh);\n        }\n        else\n            break;\n    }\n    if (hPricesHighBackup.length != 0)\n    {\n        if (hPricesHigh.length > hPricesHighBackup.length)\n        {\n            hPricesHighBackup = hPricesHigh;\n        }\n        else\n        {\n            //We have a new high price block\n            hHighPeaksBlocks.push(hPricesHighBackup);\n            hPricesHighBackup = [];\n            hPricesHigh = [];\n            iStartHour = -1;\n            dStartPrice = 1000.0;\n        }\n        ii = jj - 1;\n    }\n    else if (hPricesHigh.length != 0)\n    {\n        hPricesHighBackup = hPricesHigh;\n    }\n}\n\nif (hHighPeaksBlocks.length != 0)\n{\n    //Process the high peaks blocks\n    \n    //First make sure each block is not larger than total discharge hours\n    for (let ii = 0; ii < hHighPeaksBlocks.length; ii++)\n    {\n        hHighPeaksBlocks[ii].sort((a, b) => b.Price - a.Price);\n        if (hHighPeaksBlocks[ii].length > context.flow.tot_hours_2_discharge_full) {\n            hHighPeaksBlocks[ii] = hHighPeaksBlocks[ii].slice(0, context.flow.tot_hours_2_discharge_full);\n        }\n        //Sort back on hour again\n        hHighPeaksBlocks[ii].sort((a, b) => a.iHour - b.iHour);\n    }\n    \n    let iStartChargeBlock = 0;\n    for (var ittBlock of hHighPeaksBlocks)\n    {\n        let iBlockStart = parseInt(ittBlock[0].szHour.substring(0, 2));\n        let iNextStartChargeBlock = parseInt(ittBlock[ittBlock.length - 1].szHour.substring(0, 2));\n\n        let ittBlockHighPrice = [...ittBlock];\n\n        ittBlock.sort((a, b) => a.Price - b.Price);\n        ittBlockHighPrice.sort((a, b) => b.Price - a.Price);\n\n        let dLowestBlockPrice = ittBlock[0].Price;\n\n        //add all charge hours before the block and sort them by price\n        let hPricesCharge = [];\n        for (let ii = iStartChargeBlock; ii < iBlockStart; ii++)\n        {\n            let itt = hPrices[ii];\n            hPricesCharge.push(itt);\n        }\n        hPricesCharge.sort((a, b) => a.Price - b.Price);\n\n        let iIndex = 0;\n\n        let tmp_chargeHours = [];\n        let tmp_dischargeHours = [];\n\n        for (var itt of ittBlockHighPrice)\n        {\n            if (iIndex >= hPricesCharge.length)\n                break;\n\n            let bIsHigh = false;\n            switch (context.flow.calculation_method)\n            {\n            case \"price\":\n                bIsHigh = (itt.Price - hPricesCharge[iIndex].Price >= context.flow.price_min_sell_difference);\n                break;\n            case \"percentage_difference\":\n            {\n                let percDiff = Math.abs(calcPercentageChange(itt.Price, hPricesCharge[iIndex].Price));\n                bIsHigh = (percDiff > context.flow.price_percentage_sell_difference);\n            }\n            break;\n            case \"percentage_efficiency\":\n                bIsHigh = (hPricesCharge[iIndex].Price < itt.Price * context.flow.price_percentage_sell_efficiency);\n                break;\n            }\n\n            if (bIsHigh)\n            {\n                //We have a charge hour\n                itt.iOrder = iIndex + 1;\n                hPricesCharge[iIndex].iOrder = iIndex + 1;\n                tmp_chargeHours.push(hPricesCharge[iIndex]);\n                tmp_dischargeHours.push(itt);\n            }\n            else\n            {\n                break;\n            }\n            iIndex++;\n        }\n\n        if (tmp_dischargeHours.length > context.flow.tot_hours_2_discharge_full)\n        {\n            //We have too many discharge hours\n            let extraHours = tmp_dischargeHours.length - context.flow.tot_hours_2_discharge_full;\n            for (let ii = 0; ii < extraHours; ii++)\n            {\n                tmp_dischargeHours.pop();\n            }\n        }\n\n        let tot_discharge_hours = tmp_dischargeHours.length;\n        let totWantedChargeHours = context.flow.ground(parseFloat(tot_discharge_hours * context.flow.batt_discharge_rate) / parseFloat(context.flow.batt_charge_rate));\n        if (totWantedChargeHours > context.flow.tot_hours_2_charge_full)\n            totWantedChargeHours = context.flow.tot_hours_2_charge_full;\n\n        if (totWantedChargeHours > tmp_chargeHours.length)\n        {\n            //We like some more charge hours\n            let extraHours = totWantedChargeHours - tmp_chargeHours.length;\n            for (let ii = 0; ii < extraHours; ii++)\n            {\n                if (iIndex + ii >= hPricesCharge.length)\n                    break;\n\n                let bIsHigh = false;\n\n                switch (context.flow.calculation_method)\n                {\n                case \"price\":\n                        bIsHigh = (ittBlock[0].Price - hPricesCharge[iIndex + ii].Price >= context.flow.price_min_sell_difference);\n                    break;\n                case \"percentage_difference\":\n                {\n                    let percDiff = Math.abs(calcPercentageChange(ittBlock[0].Price, hPricesCharge[iIndex + ii].Price));\n                            bIsHigh = (percDiff > context.flow.price_percentage_sell_difference);\n                }\n                break;\n                case \"percentage_efficiency\":\n                        bIsHigh = (hPricesCharge[iIndex].Price < ittBlock[0].Price * context.flow.price_percentage_sell_efficiency);\n                    break;\n                }\n\n                if (bIsHigh)\n                {\n                    hPricesCharge[iIndex + ii].iOrder = parseInt(iIndex + ii) + 1;\n                    tmp_chargeHours.push(hPricesCharge[iIndex + ii]);\n                }\n                else\n                    break;\n            }\n        }\n        if (tmp_chargeHours.length > context.flow.tot_hours_2_charge_full)\n        {\n            //We have too many charge hours\n            let extraHours = tmp_chargeHours.length- context.flow.tot_hours_2_charge_full;\n            for (let ii = 0; ii < extraHours; ii++)\n            {\n                tmp_chargeHours.pop();\n            }\n        }\n\n        chargeHours.push(tmp_chargeHours);\n        dischargeHours.push(tmp_dischargeHours);\n\n        iStartChargeBlock = iNextStartChargeBlock + 1;\n    }\n}\n\nlet  hourPricesTypes = [];\n\n//First flag all hours with their type\nfor (var itt of hPrices)\n{\n    let hPriceType = {\n        \"iHour\": parseInt(itt.szHour.substr(0, 2)),\n        \"hour_price\": itt.Price,\n        \"forecast\": itt.Forecast,\n        \"iOrder\": 0,\n        \"hour_type\": \"idle\",\n        \"battery_capacity_watt\": 0,\n        \"battery_capacity_percentage\": 0,\n        \"earned_money\": 0\n    };\n    hourPricesTypes.push(hPriceType);\n}\n\n//Merge the charge and discharge hours\nfor (var ittCh of chargeHours)\n{\n    for (var ittCh2 of ittCh)\n    {\n        let iHour = parseInt(ittCh2.szHour.substring(0, 2));\n        for (var itt2 of hourPricesTypes)\n        {\n            if (itt2.iHour == iHour)\n            {\n                itt2.iOrder = ittCh2.iOrder;\n                itt2.hour_type = \"charge\";\n                break;\n            }\n        }\n    }\n}\n\nfor (var ittDh of dischargeHours)\n{\n    for (var ittDh2 of ittDh)\n    {\n        let iHour = parseInt(ittDh2.szHour.substring(0, 2));\n        for (var itt2 of hourPricesTypes)\n        {\n            if (itt2.iHour == iHour)\n            {\n                itt2.iOrder = ittDh2[\"iOrder\"];\n                itt2.hour_type = \"discharge\";\n                break;\n            }\n        }\n    }\n}\n\n//Now calculate the battery capacity and earned money for each hour\n\n//Assume we start empty\nlet battery_capacity_start = context.flow.batt_min_charged;\n\n\nlet battery_capacity_watt = battery_capacity_start;\nlet earned_money = 0.0;\n\nfor (var ittHp of hourPricesTypes)\n{\n    if (ittHp.hour_type == \"charge\")\n    {\n        let power_2_add = context.flow.batt_charge_rate;\n        if (battery_capacity_watt + power_2_add > context.flow.batt_capacity)\n            power_2_add = context.flow.batt_capacity - battery_capacity_watt;\n\n        if (power_2_add > 0)\n        {\n            battery_capacity_watt += power_2_add;\n            earned_money -= (power_2_add / 1000) * ittHp.hour_price;\n        }\n    }\n    else if (ittHp.hour_type == \"discharge\")\n    {\n        let power_2_sub = context.flow.batt_discharge_rate;\n\n        if (battery_capacity_watt - power_2_sub < context.flow.batt_min_charged)\n        {\n            power_2_sub = battery_capacity_watt - context.flow.batt_min_charged;\n            if (power_2_sub < 0)\n                power_2_sub = 0;\n        }\n\n        if (power_2_sub > 0)\n        {\n            battery_capacity_watt -= power_2_sub;\n            earned_money += (power_2_sub / 1000) * ittHp.hour_price;\n        }\n    }\n    ittHp.battery_capacity_watt = battery_capacity_watt;\n    ittHp.battery_capacity_percentage = parseFloat(((100.0 / context.flow.batt_capacity) * ittHp.battery_capacity_watt).toFixed(2));\n    ittHp.earned_money = parseFloat(earned_money.toFixed(4));\n}\n\n// @ts-ignore\nif (debug == true) {\n    //node.warn(JSON.stringify(hourPricesTypes));\n    node.warn(hourPricesTypes);\n}\nret.status = true;\nret.datum = json.datum;\nret.data = hourPricesTypes;\nmsg.payload = ret;\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1180,
-        "y": 340,
+        "x": 540,
+        "y": 400,
         "wires": [
             [
-                "5da22a307938b06f",
-                "29aac9fd41c783d5"
+                "28226bb08eec0b30",
+                "7347ef667ed20efa"
             ]
         ]
     },
     {
-        "id": "9c7ef1b39f1dead5",
-        "type": "change",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
-        "name": "T=Today Prices",
-        "rules": [
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "tibber_data/today/state",
-                "tot": "str"
-            },
-            {
-                "t": "set",
-                "p": "sendnow",
-                "pt": "msg",
-                "to": "true",
-                "tot": "bool"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 820,
-        "y": 220,
-        "wires": [
-            [
-                "95395101f0637f21",
-                "bf6ac6d5e40538d3"
-            ]
-        ]
-    },
-    {
-        "id": "19032ccde1c37ef0",
+        "id": "18ded7543547a3f3",
         "type": "inject",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
-        "name": "Between 14:00 - 1600",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
+        "name": "@14:00",
         "props": [
             {
                 "p": "payload"
             }
         ],
         "repeat": "",
-        "crontab": "*/10 14-15 * * *",
+        "crontab": "00 14 * * *",
         "once": true,
-        "onceDelay": "1",
+        "onceDelay": "2",
         "topic": "",
         "payload": "1",
         "payloadType": "str",
-        "x": 170,
-        "y": 340,
+        "x": 120,
+        "y": 240,
         "wires": [
             [
-                "bdb9d378b48c2087"
+                "b8e7d236d12fcbe8"
             ]
         ]
     },
     {
-        "id": "e32bba2eb3557959",
-        "type": "tibber-data",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
-        "name": "Get Tomorrow Prices",
-        "active": true,
-        "apiEndpointRef": "c375361050518336",
-        "queryName": "getTomorrowsEnergyPrices",
-        "homeId": "your-home-id-b14b407a3cc2",
-        "energyResolution": "HOURLY",
-        "lastCount": 10,
-        "x": 360,
-        "y": 380,
-        "wires": [
-            [
-                "6ffb1aeabcfbc32f"
-            ]
-        ]
-    },
-    {
-        "id": "3853080d6883a3e2",
-        "type": "change",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
-        "name": "T=Tomorrow Prices",
-        "rules": [
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "tibber_data/tomorrow/state",
-                "tot": "str"
-            },
-            {
-                "t": "set",
-                "p": "sendnow",
-                "pt": "msg",
-                "to": "true",
-                "tot": "bool"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 950,
-        "y": 380,
-        "wires": [
-            [
-                "95395101f0637f21"
-            ]
-        ]
-    },
-    {
-        "id": "5da22a307938b06f",
+        "id": "28226bb08eec0b30",
         "type": "debug",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
         "name": "debug 56",
         "active": false,
         "tosidebar": true,
@@ -403,17 +1018,17 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1220,
-        "y": 400,
+        "x": 700,
+        "y": 420,
         "wires": []
     },
     {
-        "id": "fd6ca2e631f76c7a",
+        "id": "14c3076dd27b816b",
         "type": "function",
-        "z": "f8acf16219409257",
-        "g": "a7e0ac25b61f1fd9",
+        "z": "edf9f455029eeb7f",
+        "g": "1a81b3b5b7840ea2",
         "name": "Global Variables",
-        "func": "context.flow.batt_capacity = 14300; //14.3 kWh\ncontext.flow.batt_charge_rate = 3000; //Watt\ncontext.flow.batt_discharge_rate = 4000;\ncontext.flow.batt_soc_min = 10;\ncontext.flow.batt_soc_max = 90;\n\ncontext.flow.price_min_sell_difference= 0.06; //6 cents\ncontext.flow.price_percentage_sell_difference = 23; //%\ncontext.flow.price_percentage_sell_efficiency = 0.8; //80%\n\ncontext.flow.calculation_method = \"price\"; //price, percentage_difference, percentage_efficiency\n\ncontext.flow.batt_min_charged = context.flow.batt_capacity * context.flow.batt_soc_min / 100;\ncontext.flow.batt_charged_capacity = context.flow.batt_capacity * (context.flow.batt_soc_max - context.flow.batt_soc_min) / 100;\n\nflow.set('afternoon_received', false);\n\ncontext.flow.ground = function(/** @type {number} */ value)\n{\n    return parseInt(value + 0.5);\n}\n\ncontext.flow.hours_2_charge = parseFloat(context.flow.batt_charged_capacity) / parseFloat(context.flow.batt_charge_rate);\ncontext.flow.tot_hours_2_charge_full = context.flow.ground(context.flow.hours_2_charge);\ncontext.flow.hours_2_discharge = parseFloat(context.flow.batt_charged_capacity) / parseFloat(context.flow.batt_discharge_rate)\ncontext.flow.tot_hours_2_discharge_full = context.flow.ground(context.flow.hours_2_discharge);\n\nlet debug = false;\n\nfunction printBasicInfo()\n{\n    var gstr = \"\";\n    gstr +=\"Battery Capacity: \" + context.flow.batt_capacity + \" Watt\";\n    gstr +=\"\\nCharged Capacity: \" + context.flow.batt_charged_capacity + \" Watt\";\n    gstr +=\"\\nmin-soc: \" + context.flow.batt_soc_min + \" %\";\n    gstr +=\"\\nmax-soc: \" + context.flow.batt_soc_max + \" %\";\n    gstr +=\"\\nCharge-Rate: \" + context.flow.batt_charge_rate + \" Watt\";\n    gstr +=\"\\nDischarge-Rate: \" + context.flow.batt_discharge_rate + \" Watt\";\n\n    gstr +=\"\\nHours to charge battery to full: \" + context.flow.tot_hours_2_charge_full + \"(\" +  context.flow.hours_2_charge.toFixed(2) + \")\";\n    gstr +=\"\\nHours to discharge battery to full: \" + context.flow.tot_hours_2_discharge_full + \"(\" + context.flow.hours_2_discharge.toFixed(2) + \")\";\n    gstr +=\"\\nCalculation method used: \";\n    switch (context.flow.calculation_method) {\n        case \"price\":\n            gstr +=\"\\nprice difference\";\n            break;\n        case \"percentage_difference\":\n            gstr +=\"\\npercentage difference\";\n            break;\n        case \"percentage_efficiency\":\n            gstr +=\"\\npercentage efficiency\";\n            break;\n    }\n    node.warn((gstr));\n}\n\n// @ts-ignore\nif (debug == true) {\n    printBasicInfo();\n}\n\nreturn msg;",
+        "func": "context.flow.batt_capacity = 14300; //14.3 kWh\ncontext.flow.batt_charge_rate = 3000; //Watt\ncontext.flow.batt_discharge_rate = 4000;\ncontext.flow.batt_soc_min = 10;\ncontext.flow.batt_soc_max = 90;\n\ncontext.flow.price_min_sell_difference= 0.06; //6 cents\ncontext.flow.price_percentage_sell_difference = 23; //%\ncontext.flow.price_percentage_sell_efficiency = 0.8; //80%\n\ncontext.flow.calculation_method = \"price\"; //price, percentage_difference, percentage_efficiency\n\ncontext.flow.batt_min_charged = context.flow.batt_capacity * context.flow.batt_soc_min / 100;\ncontext.flow.batt_charged_capacity = context.flow.batt_capacity * (context.flow.batt_soc_max - context.flow.batt_soc_min) / 100;\n\nflow.set('retry_count', 0);\n\ncontext.flow.ground = function(/** @type {number} */ value)\n{\n    return parseInt(value + 0.5);\n}\n\ncontext.flow.hours_2_charge = parseFloat(context.flow.batt_charged_capacity) / parseFloat(context.flow.batt_charge_rate);\ncontext.flow.tot_hours_2_charge_full = context.flow.ground(context.flow.hours_2_charge);\ncontext.flow.hours_2_discharge = parseFloat(context.flow.batt_charged_capacity) / parseFloat(context.flow.batt_discharge_rate)\ncontext.flow.tot_hours_2_discharge_full = context.flow.ground(context.flow.hours_2_discharge);\n\nlet debug = false;\n\nfunction printBasicInfo()\n{\n    var gstr = \"\";\n    gstr +=\"Battery Capacity: \" + context.flow.batt_capacity + \" Watt\";\n    gstr +=\"\\nCharged Capacity: \" + context.flow.batt_charged_capacity + \" Watt\";\n    gstr +=\"\\nmin-soc: \" + context.flow.batt_soc_min + \" %\";\n    gstr +=\"\\nmax-soc: \" + context.flow.batt_soc_max + \" %\";\n    gstr +=\"\\nCharge-Rate: \" + context.flow.batt_charge_rate + \" Watt\";\n    gstr +=\"\\nDischarge-Rate: \" + context.flow.batt_discharge_rate + \" Watt\";\n\n    gstr +=\"\\nHours to charge battery to full: \" + context.flow.tot_hours_2_charge_full + \"(\" +  context.flow.hours_2_charge.toFixed(2) + \")\";\n    gstr +=\"\\nHours to discharge battery to full: \" + context.flow.tot_hours_2_discharge_full + \"(\" + context.flow.hours_2_discharge.toFixed(2) + \")\";\n    gstr +=\"\\nCalculation method used: \";\n    switch (context.flow.calculation_method) {\n        case \"price\":\n            gstr +=\"\\nprice difference\";\n            break;\n        case \"percentage_difference\":\n            gstr +=\"\\npercentage difference\";\n            break;\n        case \"percentage_efficiency\":\n            gstr +=\"\\npercentage efficiency\";\n            break;\n    }\n    node.warn((gstr));\n}\n\n// @ts-ignore\nif (debug == true) {\n    printBasicInfo();\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -424,15 +1039,15 @@
         "y": 100,
         "wires": [
             [
-                "a87a6fdf3276c741"
+                "122749331c478207"
             ]
         ]
     },
     {
-        "id": "964c79fd1821f27f",
+        "id": "b657827f03345e3d",
         "type": "change",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
         "name": "Tib2Scheme",
         "rules": [
             {
@@ -459,27 +1074,109 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1130,
-        "y": 280,
+        "x": 370,
+        "y": 400,
         "wires": [
             [
-                "20293754418bc27e"
+                "940a6419ce2b4c0f"
             ]
         ]
     },
     {
-        "id": "e4934419bb9c21ea",
+        "id": "60cbc394be7a8628",
+        "type": "catch",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 100,
+        "y": 280,
+        "wires": [
+            [
+                "2d205981144bf6be",
+                "a94b01c687825b75"
+            ]
+        ]
+    },
+    {
+        "id": "2d205981144bf6be",
+        "type": "debug",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
+        "name": "msg.error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "error",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 240,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "a94b01c687825b75",
+        "type": "function",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
+        "name": "Do Retry",
+        "func": "let act_retry_count = flow.get('retry_count')  + 1;\nif (act_retry_count >= 8)\n    return null;\nflow.set('retry_count', act_retry_count);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 280,
+        "wires": [
+            [
+                "97ede11f89054187"
+            ]
+        ]
+    },
+    {
+        "id": "97ede11f89054187",
+        "type": "delay",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "15",
+        "timeoutUnits": "minutes",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 410,
+        "y": 280,
+        "wires": [
+            [
+                "2a77a49d4ff72143"
+            ]
+        ]
+    },
+    {
+        "id": "1d4ccdbd16aed160",
         "type": "change",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
-        "name": "Set AfterRecv = False",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
+        "name": "Reset",
         "rules": [
             {
                 "t": "set",
-                "p": "afternoon_received",
+                "p": "retry_count",
                 "pt": "flow",
-                "to": "false",
-                "tot": "bool"
+                "to": "0",
+                "tot": "num"
             }
         ],
         "action": "",
@@ -487,47 +1184,53 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 360,
-        "y": 280,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "bdb9d378b48c2087",
-        "type": "switch",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
-        "name": "If AfterRecv = False",
-        "property": "afternoon_received",
-        "propertyType": "flow",
-        "rules": [
-            {
-                "t": "false"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 150,
-        "y": 380,
+        "x": 390,
+        "y": 200,
         "wires": [
             [
-                "e32bba2eb3557959"
+                "2a77a49d4ff72143"
             ]
         ]
     },
     {
-        "id": "3290978fff06dcc5",
+        "id": "2a77a49d4ff72143",
         "type": "change",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
-        "name": "Set AfterRecv = True",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
+        "name": "Start",
         "rules": [
             {
                 "t": "set",
-                "p": "afternoon_received",
-                "pt": "flow",
+                "p": "payload",
+                "pt": "msg",
+                "to": "1",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 530,
+        "y": 200,
+        "wires": [
+            [
+                "7ed67c1510d458c5"
+            ]
+        ]
+    },
+    {
+        "id": "18983c8132c11beb",
+        "type": "change",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
+        "name": "Today",
+        "rules": [
+            {
+                "t": "set",
+                "p": "today",
+                "pt": "msg",
                 "to": "true",
                 "tot": "bool"
             }
@@ -537,44 +1240,168 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 560,
-        "y": 420,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "6ffb1aeabcfbc32f",
-        "type": "switch",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
-        "name": "",
-        "property": "payload",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "jsonata_exp",
-                "v": "($count(payload))=24",
-                "vt": "jsonata"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 550,
-        "y": 380,
+        "x": 250,
+        "y": 200,
         "wires": [
             [
-                "3290978fff06dcc5",
-                "786766b4800fa311"
+                "1d4ccdbd16aed160"
             ]
         ]
     },
     {
-        "id": "249a8506a9a2ef3c",
+        "id": "b8e7d236d12fcbe8",
+        "type": "change",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
+        "name": "Tomorrow",
+        "rules": [
+            {
+                "t": "set",
+                "p": "today",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 260,
+        "y": 240,
+        "wires": [
+            [
+                "1d4ccdbd16aed160"
+            ]
+        ]
+    },
+    {
+        "id": "95ef6a6364e11d89",
+        "type": "link out",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
+        "name": "Perform Today",
+        "mode": "link",
+        "links": [
+            "9d7f474efb189328",
+            "6bd72b3f7f9c02e3"
+        ],
+        "x": 785,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "9d7f474efb189328",
+        "type": "link in",
+        "z": "edf9f455029eeb7f",
+        "g": "53c4909b2cd159f9",
+        "name": "Perform Today",
+        "links": [
+            "95ef6a6364e11d89"
+        ],
+        "x": 55,
+        "y": 540,
+        "wires": [
+            [
+                "82633b4d062d1a13",
+                "0b97aa3927f7c375"
+            ]
+        ]
+    },
+    {
+        "id": "30037a5069c38173",
+        "type": "link out",
+        "z": "edf9f455029eeb7f",
+        "g": "53c4909b2cd159f9",
+        "name": "Data Ready",
+        "mode": "link",
+        "links": [
+            "1b6c2789468c41cc"
+        ],
+        "x": 1175,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "1b6c2789468c41cc",
+        "type": "link in",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
+        "name": "Data Ready",
+        "links": [
+            "30037a5069c38173",
+            "dc4044a49cdc66a0",
+            "9e4cb9245413a0c8"
+        ],
+        "x": 55,
+        "y": 380,
+        "wires": [
+            [
+                "3822f057ea823e2f"
+            ]
+        ]
+    },
+    {
+        "id": "82633b4d062d1a13",
+        "type": "tibber-data",
+        "z": "edf9f455029eeb7f",
+        "g": "53c4909b2cd159f9",
+        "name": "Get Today Prices",
+        "active": true,
+        "apiEndpointRef": "c375361050518336",
+        "queryName": "getTodaysEnergyPrices",
+        "homeId": "49bf2e0e-83cf-4388-b0d5-a03a407a3cc0",
+        "energyResolution": "HOURLY",
+        "lastCount": 10,
+        "x": 340,
+        "y": 540,
+        "wires": [
+            [
+                "6c6c80a15e1cb4be"
+            ]
+        ]
+    },
+    {
+        "id": "ee7037e289888936",
+        "type": "change",
+        "z": "edf9f455029eeb7f",
+        "g": "53c4909b2cd159f9",
+        "name": "T=Today Prices",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "tibber_data/today/state",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "sendnow",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1040,
+        "y": 540,
+        "wires": [
+            [
+                "30037a5069c38173"
+            ]
+        ]
+    },
+    {
+        "id": "3e91a56b38ec890b",
         "type": "join",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
+        "z": "edf9f455029eeb7f",
+        "g": "53c4909b2cd159f9",
         "name": "Join",
         "mode": "custom",
         "build": "object",
@@ -591,64 +1418,19 @@
         "reduceInit": "",
         "reduceInitType": "num",
         "reduceFixup": "",
-        "x": 670,
-        "y": 220,
+        "x": 800,
+        "y": 540,
         "wires": [
             [
-                "9c7ef1b39f1dead5"
+                "ee7037e289888936"
             ]
         ]
     },
     {
-        "id": "6c8a8fdb2d93dc13",
-        "type": "vrm-api",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
-        "vrm": "b5817f4cf066d93c",
-        "name": "Get Solar Forecast Today",
-        "api_type": "installations",
-        "idUser": "",
-        "users": "",
-        "idSite": "your_id_12234",
-        "installations": "stats",
-        "attribute": "vrm_solar_irradiance_fc",
-        "stats_interval": "hours",
-        "show_instance": false,
-        "stats_start": "bod",
-        "stats_end": "eod",
-        "use_utc": false,
-        "widgets": "BatterySummary",
-        "instance": "",
-        "vrm_id": "",
-        "country": "",
-        "b_max": "",
-        "tb_max": "",
-        "fb_max": "",
-        "tg_max": "",
-        "fg_max": "",
-        "b_cycle_cost": "",
-        "buy_price_formula": "",
-        "sell_price_formula": "",
-        "green_mode_on": "",
-        "feed_in_possible": "",
-        "feed_in_control_on": "",
-        "b_goal_hour": "",
-        "b_goal_SOC": "",
-        "store_in_global_context": false,
-        "verbose": false,
-        "x": 370,
-        "y": 240,
-        "wires": [
-            [
-                "4cc3771509ca0c72"
-            ]
-        ]
-    },
-    {
-        "id": "0467222ee01cceaa",
+        "id": "9213fea48881c844",
         "type": "change",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
+        "z": "edf9f455029eeb7f",
+        "g": "53c4909b2cd159f9",
         "name": "T=tibber",
         "rules": [
             {
@@ -664,34 +1446,500 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 520,
-        "y": 200,
+        "x": 650,
+        "y": 540,
         "wires": [
             [
-                "249a8506a9a2ef3c"
+                "3e91a56b38ec890b"
             ]
         ]
     },
     {
-        "id": "4cc3771509ca0c72",
+        "id": "6c6c80a15e1cb4be",
+        "type": "switch",
+        "z": "edf9f455029eeb7f",
+        "g": "53c4909b2cd159f9",
+        "name": "IsOK?",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "jsonata_exp",
+                "v": "($count(payload))=24",
+                "vt": "jsonata"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 520,
+        "y": 540,
+        "wires": [
+            [
+                "9213fea48881c844"
+            ],
+            [
+                "17d5b20904010c39"
+            ]
+        ]
+    },
+    {
+        "id": "17d5b20904010c39",
+        "type": "link out",
+        "z": "edf9f455029eeb7f",
+        "g": "53c4909b2cd159f9",
+        "name": "Do Retry",
+        "mode": "link",
+        "links": [
+            "f79ebd4ef82b18e4"
+        ],
+        "x": 635,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "f79ebd4ef82b18e4",
+        "type": "link in",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
+        "name": "Do Retry",
+        "links": [
+            "17d5b20904010c39",
+            "077de6fb6f867b6f",
+            "159fe759525d9223"
+        ],
+        "x": 115,
+        "y": 320,
+        "wires": [
+            [
+                "a94b01c687825b75"
+            ]
+        ]
+    },
+    {
+        "id": "0b97aa3927f7c375",
+        "type": "subflow:481b42546729112e",
+        "z": "edf9f455029eeb7f",
+        "g": "53c4909b2cd159f9",
+        "name": "",
+        "env": [
+            {
+                "name": "latitude",
+                "value": "52.140480",
+                "type": "num"
+            },
+            {
+                "name": "longitude",
+                "value": "5.436300",
+                "type": "num"
+            },
+            {
+                "name": "azimuth",
+                "value": "180",
+                "type": "num"
+            },
+            {
+                "name": "modules power",
+                "value": "13",
+                "type": "num"
+            },
+            {
+                "name": "apikey",
+                "type": "cred"
+            }
+        ],
+        "x": 220,
+        "y": 620,
+        "wires": [
+            [
+                "c23bdedb46992b45",
+                "58fe7bca50cdfaef"
+            ]
+        ]
+    },
+    {
+        "id": "c23bdedb46992b45",
+        "type": "switch",
+        "z": "edf9f455029eeb7f",
+        "g": "53c4909b2cd159f9",
+        "name": "IsOK?",
+        "property": "payload.result",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nnull"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 390,
+        "y": 620,
+        "wires": [
+            [
+                "3933f3579ce2aad0"
+            ],
+            [
+                "17d5b20904010c39"
+            ]
+        ]
+    },
+    {
+        "id": "3933f3579ce2aad0",
+        "type": "function",
+        "z": "edf9f455029eeb7f",
+        "g": "53c4909b2cd159f9",
+        "name": "Parse Payload",
+        "func": "let result = msg.payload.result;\n\nconst d = new Date();\nlet actDay = d.getDate();\n\n//create default array with 0 forcast\nlet aForecast = new Array(24).fill(0);\n\nfor (const [key, value] of Object.entries(result)) {\n    let szDate = key.substring(0,10);\n    let szHour = key.substring(11, 14) + \"00\";\n\n    let day = parseInt(szDate.substring(8,10));\n    let hour = parseInt(key.substring(11, 13));\n\n    if (msg.today) {\n        if (day != actDay) {\n            //not interesting in tomorrow\n            continue;\n        }\n    } else {\n        if (day == actDay) {\n            //not interesting in tomorrow\n            continue;\n        }     \n    }\n\n    aForecast[hour] = parseInt(value);\n}\n\nmsg.topic = \"forecast\";\nmsg.payload = aForecast;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 620,
+        "wires": [
+            [
+                "3e91a56b38ec890b"
+            ]
+        ]
+    },
+    {
+        "id": "3dc11edd9ba338dc",
+        "type": "function",
+        "z": "edf9f455029eeb7f",
+        "g": "53c4909b2cd159f9",
+        "name": "Test Data",
+        "func": "msg.payload = JSON.parse('[{\"total\":0.2452,\"energy\":0.0763,\"tax\":0.1689,\"startsAt\":\"2024-07-30T00:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.2426,\"energy\":0.0742,\"tax\":0.1684,\"startsAt\":\"2024-07-30T01:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.245,\"energy\":0.0762,\"tax\":0.1688,\"startsAt\":\"2024-07-30T02:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.2506,\"energy\":0.0808,\"tax\":0.1698,\"startsAt\":\"2024-07-30T03:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.2561,\"energy\":0.0854,\"tax\":0.1707,\"startsAt\":\"2024-07-30T04:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.2741,\"energy\":0.1002,\"tax\":0.1739,\"startsAt\":\"2024-07-30T05:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.287,\"energy\":0.1109,\"tax\":0.1761,\"startsAt\":\"2024-07-30T06:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.2847,\"energy\":0.109,\"tax\":0.1757,\"startsAt\":\"2024-07-30T07:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.2719,\"energy\":0.0984,\"tax\":0.1735,\"startsAt\":\"2024-07-30T08:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.234,\"energy\":0.0671,\"tax\":0.1669,\"startsAt\":\"2024-07-30T09:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.1982,\"energy\":0.0375,\"tax\":0.1607,\"startsAt\":\"2024-07-30T10:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1623,\"energy\":0.0078,\"tax\":0.1545,\"startsAt\":\"2024-07-30T11:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.154,\"energy\":0.001,\"tax\":0.153,\"startsAt\":\"2024-07-30T12:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1528,\"energy\":-0.0001,\"tax\":0.1529,\"startsAt\":\"2024-07-30T13:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1528,\"energy\":-0.0001,\"tax\":0.1529,\"startsAt\":\"2024-07-30T14:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1687,\"energy\":0.0131,\"tax\":0.1556,\"startsAt\":\"2024-07-30T15:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.2021,\"energy\":0.0407,\"tax\":0.1614,\"startsAt\":\"2024-07-30T16:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.2464,\"energy\":0.0773,\"tax\":0.1691,\"startsAt\":\"2024-07-30T17:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.2765,\"energy\":0.1022,\"tax\":0.1743,\"startsAt\":\"2024-07-30T18:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.3062,\"energy\":0.1268,\"tax\":0.1794,\"startsAt\":\"2024-07-30T19:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.3521,\"energy\":0.1647,\"tax\":0.1874,\"startsAt\":\"2024-07-30T20:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"VERY_EXPENSIVE\"},{\"total\":0.3278,\"energy\":0.1446,\"tax\":0.1832,\"startsAt\":\"2024-07-30T21:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"VERY_EXPENSIVE\"},{\"total\":0.2915,\"energy\":0.1146,\"tax\":0.1769,\"startsAt\":\"2024-07-30T22:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.2727,\"energy\":0.099,\"tax\":0.1737,\"startsAt\":\"2024-07-30T23:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"}]');\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "098ed9195ff7a18f",
+        "type": "function",
+        "z": "edf9f455029eeb7f",
+        "g": "53c4909b2cd159f9",
+        "name": "Test data",
+        "func": "msg.payload = JSON.parse('{\"result\":{\"2024-08-03 06:03:38\":0,\"2024-08-03 06:15:00\":376,\"2024-08-03 07:00:00\":926,\"2024-08-03 08:00:00\":1500,\"2024-08-03 09:00:00\":1987,\"2024-08-03 10:00:00\":2402,\"2024-08-03 11:00:00\":2713,\"2024-08-03 12:00:00\":2946,\"2024-08-03 13:00:00\":3209,\"2024-08-03 14:00:00\":3241,\"2024-08-03 15:00:00\":3053,\"2024-08-03 16:00:00\":2743,\"2024-08-03 17:00:00\":2401,\"2024-08-03 18:00:00\":1901,\"2024-08-03 19:00:00\":1332,\"2024-08-03 20:00:00\":819,\"2024-08-03 21:25:12\":0,\"2024-08-04 06:05:13\":0,\"2024-08-04 06:15:00\":340,\"2024-08-04 07:00:00\":826,\"2024-08-04 08:00:00\":1429,\"2024-08-04 09:00:00\":1987,\"2024-08-04 10:00:00\":2443,\"2024-08-04 11:00:00\":2766,\"2024-08-04 12:00:00\":3022,\"2024-08-04 13:00:00\":3255,\"2024-08-04 14:00:00\":3282,\"2024-08-04 15:00:00\":3093,\"2024-08-04 16:00:00\":2765,\"2024-08-04 17:00:00\":2410,\"2024-08-04 18:00:00\":1964,\"2024-08-04 19:00:00\":1516,\"2024-08-04 20:00:00\":1007,\"2024-08-04 21:23:26\":0},\"message\":{\"code\":0,\"type\":\"success\",\"text\":\"\",\"pid\":\"bNl68Y46\",\"info\":{\"latitude\":52.1405,\"longitude\":5.4363,\"distance\":0,\"place\":\"Ruige Velddreef 34, 3831 PG Leusden, Netherlands\",\"timezone\":\"Europe/Amsterdam\",\"time\":\"2024-08-03T15:24:33+02:00\",\"time_utc\":\"2024-08-03T13:24:33+00:00\"},\"ratelimit\":{\"zone\":\"IP 45.142.18.18\",\"period\":3600,\"limit\":12,\"remaining\":11}}}');\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 210,
+        "y": 660,
+        "wires": [
+            [
+                "c23bdedb46992b45"
+            ]
+        ]
+    },
+    {
+        "id": "9e4cb9245413a0c8",
+        "type": "link out",
+        "z": "edf9f455029eeb7f",
+        "g": "09a080a963e69d6f",
+        "name": "Data Ready",
+        "mode": "link",
+        "links": [
+            "1b6c2789468c41cc"
+        ],
+        "x": 1165,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "2267757ef11d51f0",
+        "type": "join",
+        "z": "edf9f455029eeb7f",
+        "g": "09a080a963e69d6f",
+        "name": "Join",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 790,
+        "y": 760,
+        "wires": [
+            [
+                "a73a59c7a15f6a8f"
+            ]
+        ]
+    },
+    {
+        "id": "c99527de89c75e32",
         "type": "change",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
-        "name": "Strip",
+        "z": "edf9f455029eeb7f",
+        "g": "09a080a963e69d6f",
+        "name": "T=tibber",
         "rules": [
             {
                 "t": "set",
                 "p": "topic",
                 "pt": "msg",
-                "to": "forecast",
+                "to": "tibber",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 640,
+        "y": 760,
+        "wires": [
+            [
+                "2267757ef11d51f0"
+            ]
+        ]
+    },
+    {
+        "id": "57db08c51ea509f2",
+        "type": "switch",
+        "z": "edf9f455029eeb7f",
+        "g": "09a080a963e69d6f",
+        "name": "IsOK?",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "jsonata_exp",
+                "v": "($count(payload))=24",
+                "vt": "jsonata"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 510,
+        "y": 760,
+        "wires": [
+            [
+                "c99527de89c75e32"
+            ],
+            [
+                "159fe759525d9223"
+            ]
+        ]
+    },
+    {
+        "id": "159fe759525d9223",
+        "type": "link out",
+        "z": "edf9f455029eeb7f",
+        "g": "09a080a963e69d6f",
+        "name": "Do Retry",
+        "mode": "link",
+        "links": [
+            "f79ebd4ef82b18e4"
+        ],
+        "x": 625,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "2fa2476e9ee7e277",
+        "type": "subflow:481b42546729112e",
+        "z": "edf9f455029eeb7f",
+        "g": "09a080a963e69d6f",
+        "name": "",
+        "env": [
+            {
+                "name": "latitude",
+                "value": "52.140480",
+                "type": "num"
+            },
+            {
+                "name": "longitude",
+                "value": "5.436300",
+                "type": "num"
+            },
+            {
+                "name": "azimuth",
+                "value": "180",
+                "type": "num"
+            },
+            {
+                "name": "modules power",
+                "value": "13",
+                "type": "num"
+            },
+            {
+                "name": "apikey",
+                "type": "cred"
+            }
+        ],
+        "x": 210,
+        "y": 840,
+        "wires": [
+            [
+                "ca4017109521366e",
+                "e5d4cef80c1ff7da"
+            ]
+        ]
+    },
+    {
+        "id": "ca4017109521366e",
+        "type": "switch",
+        "z": "edf9f455029eeb7f",
+        "g": "09a080a963e69d6f",
+        "name": "IsOK?",
+        "property": "payload.result",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nnull"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 380,
+        "y": 840,
+        "wires": [
+            [
+                "3ebb033deb357c05"
+            ],
+            [
+                "159fe759525d9223"
+            ]
+        ]
+    },
+    {
+        "id": "3ebb033deb357c05",
+        "type": "function",
+        "z": "edf9f455029eeb7f",
+        "g": "09a080a963e69d6f",
+        "name": "Parse Payload",
+        "func": "let result = msg.payload.result;\n\nconst d = new Date();\nlet actDay = d.getDate();\n\n//create default array with 0 forcast\nlet aForecast = new Array(24).fill(0);\n\nfor (const [key, value] of Object.entries(result)) {\n    let szDate = key.substring(0,10);\n    let szHour = key.substring(11, 14) + \"00\";\n\n    let day = parseInt(szDate.substring(8,10));\n    let hour = parseInt(key.substring(11, 13));\n\n    if (msg.today) {\n        if (day != actDay) {\n            //not interesting in tomorrow\n            continue;\n        }\n    } else {\n        if (day == actDay) {\n            //not interesting in tomorrow\n            continue;\n        }     \n    }\n\n    aForecast[hour] = parseInt(value);\n}\n\nmsg.topic = \"forecast\";\nmsg.payload = aForecast;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 840,
+        "wires": [
+            [
+                "2267757ef11d51f0"
+            ]
+        ]
+    },
+    {
+        "id": "febaf0d9ca8c4d2b",
+        "type": "function",
+        "z": "edf9f455029eeb7f",
+        "g": "09a080a963e69d6f",
+        "name": "Test Data",
+        "func": "msg.payload = JSON.parse('[{\"total\":0.2452,\"energy\":0.0763,\"tax\":0.1689,\"startsAt\":\"2024-07-30T00:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.2426,\"energy\":0.0742,\"tax\":0.1684,\"startsAt\":\"2024-07-30T01:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.245,\"energy\":0.0762,\"tax\":0.1688,\"startsAt\":\"2024-07-30T02:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.2506,\"energy\":0.0808,\"tax\":0.1698,\"startsAt\":\"2024-07-30T03:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.2561,\"energy\":0.0854,\"tax\":0.1707,\"startsAt\":\"2024-07-30T04:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.2741,\"energy\":0.1002,\"tax\":0.1739,\"startsAt\":\"2024-07-30T05:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.287,\"energy\":0.1109,\"tax\":0.1761,\"startsAt\":\"2024-07-30T06:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.2847,\"energy\":0.109,\"tax\":0.1757,\"startsAt\":\"2024-07-30T07:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.2719,\"energy\":0.0984,\"tax\":0.1735,\"startsAt\":\"2024-07-30T08:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.234,\"energy\":0.0671,\"tax\":0.1669,\"startsAt\":\"2024-07-30T09:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.1982,\"energy\":0.0375,\"tax\":0.1607,\"startsAt\":\"2024-07-30T10:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1623,\"energy\":0.0078,\"tax\":0.1545,\"startsAt\":\"2024-07-30T11:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.154,\"energy\":0.001,\"tax\":0.153,\"startsAt\":\"2024-07-30T12:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1528,\"energy\":-0.0001,\"tax\":0.1529,\"startsAt\":\"2024-07-30T13:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1528,\"energy\":-0.0001,\"tax\":0.1529,\"startsAt\":\"2024-07-30T14:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.1687,\"energy\":0.0131,\"tax\":0.1556,\"startsAt\":\"2024-07-30T15:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.2021,\"energy\":0.0407,\"tax\":0.1614,\"startsAt\":\"2024-07-30T16:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"CHEAP\"},{\"total\":0.2464,\"energy\":0.0773,\"tax\":0.1691,\"startsAt\":\"2024-07-30T17:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"NORMAL\"},{\"total\":0.2765,\"energy\":0.1022,\"tax\":0.1743,\"startsAt\":\"2024-07-30T18:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.3062,\"energy\":0.1268,\"tax\":0.1794,\"startsAt\":\"2024-07-30T19:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.3521,\"energy\":0.1647,\"tax\":0.1874,\"startsAt\":\"2024-07-30T20:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"VERY_EXPENSIVE\"},{\"total\":0.3278,\"energy\":0.1446,\"tax\":0.1832,\"startsAt\":\"2024-07-30T21:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"VERY_EXPENSIVE\"},{\"total\":0.2915,\"energy\":0.1146,\"tax\":0.1769,\"startsAt\":\"2024-07-30T22:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"},{\"total\":0.2727,\"energy\":0.099,\"tax\":0.1737,\"startsAt\":\"2024-07-30T23:00:00.000+02:00\",\"currency\":\"EUR\",\"level\":\"EXPENSIVE\"}]');\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6535373b1607bd1e",
+        "type": "function",
+        "z": "edf9f455029eeb7f",
+        "g": "09a080a963e69d6f",
+        "name": "Test data",
+        "func": "msg.payload = JSON.parse('{\"result\":{\"2024-07-30 05:57:25\":0,\"2024-07-30 06:15:00\":376,\"2024-07-30 07:00:00\":938,\"2024-07-30 08:00:00\":1691,\"2024-07-30 09:00:00\":2240,\"2024-07-30 10:00:00\":2612,\"2024-07-30 11:00:00\":2661,\"2024-07-30 12:00:00\":2847,\"2024-07-30 13:00:00\":3038,\"2024-07-30 14:00:00\":3053,\"2024-07-30 15:00:00\":2924,\"2024-07-30 16:00:00\":2722,\"2024-07-30 17:00:00\":2446,\"2024-07-30 18:00:00\":2029,\"2024-07-30 19:00:00\":1541,\"2024-07-30 20:00:00\":983,\"2024-07-30 21:31:58\":0,\"2024-07-31 05:58:57\":0,\"2024-07-31 06:15:00\":318,\"2024-07-31 07:00:00\":789,\"2024-07-31 08:00:00\":1381,\"2024-07-31 09:00:00\":1914,\"2024-07-31 10:00:00\":2364,\"2024-07-31 11:00:00\":2699,\"2024-07-31 12:00:00\":2939,\"2024-07-31 13:00:00\":3141,\"2024-07-31 14:00:00\":3136,\"2024-07-31 15:00:00\":2961,\"2024-07-31 16:00:00\":2684,\"2024-07-31 17:00:00\":2320,\"2024-07-31 18:00:00\":1820,\"2024-07-31 19:00:00\":1278,\"2024-07-31 20:00:00\":791,\"2024-07-31 21:30:19\":0},\"message\":{\"code\":0,\"type\":\"success\",\"text\":\"\",\"pid\":\"19fhEATJ\",\"info\":{\"latitude\":52.1405,\"longitude\":5.4363,\"distance\":0,\"place\":\"Ruige Velddreef 34, 3831 PG Leusden, Netherlands\",\"timezone\":\"Europe/Amsterdam\",\"time\":\"2024-07-30T14:36:15+02:00\",\"time_utc\":\"2024-07-30T12:36:15+00:00\"},\"ratelimit\":{\"zone\":\"IP 77.164.175.181\",\"period\":3600,\"limit\":12,\"remaining\":11}}}');\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
+        "y": 880,
+        "wires": [
+            [
+                "ca4017109521366e"
+            ]
+        ]
+    },
+    {
+        "id": "5333b48ce6123b27",
+        "type": "tibber-data",
+        "z": "edf9f455029eeb7f",
+        "g": "09a080a963e69d6f",
+        "name": "Get Tomorrow Prices",
+        "active": true,
+        "apiEndpointRef": "c375361050518336",
+        "queryName": "getTomorrowsEnergyPrices",
+        "homeId": "49bf2e0e-83cf-4388-b0d5-a03a407a3cc0",
+        "energyResolution": "HOURLY",
+        "lastCount": 10,
+        "x": 330,
+        "y": 760,
+        "wires": [
+            [
+                "57db08c51ea509f2"
+            ]
+        ]
+    },
+    {
+        "id": "a73a59c7a15f6a8f",
+        "type": "change",
+        "z": "edf9f455029eeb7f",
+        "g": "09a080a963e69d6f",
+        "name": "T=Tomorrow Prices",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "tibber_data/tomorrow/state",
                 "tot": "str"
             },
             {
                 "t": "set",
-                "p": "payload",
+                "p": "sendnow",
                 "pt": "msg",
-                "to": "payload.records.vrm_solar_irradiance_fc",
-                "tot": "msg"
+                "to": "true",
+                "tot": "bool"
             }
         ],
         "action": "",
@@ -699,48 +1947,82 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 550,
-        "y": 240,
+        "x": 1020,
+        "y": 760,
         "wires": [
             [
-                "249a8506a9a2ef3c"
+                "9e4cb9245413a0c8"
             ]
         ]
     },
     {
-        "id": "786766b4800fa311",
-        "type": "change",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
+        "id": "7ed67c1510d458c5",
+        "type": "switch",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
         "name": "",
+        "property": "today",
+        "propertyType": "msg",
         "rules": [
             {
-                "t": "set",
-                "p": "payload.tibber",
-                "pt": "msg",
-                "to": "payload",
-                "tot": "msg"
+                "t": "true"
+            },
+            {
+                "t": "false"
             }
         ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 740,
-        "y": 380,
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 650,
+        "y": 200,
         "wires": [
             [
-                "3853080d6883a3e2"
+                "95ef6a6364e11d89"
+            ],
+            [
+                "cef1e6499e62a43b"
             ]
         ]
     },
     {
-        "id": "bf6ac6d5e40538d3",
+        "id": "9d508e53fd26ec14",
+        "type": "link in",
+        "z": "edf9f455029eeb7f",
+        "g": "09a080a963e69d6f",
+        "name": "Perform Tomorrow",
+        "links": [
+            "cef1e6499e62a43b"
+        ],
+        "x": 55,
+        "y": 760,
+        "wires": [
+            [
+                "5333b48ce6123b27",
+                "2fa2476e9ee7e277"
+            ]
+        ]
+    },
+    {
+        "id": "cef1e6499e62a43b",
+        "type": "link out",
+        "z": "edf9f455029eeb7f",
+        "g": "9fc897c32bfacc77",
+        "name": "Perform Tomorrow",
+        "mode": "link",
+        "links": [
+            "9d508e53fd26ec14"
+        ],
+        "x": 785,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "58fe7bca50cdfaef",
         "type": "debug",
-        "z": "f8acf16219409257",
-        "g": "d15f3be7289fc5f3",
-        "name": "debug 59",
+        "z": "edf9f455029eeb7f",
+        "g": "53c4909b2cd159f9",
+        "name": "debug 62",
         "active": false,
         "tosidebar": true,
         "console": false,
@@ -748,8 +2030,25 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 580,
-        "y": 300,
+        "x": 420,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "e5d4cef80c1ff7da",
+        "type": "debug",
+        "z": "edf9f455029eeb7f",
+        "g": "09a080a963e69d6f",
+        "name": "debug 63",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 410,
+        "y": 880,
         "wires": []
     },
     {
@@ -760,10 +2059,5 @@
         "feedTimeout": "60",
         "queryRequestTimeout": "30",
         "name": "TibberRob"
-    },
-    {
-        "id": "b5817f4cf066d93c",
-        "type": "config-vrm-api",
-        "name": "Ruig34"
     }
 ]
