@@ -8,6 +8,8 @@
 needed libraries
 pip3 install requests pyserial
 
+This is probably Pylontech protocol, see https://www.photovoltaikforum.com/core/attachment/77134-pylon-lfp-battery-communication-protocol-rs485-v2-8-20161216-pdf/
+
 """
 
 import json
