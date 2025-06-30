@@ -21,17 +21,17 @@
       }
     ]
   },
+  "description": "JK Battery Pack",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 10,
+  "id": 19,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "qrO1dKjMk"
+        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
       },
       "description": "",
       "fieldConfig": {
@@ -40,14 +40,21 @@
             "mode": "thresholds"
           },
           "mappings": [],
-          "max": 3600,
-          "min": 0,
+          "max": 6000,
+          "min": -6000,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
+                "color": "green"
+              },
+              {
                 "color": "green",
-                "value": null
+                "value": -2000
+              },
+              {
+                "color": "blue",
+                "value": -1000
               },
               {
                 "color": "yellow",
@@ -77,6 +84,8 @@
         }
       ],
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -87,9 +96,161 @@
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": true,
+        "sizing": "auto",
         "text": {}
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "alias": "Usage",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "Usage-current",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT last(\"value\") FROM \"P1Actual\" WHERE (\"idx\"::tag = '1768')",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "idx::tag",
+              "operator": "=",
+              "value": "1768"
+            }
+          ]
+        }
+      ],
+      "title": "Grid Usage",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "qrO1dKjMk"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "max": 5000,
+          "min": -5000,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#ffffff"
+              },
+              {
+                "color": "red",
+                "value": -3000
+              },
+              {
+                "color": "green",
+                "value": -2500
+              },
+              {
+                "color": "super-light-blue",
+                "value": -2000
+              },
+              {
+                "color": "yellow",
+                "value": -1500
+              },
+              {
+                "color": "super-light-blue",
+                "value": -800
+              },
+              {
+                "color": "light-blue",
+                "value": 800
+              },
+              {
+                "color": "yellow",
+                "value": 1500
+              },
+              {
+                "color": "super-light-blue",
+                "value": 2000
+              },
+              {
+                "color": "green",
+                "value": 2500
+              },
+              {
+                "color": "red",
+                "value": 3000
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "id": 39,
+      "links": [
+        {
+          "title": "Home",
+          "url": "http://172.16.0.201:3000/d/3TD_2KCMk/domoticz-home?orgId=1"
+        }
+      ],
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto",
+        "text": {}
+      },
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "datasource": {
@@ -113,7 +274,7 @@
           "hide": false,
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "from(bucket:\"domoticz_home\")\r\n  |> range(start: 0)\r\n  |> filter(fn:(r) => r._measurement == \"Usage-current\" and r.idx == \"1768\")\r\n  |> last()",
+          "query": "from(bucket:\"domoticz_home\")\r\n  |> range(start: 0)\r\n  |> filter(fn:(r) => r._measurement == \"Setpoint\" and r.idx == \"9448\")\r\n  |> last()",
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -133,246 +294,8 @@
           "tags": []
         }
       ],
-      "title": "Grid Usage",
+      "title": "ESS Setpoint",
       "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 10
-              },
-              {
-                "color": "green",
-                "value": 30
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 4,
-        "y": 0
-      },
-      "id": 8,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "text": {}
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "Percentage",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "query": "SELECT last(\"value\") FROM \"autogen\".\"Percentage\" WHERE (\"idx\"::tag = '9454')",
-          "rawQuery": true,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "idx::tag",
-              "operator": "=",
-              "value": "9454"
-            }
-          ]
-        }
-      ],
-      "title": "Battery SOC",
-      "transformations": [],
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "decimals": 2,
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "dark-red",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 52
-              },
-              {
-                "color": "yellow",
-                "value": 53.7
-              },
-              {
-                "color": "green",
-                "value": 55
-              }
-            ]
-          },
-          "unit": "volt"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 8,
-        "y": 0
-      },
-      "hideTimeOverride": true,
-      "id": 22,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {
-          "valueSize": 35
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "Voltage",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "idx::tag",
-              "operator": "=",
-              "value": "9462"
-            }
-          ]
-        }
-      ],
-      "timeFrom": "12h",
-      "title": "Battery Voltage",
-      "type": "stat"
     },
     {
       "datasource": {
@@ -386,22 +309,29 @@
             "mode": "thresholds"
           },
           "mappings": [],
-          "max": 5200,
+          "max": 40,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
+                "color": "red"
+              },
+              {
                 "color": "orange",
-                "value": null
+                "value": 5
               },
               {
                 "color": "yellow",
-                "value": 1000
+                "value": 10
+              },
+              {
+                "color": "super-light-blue",
+                "value": 20
               },
               {
                 "color": "green",
-                "value": 1800
+                "value": 30
               }
             ]
           },
@@ -412,11 +342,13 @@
       "gridPos": {
         "h": 4,
         "w": 4,
-        "x": 12,
+        "x": 8,
         "y": 0
       },
       "id": 15,
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -427,9 +359,10 @@
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": true,
+        "sizing": "auto",
         "text": {}
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "datasource": {
@@ -487,50 +420,50 @@
           "color": {
             "mode": "thresholds"
           },
-          "mappings": [
-            {
-              "options": {
-                "null": {
-                  "color": "green",
-                  "index": 0,
-                  "text": "N/A"
-                }
-              },
-              "type": "value"
-            }
-          ],
-          "max": 4800,
-          "min": 0,
-          "noValue": "0",
+          "decimals": 0,
+          "mappings": [],
+          "max": 5000,
+          "min": -5000,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "yellow",
-                "value": 700
+                "value": 1500
+              },
+              {
+                "color": "orange",
+                "value": 5000
               },
               {
                 "color": "red",
-                "value": 1400
+                "value": 8000
               }
             ]
           },
-          "unit": "watt"
+          "unit": "none"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 4,
         "w": 4,
-        "x": 16,
+        "x": 12,
         "y": 0
       },
-      "id": 5,
+      "id": 40,
+      "links": [
+        {
+          "title": "Home",
+          "url": "http://172.16.0.201:3000/d/3TD_2KCMk/domoticz-home?orgId=1"
+        }
+      ],
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -541,9 +474,10 @@
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": true,
+        "sizing": "auto",
         "text": {}
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "datasource": {
@@ -565,9 +499,11 @@
             }
           ],
           "hide": false,
+          "measurement": "Usage",
           "orderByTime": "ASC",
-          "policy": "default",
-          "query": "from(bucket:\"domoticz_home\")\r\n  |> range(start: 0)\r\n  |> filter(fn:(r) => r._measurement == \"Instant\" and r.idx == \"8023\")\r\n  |> last()",
+          "policy": "autogen",
+          "query": "from(bucket:\"domoticz_home\")\r\n  |> range(start: 0)\r\n  |> filter(fn:(r) => r._measurement == \"Usage\" and r.idx == \"8129\")\r\n  |> last()",
+          "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -584,11 +520,139 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "idx::tag",
+              "operator": "=",
+              "value": "select tag value"
+            }
+          ]
         }
       ],
-      "title": "Enphase Now",
-      "transformations": [],
+      "title": "Actual Usage",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "qrO1dKjMk"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "max": 5000,
+          "min": -5000,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red"
+              },
+              {
+                "color": "light-blue",
+                "value": 800
+              },
+              {
+                "color": "orange",
+                "value": 1500
+              },
+              {
+                "color": "green",
+                "value": 3000
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 0
+      },
+      "id": 41,
+      "links": [
+        {
+          "title": "Home",
+          "url": "http://172.16.0.201:3000/d/3TD_2KCMk/domoticz-home?orgId=1"
+        }
+      ],
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto",
+        "text": {}
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "qrO1dKjMk"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "Usage",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "from(bucket:\"domoticz_home\")\r\n  |> range(start: 0)\r\n  |> filter(fn:(r) => r._measurement == \"Usage\" and r.idx == \"8130\")\r\n  |> last()",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "idx::tag",
+              "operator": "=",
+              "value": "select tag value"
+            }
+          ]
+        }
+      ],
+      "title": "Actual Delivery",
       "type": "gauge"
     },
     {
@@ -617,8 +681,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "rgba(0, 55, 255, 0.97)",
-                "value": null
+                "color": "rgba(0, 55, 255, 0.97)"
               },
               {
                 "color": "rgba(0, 255, 147, 0.89)",
@@ -644,20 +707,20 @@
         ]
       },
       "gridPos": {
-        "h": 4,
+        "h": 2,
         "w": 4,
         "x": 20,
         "y": 0
       },
       "hideTimeOverride": true,
       "id": 13,
-      "links": [],
       "maxDataPoints": 100,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -665,12 +728,14 @@
           "fields": "",
           "values": false
         },
+        "showPercentChange": false,
         "text": {
           "valueSize": 35
         },
-        "textMode": "auto"
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "datasource": {
@@ -728,417 +793,6 @@
         "type": "influxdb",
         "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
       },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "#3eb6b180",
-            "mode": "fixed"
-          },
-          "custom": {
-            "align": "center",
-            "cellOptions": {
-              "mode": "gradient",
-              "type": "color-background"
-            },
-            "filterable": false,
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Time"
-            },
-            "properties": [
-              {
-                "id": "custom.hidden",
-                "value": true
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 0,
-        "y": 4
-      },
-      "id": 24,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "enablePagination": false,
-          "fields": [],
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": false
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "Text",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "query": "SELECT last(\"value\") FROM \"autogen\".\"Text\" WHERE (\"idx\"::tag = '9453')",
-          "rawQuery": true,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "idx::tag",
-              "operator": "=",
-              "value": "9453"
-            }
-          ]
-        }
-      ],
-      "title": "Charge State",
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "decimals": 1,
-          "links": [
-            {
-              "targetBlank": false,
-              "title": "Show details",
-              "url": "http://172.16.0.201:3000/d/3TD_2KCMk_HB/home-battery?orgId=1&refresh=5s&from=now-24h&to=now&viewPanel=17"
-            }
-          ],
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 20
-              },
-              {
-                "color": "yellow",
-                "value": 50
-              },
-              {
-                "color": "super-light-green",
-                "value": 70
-              },
-              {
-                "color": "green",
-                "value": 90
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 4,
-        "y": 4
-      },
-      "hideTimeOverride": true,
-      "id": 32,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {
-          "valueSize": 40
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-          },
-          "groupBy": [],
-          "measurement": "Percentage",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "query": "SELECT last(\"value\") FROM \"autogen\".\"Percentage\" WHERE (\"idx\"::tag = '9454')",
-          "rawQuery": true,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "idx::tag",
-              "operator": "=",
-              "value": "9454"
-            }
-          ]
-        }
-      ],
-      "timeFrom": "12h",
-      "title": "Battery SOC",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "decimals": 3,
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 4000
-              },
-              {
-                "color": "yellow",
-                "value": 7500
-              },
-              {
-                "color": "green",
-                "value": 10000
-              },
-              {
-                "color": "blue",
-                "value": 12000
-              }
-            ]
-          },
-          "unit": "watt"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 8,
-        "y": 4
-      },
-      "hideTimeOverride": true,
-      "id": 21,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {
-          "valueSize": 35
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "Usage",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "query": "SELECT last(\"value\") FROM \"autogen\".\"Usage\" WHERE (\"idx\"::tag = '9466')",
-          "rawQuery": true,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "idx::tag",
-              "operator": "=",
-              "value": "9466"
-            }
-          ]
-        }
-      ],
-      "timeFrom": "12h",
-      "title": "Battery Capacity",
-      "type": "stat"
-    },
-    {
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 12,
-        "y": 4
-      },
-      "id": 30,
-      "libraryPanel": {
-        "name": "Cycle Count",
-        "uid": "e783cd6c-3bb0-4057-94a6-2c07dd3909bc"
-      },
-      "title": "Cycle Count"
-    },
-    {
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 16,
-        "y": 4
-      },
-      "id": 37,
-      "libraryPanel": {
-        "name": "Cell Min/Max/Avg/Diff",
-        "uid": "f8abdff6-48eb-4363-b671-030c552cbe03"
-      },
-      "title": "Cell Min/Max/Avg/Diff"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1160,8 +814,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "#1265e2",
-                "value": null
+                "color": "#1265e2"
               },
               {
                 "color": "#44d731",
@@ -1178,20 +831,20 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
+        "h": 2,
         "w": 4,
         "x": 20,
-        "y": 4
+        "y": 2
       },
       "hideTimeOverride": true,
       "id": 38,
-      "links": [],
       "maxDataPoints": 100,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1199,12 +852,14 @@
           "fields": "",
           "values": false
         },
+        "showPercentChange": false,
         "text": {
           "valueSize": 35
         },
-        "textMode": "auto"
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "datasource": {
@@ -1258,18 +913,1142 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#3eb6b180",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "mode": "gradient",
+              "type": "color-background"
+            },
+            "filterable": false,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 0,
+        "y": 4
+      },
+      "id": 24,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": [],
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": false
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "Text",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "SELECT last(\"value\") FROM \"autogen\".\"Text\" WHERE (\"idx\"::tag = '9453')",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "idx::tag",
+              "operator": "=",
+              "value": "9453"
+            }
+          ]
+        }
+      ],
+      "title": "State",
+      "type": "table"
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 3,
+        "y": 4
+      },
+      "id": 30,
+      "libraryPanel": {
+        "name": "Cycles",
+        "uid": "e783cd6c-3bb0-4057-94a6-2c07dd3909bc"
+      },
+      "title": "Cycles",
+      "type": "library-panel-ref"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "Show details",
+              "url": "http://172.16.0.201:3000/d/3TD_2KCMk_HB/home-battery?orgId=1&refresh=5s&from=now-24h&to=now&viewPanel=17"
+            }
+          ],
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red"
+              },
+              {
+                "color": "orange",
+                "value": 20
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "super-light-green",
+                "value": 70
+              },
+              {
+                "color": "green",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 5,
+        "y": 4
+      },
+      "hideTimeOverride": true,
+      "id": 32,
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "alias": "Smartshunt",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "Percentage",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "SELECT last(\"value\") FROM \"autogen\".\"Percentage\" WHERE (\"idx\"::tag = '9454')",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "idx::tag",
+              "operator": "=",
+              "value": "10352"
+            }
+          ]
+        },
+        {
+          "alias": "Basen",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "basengreen",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "soc"
+            }
+          ]
+        },
+        {
+          "alias": "JK",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "jk",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "soc"
+            }
+          ]
+        }
+      ],
+      "timeFrom": "12h",
+      "title": "Battery SOC",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red"
+              },
+              {
+                "color": "orange",
+                "value": 52
+              },
+              {
+                "color": "yellow",
+                "value": 53.7
+              },
+              {
+                "color": "green",
+                "value": 55
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 9,
+        "y": 4
+      },
+      "hideTimeOverride": true,
+      "id": 22,
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 35
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "alias": "Smartshunt",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "Voltage",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "idx::tag",
+              "operator": "=",
+              "value": "9462"
+            }
+          ]
+        },
+        {
+          "alias": "Basen",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "basengreen",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "battery_voltage"
+            }
+          ]
+        },
+        {
+          "alias": "JK",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "jk",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "battery_voltage"
+            }
+          ]
+        }
+      ],
+      "timeFrom": "12h",
+      "title": "Battery Voltage",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red"
+              },
+              {
+                "color": "orange",
+                "value": 52
+              },
+              {
+                "color": "yellow",
+                "value": 53.7
+              },
+              {
+                "color": "green",
+                "value": 55
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 13,
+        "y": 4
+      },
+      "hideTimeOverride": true,
+      "id": 42,
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 35
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "alias": "Smartshunt",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "Current",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"value\" FROM \"Current\" WHERE (\"idx\"::tag = '9461')",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "idx::tag",
+              "operator": "=",
+              "value": "9461"
+            }
+          ]
+        },
+        {
+          "alias": "Basen",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "basengreen",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"value\" FROM \"basengreen\" WHERE (\"type\"::tag = 'battery_current')",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "battery_current"
+            }
+          ]
+        },
+        {
+          "alias": "JK",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "jk",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "SELECT \"value\" FROM \"Current\" WHERE (\"idx\"::tag = '9461')",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "battery_current"
+            }
+          ]
+        }
+      ],
+      "timeFrom": "12h",
+      "title": "Battery Ampere",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 3,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red"
+              },
+              {
+                "color": "orange",
+                "value": 4000
+              },
+              {
+                "color": "yellow",
+                "value": 7500
+              },
+              {
+                "color": "green",
+                "value": 10000
+              },
+              {
+                "color": "blue",
+                "value": 12000
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 17,
+        "y": 4
+      },
+      "hideTimeOverride": true,
+      "id": 21,
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 35
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "alias": "Basen",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "Usage",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "idx::tag",
+              "operator": "=",
+              "value": "9466"
+            }
+          ]
+        },
+        {
+          "alias": "JK",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "jk",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "battery_kw"
+            }
+          ]
+        }
+      ],
+      "timeFrom": "12h",
+      "title": "Battery Capacity",
+      "type": "stat"
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 4
+      },
+      "id": 37,
+      "libraryPanel": {
+        "name": "Cell Min/Max/Avg/Diff",
+        "uid": "f8abdff6-48eb-4363-b671-030c552cbe03"
+      },
+      "title": "Cell Min/Max/Avg/Diff",
+      "type": "library-panel-ref"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "fieldMinMax": false,
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 50,
+      "options": {
+        "autoSizeColumns": true,
+        "autoSizePolygons": true,
+        "autoSizeRows": true,
+        "compositeConfig": {
+          "animationSpeed": "1500",
+          "composites": [],
+          "enabled": true
+        },
+        "compositeGlobalAliasingEnabled": false,
+        "ellipseCharacters": 18,
+        "ellipseEnabled": false,
+        "globalAutoScaleFonts": true,
+        "globalClickthrough": "",
+        "globalClickthroughCustomTarget": "",
+        "globalClickthroughCustomTargetEnabled": false,
+        "globalClickthroughNewTabEnabled": true,
+        "globalClickthroughSanitizedEnabled": true,
+        "globalDecimals": 2,
+        "globalDisplayMode": "all",
+        "globalDisplayTextTriggeredEmpty": "OK",
+        "globalFillColor": "rgba(10, 85, 161, 1)",
+        "globalFontSize": 12,
+        "globalGradientsEnabled": true,
+        "globalOperator": "lastNotNull",
+        "globalPolygonBorderColor": "rgba(0, 0, 0, 0)",
+        "globalPolygonBorderSize": 2,
+        "globalPolygonSize": 25,
+        "globalRegexPattern": "",
+        "globalShape": "hexagon_pointed_top",
+        "globalShowTimestampEnabled": true,
+        "globalShowTimestampFontSize": 12,
+        "globalShowTimestampFormat": "YYYY-MM-DD HH:mm:ss",
+        "globalShowTimestampPosition": "below_value",
+        "globalShowTimestampYOffset": 0,
+        "globalShowTooltipColumnHeadersEnabled": true,
+        "globalShowValueEnabled": false,
+        "globalTextFontAutoColorEnabled": true,
+        "globalTextFontColor": "#000000",
+        "globalTextFontFamily": "Roboto",
+        "globalThresholdsConfig": [
+          {
+            "color": "#299c46",
+            "state": 0,
+            "value": 0
+          },
+          {
+            "color": "#f53636",
+            "state": 2,
+            "value": 1
+          }
+        ],
+        "globalTooltipsEnabled": true,
+        "globalTooltipsFontFamily": "Roboto",
+        "globalTooltipsShowTimestampEnabled": true,
+        "globalTooltipsShowValueEnabled": true,
+        "globalUnitFormat": "bool_yes_no",
+        "layoutDisplayLimit": 100,
+        "layoutNumColumns": 8,
+        "layoutNumRows": 8,
+        "overrideConfig": {
+          "overrides": []
+        },
+        "sortByDirection": 1,
+        "sortByField": "name",
+        "tooltipDisplayMode": "all",
+        "tooltipDisplayTextTriggeredEmpty": "OK",
+        "tooltipPrimarySortByField": "thresholdLevel",
+        "tooltipPrimarySortDirection": 0,
+        "tooltipSecondarySortByField": "value",
+        "tooltipSecondarySortDirection": 0
+      },
+      "pluginVersion": "2.1.14",
+      "targets": [
+        {
+          "alias": "$tag_id",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "id::tag"
+              ],
+              "type": "tag"
+            }
+          ],
+          "hide": false,
+          "measurement": "/^$wbattery$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "alarm"
+            }
+          ]
+        }
+      ],
+      "title": "",
+      "type": "grafana-polystat-panel"
+    },
+    {
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 7
+        "y": 10
       },
-      "id": 35,
+      "id": 46,
       "libraryPanel": {
         "name": "Battery SOC/Voltage",
         "uid": "fabe9600-2c1f-4015-b0be-8cef4dc99d38"
       },
-      "title": "Battery SOC/Voltage"
+      "title": "Battery SOC/Voltage",
+      "type": "library-panel-ref"
     },
     {
       "datasource": {
@@ -1283,11 +2062,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 50,
             "gradientMode": "opacity",
@@ -1296,6 +2077,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "stepAfter",
             "lineWidth": 1,
             "pointSize": 5,
@@ -1318,8 +2100,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -1364,11 +2145,11 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
+        "w": 12,
         "x": 12,
-        "y": 7
+        "y": 10
       },
-      "id": 23,
+      "id": 47,
       "options": {
         "legend": {
           "calcs": [
@@ -1382,10 +2163,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "alias": "Volt",
@@ -1407,9 +2190,9 @@
               "type": "fill"
             }
           ],
-          "measurement": "Voltage",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
-          "policy": "default",
+          "policy": "autogen",
           "refId": "Volt",
           "resultFormat": "time_series",
           "select": [
@@ -1428,9 +2211,9 @@
           ],
           "tags": [
             {
-              "key": "idx::tag",
+              "key": "type::tag",
               "operator": "=",
-              "value": "9462"
+              "value": "battery_voltage"
             }
           ]
         },
@@ -1455,9 +2238,9 @@
             }
           ],
           "hide": false,
-          "measurement": "Current",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
-          "policy": "default",
+          "policy": "autogen",
           "refId": "Ampere",
           "resultFormat": "time_series",
           "select": [
@@ -1476,9 +2259,9 @@
           ],
           "tags": [
             {
-              "key": "idx::tag",
+              "key": "type::tag",
               "operator": "=",
-              "value": "9461"
+              "value": "battery_current"
             }
           ]
         }
@@ -1498,413 +2281,13 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 50,
-            "gradientMode": "opacity",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "stepAfter",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "decimals": 2,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "volt"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Volt"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "semi-dark-yellow",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Ampere"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "semi-dark-blue",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "unit",
-                "value": "amp"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 7
-      },
-      "id": 26,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean",
-            "last"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "alias": "Volt",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "Voltage",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "Volt",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "idx::tag",
-              "operator": "=",
-              "value": "9460"
-            }
-          ]
-        },
-        {
-          "alias": "Ampere",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "Current",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "Ampere",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "idx::tag",
-              "operator": "=",
-              "value": "9459"
-            }
-          ]
-        }
-      ],
-      "title": "Basen Volt/Ampere",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Percentage",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "graph": false,
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "decimals": 1,
-          "mappings": [],
-          "noValue": "-",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 0,
-        "y": 15
-      },
-      "id": 17,
-      "options": {
-        "graph": {},
-        "legend": {
-          "calcs": [
-            "last"
-          ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "7.5.5",
-      "targets": [
-        {
-          "alias": "Smartshunt",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "Percentage",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "",
-          "refId": "Smartshunt",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "idx::tag",
-              "operator": "=",
-              "value": "9454"
-            }
-          ]
-        },
-        {
-          "alias": "BasenVT",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "Percentage",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "query": "",
-          "refId": "BasenVT",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "idx::tag",
-              "operator": "=",
-              "value": "9452"
-            }
-          ]
-        }
-      ],
-      "title": "Battery SOC",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "qrO1dKjMk"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "Voltage",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1914,169 +2297,7 @@
               "tooltip": false,
               "viz": false
             },
-            "lineInterpolation": "smooth",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "decimals": 2,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "volt"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "value {idx=\"9462\", name=\"Battery-Voltage\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Smartshunt"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "value {idx=\"9460\", name=\"BasenVT-Voltage\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "BasenVT"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 12,
-        "y": 15
-      },
-      "id": 18,
-      "options": {
-        "graph": {},
-        "legend": {
-          "calcs": [
-            "last"
-          ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "7.5.5",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "qrO1dKjMk"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "from(bucket:\"domoticz_home\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn:(r) =>\r\n    r._measurement == \"Voltage\"\r\n    and r.idx == \"9462\"\r\n  )\r\n  |> aggregateWindow(every: $__interval, fn: mean)\r\n  |> yield()\r\n",
-          "refId": "Battery Voltage",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "qrO1dKjMk"
-          },
-          "hide": false,
-          "query": "from(bucket:\"domoticz_home\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn:(r) =>\r\n    r._measurement == \"Voltage\"\r\n    and r.idx == \"9460\"\r\n  )\r\n  |> aggregateWindow(every: $__interval, fn: mean)\r\n  |> yield()\r\n  \r\n",
-          "refId": "Basen Voltage"
-        }
-      ],
-      "title": "Battery Voltage",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Voltage",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "graph": false,
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
+            "insertNulls": false,
             "lineInterpolation": "smooth",
             "lineStyle": {
               "fill": "solid"
@@ -2097,13 +2318,13 @@
             }
           },
           "decimals": 3,
+          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -2115,9 +2336,9 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 22
+        "y": 18
       },
-      "id": 27,
+      "id": 48,
       "options": {
         "graph": {},
         "legend": {
@@ -2129,37 +2350,25 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "7.5.5",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
-          "alias": "Cell 1",
+          "alias": "Cell 2",
           "datasource": {
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
-          "refId": "1",
+          "refId": "A",
           "resultFormat": "time_series",
           "select": [
             [
@@ -2168,10 +2377,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2189,22 +2394,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "2",
@@ -2216,10 +2408,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2237,22 +2425,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "3",
@@ -2264,10 +2439,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2285,22 +2456,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "4",
@@ -2312,10 +2470,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2333,22 +2487,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "5",
@@ -2360,10 +2501,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2381,22 +2518,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "6",
@@ -2408,10 +2532,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2429,22 +2549,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "7",
@@ -2456,10 +2563,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2477,22 +2580,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "8",
@@ -2504,10 +2594,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2525,22 +2611,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "9",
@@ -2552,10 +2625,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2573,22 +2642,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "10",
@@ -2600,10 +2656,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2621,22 +2673,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "11",
@@ -2648,10 +2687,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2669,22 +2704,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "12",
@@ -2696,10 +2718,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2717,22 +2735,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "13",
@@ -2744,10 +2749,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2765,22 +2766,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "14",
@@ -2792,10 +2780,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2813,22 +2797,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "15",
@@ -2840,10 +2811,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2861,22 +2828,9 @@
             "type": "influxdb",
             "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
           },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "previous"
-              ],
-              "type": "fill"
-            }
-          ],
+          "groupBy": [],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "16",
@@ -2888,10 +2842,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -2904,7 +2854,7 @@
           ]
         }
       ],
-      "title": "Basen Cell Voltage",
+      "title": "JK Cell Voltage",
       "type": "timeseries"
     },
     {
@@ -2919,11 +2869,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "Voltage",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -2933,6 +2885,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "smooth",
             "lineStyle": {
               "fill": "solid"
@@ -2970,7 +2923,7 @@
         "h": 4,
         "w": 24,
         "x": 0,
-        "y": 34
+        "y": 30
       },
       "id": 28,
       "options": {
@@ -2984,11 +2937,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "7.5.5",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "alias": "Min",
@@ -3011,7 +2965,7 @@
             }
           ],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "min",
@@ -3059,7 +3013,7 @@
             }
           ],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "max",
@@ -3107,7 +3061,7 @@
             }
           ],
           "hide": false,
-          "measurement": "basengreen",
+          "measurement": "/^$wbattery$/",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "3",
@@ -3135,7 +3089,526 @@
           ]
         }
       ],
-      "title": "Basen Min/Max/Avg Voltage",
+      "title": "JK Min/Max/Avg Voltage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Voltage",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 3,
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-blue"
+              },
+              {
+                "color": "#EAB839",
+                "value": 0.001
+              },
+              {
+                "color": "#6ED0E0",
+                "value": 0.002
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 34
+      },
+      "id": 43,
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "alias": "Diff",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "/^$wbattery$/",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "refId": "min",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "voltage_diff"
+            }
+          ]
+        }
+      ],
+      "title": "JK Voltage Difference",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 38
+      },
+      "id": 45,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "alias": "1",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "/^$wbattery$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "temp::tag",
+              "operator": "=",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "alias": "2",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "/^$wbattery$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "temp::tag",
+              "operator": "=",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "alias": "3",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "/^$wbattery$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "temp::tag",
+              "operator": "=",
+              "value": "3"
+            }
+          ]
+        },
+        {
+          "alias": "4",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "/^$wbattery$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "temp::tag",
+              "operator": "=",
+              "value": "4"
+            }
+          ]
+        },
+        {
+          "alias": "5",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "/^$wbattery$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "temp::tag",
+              "operator": "=",
+              "value": "5"
+            }
+          ]
+        },
+        {
+          "alias": "PT",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "/^$wbattery$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "F",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "temp::tag",
+              "operator": "=",
+              "value": "powertube"
+            }
+          ]
+        }
+      ],
+      "title": "Basen Temperature Probes",
       "type": "timeseries"
     },
     {
@@ -3150,11 +3623,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -3164,6 +3639,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -3221,7 +3697,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 38
+        "y": 47
       },
       "id": 6,
       "options": {
@@ -3233,11 +3709,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "7.5.5",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "datasource": {
@@ -3295,11 +3772,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "Watt",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -3309,6 +3788,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "smooth",
             "lineStyle": {
               "fill": "solid"
@@ -3503,7 +3983,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 38
+        "y": 47
       },
       "id": 16,
       "options": {
@@ -3515,11 +3995,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "7.5.5",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "datasource": {
@@ -3686,11 +4167,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -3700,14 +4183,18 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true,
+            "spanNulls": 3600000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -3717,6 +4204,7 @@
             }
           },
           "decimals": 0,
+          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -3725,12 +4213,16 @@
                 "color": "green"
               },
               {
+                "color": "#EAB839",
+                "value": -5000
+              },
+              {
                 "color": "red",
-                "value": 80
+                "value": 5000
               }
             ]
           },
-          "unit": "watt"
+          "unit": "Watt"
         },
         "overrides": [
           {
@@ -3741,31 +4233,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "Elektra"
-              }
-            ]
-          },
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "Elektra"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
+                "value": "Usage"
               }
             ]
           }
@@ -3775,23 +4243,28 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 47
+        "y": 56
       },
       "id": 2,
       "options": {
         "graph": {},
         "legend": {
-          "calcs": [],
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "7.5.5",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "datasource": {
@@ -3812,9 +4285,10 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "from(bucket:\"domoticz_home\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn:(r) =>\r\n    r._measurement == \"Usage-current\"\r\n    and r.idx == \"1768\"\r\n  )\r\n  |> aggregateWindow(every: $__interval, fn: mean)\r\n  |> yield()",
+          "query": "from(bucket:\"domoticz_home\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn:(r) =>\r\n    r._measurement == \"P1Actual\"\r\n    and r.idx == \"1768\"\r\n  )\r\n  |> aggregateWindow(every: $__interval, fn: mean)\r\n  |> yield()",
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -3835,6 +4309,34 @@
         }
       ],
       "title": "Power Usage",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Usage",
+            "binary": {
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "value {idx=\"1768\", name=\"Usage-current\"}"
+                }
+              },
+              "operator": "-",
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "value {idx=\"1768\", name=\"Delivery-current\"}"
+                }
+              }
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        }
+      ],
       "type": "timeseries"
     },
     {
@@ -3849,6 +4351,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -3883,33 +4386,13 @@
           },
           "unit": "watt"
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "value {idx=\"1768\", name=\"Elektra-Meter\"}"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "displayName",
-                "value": "Elektra"
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 47
+        "y": 56
       },
       "id": 7,
       "options": {
@@ -3930,13 +4413,14 @@
           "valueSize": 21
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         },
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 0
       },
-      "pluginVersion": "7.5.5",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "datasource": {
@@ -3957,6 +4441,7 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "orderByTime": "ASC",
           "policy": "default",
           "query": "from(bucket:\"domoticz_home\")\r\n  |> range(start: today())\r\n  |> filter(fn:(r) =>\r\n    r._measurement == \"Usage-current\"\r\n    and r.idx == \"1768\"\r\n  )\r\n  |> aggregateWindow(every: 1h, fn: count)",
@@ -3977,28 +4462,919 @@
             ]
           ],
           "tags": []
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "qrO1dKjMk"
+          },
+          "hide": false,
+          "query": "from(bucket:\"domoticz_home\")\r\n  |> range(start: today())\r\n  |> filter(fn:(r) =>\r\n    r._measurement == \"Delivery-current\"\r\n    and r.idx == \"1768\"\r\n  )\r\n  |> aggregateWindow(every: 1h, fn: count)",
+          "refId": "B"
         }
       ],
       "title": "Power Usage Today (Watt)",
       "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "amp"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 0,
+        "y": 65
+      },
+      "id": 26,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "alias": "Basen",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "basengreen",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "AmpereBasen",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "balance_current"
+            }
+          ]
+        },
+        {
+          "alias": "JK",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "jk",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "AmpereJK",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "battery_current"
+            }
+          ]
+        }
+      ],
+      "title": "Battery Ampere",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Voltage",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "volt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {idx=\"9462\", name=\"Battery-Voltage\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Smartshunt"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {idx=\"9460\", name=\"BasenVT-Voltage\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "BasenVT"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 8,
+        "y": 65
+      },
+      "id": 18,
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "alias": "Smartshunt",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            }
+          ],
+          "measurement": "Voltage",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "idx::tag",
+              "operator": "=",
+              "value": "9462"
+            }
+          ]
+        },
+        {
+          "alias": "Basen",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "basengreen",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "battery_voltage"
+            }
+          ]
+        },
+        {
+          "alias": "JK",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "measurement": "jk",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "battery_voltage"
+            }
+          ]
+        }
+      ],
+      "title": "Battery Voltage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Percentage",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "-",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 16,
+        "y": 65
+      },
+      "id": 17,
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "alias": "Smartshunt",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "Percentage",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "",
+          "refId": "Smartshunt",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "idx::tag",
+              "operator": "=",
+              "value": "10352"
+            }
+          ]
+        },
+        {
+          "alias": "Basen",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "basengreen",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "",
+          "refId": "BasenVT",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "soc"
+            }
+          ]
+        },
+        {
+          "alias": "JK",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "previous"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "jk",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "soc"
+            }
+          ]
+        }
+      ],
+      "title": "Battery SOC",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "#EAB839",
+                "value": -5000
+              },
+              {
+                "color": "red",
+                "value": 5000
+              }
+            ]
+          },
+          "unit": "Watt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {idx=\"1768\", name=\"Elektra-Meter\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Usage"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 6,
+        "y": 72
+      },
+      "id": 49,
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fc47243f-b7f3-4b79-967e-4bab621bb7aa"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "/^$wbattery$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type::tag",
+              "operator": "=",
+              "value": "battery_power"
+            }
+          ]
+        }
+      ],
+      "title": "Power Usage",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Usage",
+            "binary": {
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "value {idx=\"1768\", name=\"Usage-current\"}"
+                }
+              },
+              "operator": "-",
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "value {idx=\"1768\", name=\"Delivery-current\"}"
+                }
+              }
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        }
+      ],
+      "type": "timeseries"
     }
   ],
-  "refresh": "5s",
-  "revision": 1,
-  "schemaVersion": 38,
-  "style": "dark",
+  "preload": false,
+  "refresh": "10s",
+  "schemaVersion": 41,
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "allowCustomValue": false,
+        "current": {
+          "text": "jk",
+          "value": "jk"
+        },
+        "description": "",
+        "label": "Battery",
+        "name": "wbattery",
+        "options": [
+          {
+            "selected": false,
+            "text": "basengreen",
+            "value": "basengreen"
+          },
+          {
+            "selected": true,
+            "text": "jk",
+            "value": "jk"
+          }
+        ],
+        "query": "basengreen, jk",
+        "type": "custom"
+      }
+    ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Home Battery",
-  "uid": "3TD_2KCMk_HB",
-  "version": 30,
-  "weekStart": ""
+  "title": "Home Battery Main",
+  "uid": "HDBM_1KACk_HB",
+  "version": 15
 }

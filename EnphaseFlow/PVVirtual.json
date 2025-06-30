@@ -1,0 +1,627 @@
+[
+    {
+        "id": "9aa76971e5aacbd8",
+        "type": "tab",
+        "label": "Emphase PV to Victron",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e9c238be38dfc615",
+        "type": "victron-virtual",
+        "z": "9aa76971e5aacbd8",
+        "name": "Enphase PV",
+        "device": "pvinverter",
+        "default_values": true,
+        "battery_capacity": 25,
+        "include_battery_temperature": false,
+        "grid_nrofphases": 1,
+        "include_motor_temp": false,
+        "include_controller_temp": false,
+        "include_coolant_temp": false,
+        "include_motor_rpm": true,
+        "include_motor_direction": true,
+        "position": 0,
+        "pvinverter_nrofphases": 1,
+        "fluid_type": 0,
+        "include_tank_battery": false,
+        "include_tank_temperature": false,
+        "tank_battery_voltage": 3.3,
+        "tank_capacity": 0.2,
+        "temperature_type": 2,
+        "include_humidity": false,
+        "include_pressure": false,
+        "include_temp_battery": false,
+        "temp_battery_voltage": 3.3,
+        "x": 170,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "63da225f629bddd3",
+        "type": "victron-output-custom",
+        "z": "9aa76971e5aacbd8",
+        "service": "com.victronenergy.pvinverter/100",
+        "path": "/Connected",
+        "serviceObj": {
+            "service": "com.victronenergy.pvinverter/100",
+            "name": "Enphase PV (100)"
+        },
+        "pathObj": {
+            "path": "/Connected",
+            "name": "/Connected",
+            "type": "number",
+            "value": 1
+        },
+        "name": "",
+        "onlyChanges": false,
+        "x": 650,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "0c2960b5be26181c",
+        "type": "inject",
+        "z": "9aa76971e5aacbd8",
+        "name": "1",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1",
+        "payloadType": "num",
+        "x": 430,
+        "y": 100,
+        "wires": [
+            [
+                "63da225f629bddd3"
+            ]
+        ]
+    },
+    {
+        "id": "94152efca0329e6c",
+        "type": "victron-output-custom",
+        "z": "9aa76971e5aacbd8",
+        "service": "com.victronenergy.pvinverter/100",
+        "path": "/Serial",
+        "serviceObj": {
+            "service": "com.victronenergy.pvinverter/100",
+            "name": "Enphase PV (100)"
+        },
+        "pathObj": {
+            "path": "/Serial",
+            "name": "/Serial",
+            "type": "string",
+            "value": "e9c238be38dfc615"
+        },
+        "name": "",
+        "onlyChanges": false,
+        "x": 640,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "fdbe056efc8b32dd",
+        "type": "inject",
+        "z": "9aa76971e5aacbd8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "42635462",
+        "payloadType": "str",
+        "x": 410,
+        "y": 140,
+        "wires": [
+            [
+                "94152efca0329e6c"
+            ]
+        ]
+    },
+    {
+        "id": "c5c329458ff4a379",
+        "type": "inject",
+        "z": "9aa76971e5aacbd8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "7",
+        "payloadType": "num",
+        "x": 430,
+        "y": 180,
+        "wires": [
+            [
+                "dcf7d82d20667f40"
+            ]
+        ]
+    },
+    {
+        "id": "12ed329f045d94ef",
+        "type": "inject",
+        "z": "9aa76971e5aacbd8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "5200",
+        "payloadType": "num",
+        "x": 430,
+        "y": 220,
+        "wires": [
+            [
+                "7bede248bbb5ad18"
+            ]
+        ]
+    },
+    {
+        "id": "dcf7d82d20667f40",
+        "type": "victron-output-custom",
+        "z": "9aa76971e5aacbd8",
+        "service": "com.victronenergy.pvinverter/100",
+        "path": "/StatusCode",
+        "serviceObj": {
+            "service": "com.victronenergy.pvinverter/100",
+            "name": "Enphase PV (100)"
+        },
+        "pathObj": {
+            "path": "/StatusCode",
+            "name": "/StatusCode",
+            "type": "number",
+            "value": 0
+        },
+        "name": "",
+        "onlyChanges": false,
+        "x": 650,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "7bede248bbb5ad18",
+        "type": "victron-output-custom",
+        "z": "9aa76971e5aacbd8",
+        "service": "com.victronenergy.pvinverter/100",
+        "path": "/Ac/MaxPower",
+        "serviceObj": {
+            "service": "com.victronenergy.pvinverter/100",
+            "name": "Enphase PV (100)"
+        },
+        "pathObj": {
+            "path": "/Ac/MaxPower",
+            "name": "/Ac/MaxPower",
+            "type": "number",
+            "value": 1000
+        },
+        "name": "",
+        "onlyChanges": false,
+        "x": 660,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "f710fb60c2b82a8d",
+        "type": "victron-output-custom",
+        "z": "9aa76971e5aacbd8",
+        "service": "com.victronenergy.pvinverter/100",
+        "path": "/Ac/L1/Voltage",
+        "serviceObj": {
+            "service": "com.victronenergy.pvinverter/100",
+            "name": "Enphase PV (100)"
+        },
+        "pathObj": {
+            "path": "/Ac/L1/Voltage",
+            "name": "/Ac/L1/Voltage",
+            "type": "number",
+            "value": 241.76
+        },
+        "name": "",
+        "onlyChanges": false,
+        "x": 740,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "ee934bd04b2464f8",
+        "type": "victron-output-custom",
+        "z": "9aa76971e5aacbd8",
+        "service": "com.victronenergy.pvinverter/100",
+        "path": "/Ac/L1/Power",
+        "serviceObj": {
+            "service": "com.victronenergy.pvinverter/100",
+            "name": "Enphase PV (100)"
+        },
+        "pathObj": {
+            "path": "/Ac/L1/Power",
+            "name": "/Ac/L1/Power",
+            "type": "number",
+            "value": 2356.83
+        },
+        "name": "",
+        "onlyChanges": false,
+        "x": 740,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "f36ec1e6375bd455",
+        "type": "victron-output-custom",
+        "z": "9aa76971e5aacbd8",
+        "service": "com.victronenergy.pvinverter/100",
+        "path": "/Ac/L1/Energy/Forward",
+        "serviceObj": {
+            "service": "com.victronenergy.pvinverter/100",
+            "name": "Enphase PV (100)"
+        },
+        "pathObj": {
+            "path": "/Ac/L1/Energy/Forward",
+            "name": "/Ac/L1/Energy/Forward",
+            "type": "number",
+            "value": 5386.582
+        },
+        "name": "",
+        "onlyChanges": false,
+        "x": 770,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "cd6ef05ca65b599e",
+        "type": "victron-output-custom",
+        "z": "9aa76971e5aacbd8",
+        "service": "com.victronenergy.pvinverter/100",
+        "path": "/Ac/L1/Current",
+        "serviceObj": {
+            "service": "com.victronenergy.pvinverter/100",
+            "name": "Enphase PV (100)"
+        },
+        "pathObj": {
+            "path": "/Ac/L1/Current",
+            "name": "/Ac/L1/Current",
+            "type": "number",
+            "value": 9.152796161482463
+        },
+        "name": "",
+        "onlyChanges": false,
+        "x": 1020,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "f91c59eb7132039a",
+        "type": "victron-output-custom",
+        "z": "9aa76971e5aacbd8",
+        "service": "com.victronenergy.pvinverter/100",
+        "path": "/Ac/Power",
+        "serviceObj": {
+            "service": "com.victronenergy.pvinverter/100",
+            "name": "Enphase PV (100)"
+        },
+        "pathObj": {
+            "path": "/Ac/Power",
+            "name": "/Ac/Power",
+            "type": "number",
+            "value": 2212.78
+        },
+        "name": "",
+        "onlyChanges": false,
+        "x": 730,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "ba09394bb3fccf14",
+        "type": "victron-output-custom",
+        "z": "9aa76971e5aacbd8",
+        "service": "com.victronenergy.pvinverter/100",
+        "path": "/Ac/Energy/Forward",
+        "serviceObj": {
+            "service": "com.victronenergy.pvinverter/100",
+            "name": "Enphase PV (100)"
+        },
+        "pathObj": {
+            "path": "/Ac/Energy/Forward",
+            "name": "/Ac/Energy/Forward",
+            "type": "number",
+            "value": 5386.582
+        },
+        "name": "",
+        "onlyChanges": false,
+        "x": 760,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "a5cd8ee985da5c34",
+        "type": "mqtt in",
+        "z": "9aa76971e5aacbd8",
+        "name": "PV Meter",
+        "topic": "shellies/shellyem-1/emeter/0/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ee1bb25c871ce5fc",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 420,
+        "wires": [
+            [
+                "88ba341fd585da42"
+            ]
+        ]
+    },
+    {
+        "id": "8611f47023c644e9",
+        "type": "switch",
+        "z": "9aa76971e5aacbd8",
+        "name": "Extract",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "power",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "voltage",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "total_returned",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "reactive_power",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "pf",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "total",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 6,
+        "x": 320,
+        "y": 440,
+        "wires": [
+            [
+                "f0a8ca2ad713484c"
+            ],
+            [
+                "f710fb60c2b82a8d",
+                "60a339d9b398d890"
+            ],
+            [
+                "f24aa0ba852a865a"
+            ],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "f0a8ca2ad713484c",
+        "type": "function",
+        "z": "9aa76971e5aacbd8",
+        "name": "ABS/Limit",
+        "func": "let power = parseInt(Math.ceil(Math.abs(msg.payload)));\nif (power < 5) {\n    power = 0;\n}\nmsg.payload = power;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 400,
+        "wires": [
+            [
+                "ee934bd04b2464f8",
+                "f91c59eb7132039a",
+                "60a339d9b398d890"
+            ]
+        ]
+    },
+    {
+        "id": "60a339d9b398d890",
+        "type": "join",
+        "z": "9aa76971e5aacbd8",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": true,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 650,
+        "y": 540,
+        "wires": [
+            [
+                "381e5fe76782a558"
+            ]
+        ]
+    },
+    {
+        "id": "381e5fe76782a558",
+        "type": "function",
+        "z": "9aa76971e5aacbd8",
+        "name": "Make Amps",
+        "func": "let amps = 0;\nif (\n    (msg.payload.voltage != 0)\n    && (msg.payload.power > 4)\n    )\n{\n    // If power is below 5 Watt, than show as 0 Amps.\n    // This prevents showing 1-2 W on PV when no sun is shining\n     amps = (msg.payload.power / msg.payload.voltage);\n     amps = Math.round((amps + Number.EPSILON) * 100) / 100\n}\nmsg.topic = \"amps\"\nmsg.payload = amps;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 540,
+        "wires": [
+            [
+                "cd6ef05ca65b599e"
+            ]
+        ]
+    },
+    {
+        "id": "88ba341fd585da42",
+        "type": "change",
+        "z": "9aa76971e5aacbd8",
+        "name": "",
+        "rules": [
+            {
+                "t": "change",
+                "p": "topic",
+                "pt": "msg",
+                "from": "shellies/shellyem-1/emeter/0/",
+                "fromt": "str",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 150,
+        "y": 480,
+        "wires": [
+            [
+                "8611f47023c644e9"
+            ]
+        ]
+    },
+    {
+        "id": "f24aa0ba852a865a",
+        "type": "function",
+        "z": "9aa76971e5aacbd8",
+        "name": "kWh",
+        "func": "let kWh = (msg.payload / 1000.0);\nkWh = Math.round((kWh + Number.EPSILON) * 1000) / 1000\nmsg.payload = kWh;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 580,
+        "wires": [
+            [
+                "f36ec1e6375bd455",
+                "ba09394bb3fccf14"
+            ]
+        ]
+    },
+    {
+        "id": "3a61e56d3bd98883",
+        "type": "comment",
+        "z": "9aa76971e5aacbd8",
+        "name": "7 = running, 8=standby",
+        "info": "",
+        "x": 900,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "e55a37c092aa569a",
+        "type": "comment",
+        "z": "9aa76971e5aacbd8",
+        "name": "If Power is below 5 Watt, we display 0. This prevents displaying 1-2 Watts when there is no Sun",
+        "info": "",
+        "x": 390,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "ee1bb25c871ce5fc",
+        "type": "mqtt-broker",
+        "name": "HomeNas",
+        "broker": "192.168.0.90",
+        "port": "8883",
+        "tls": "",
+        "clientid": "Victron-NodeRed",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
