@@ -11,7 +11,7 @@ History
 1.02 - Sending data every 10 seconds
 """
 from helpers import *
-from mqtt_helper import MQTTHelper
+from mqtt_helper import MQTTClient
 
 import json
 import time
@@ -19,6 +19,8 @@ import math
 import signal
 import sys
 import requests
+import logging
+from datetime import datetime
 
 poll_interval = 30 #same as defined in the Enphase hardware setup in Domoticz
 
@@ -28,38 +30,51 @@ domoticz_url              = str("http://192.168.0.90:8080/json.htm?type=command&
 
 #MQTT Settings
 broker_ip                = "192.168.0.90"
-broker_port              = 1883
+broker_port              = 2883
 broker_username          = "domoticz"
 broker_password          = "123domoticz"
 broker_public_base_topic = "enphase/envoy-s/meters"
 
+broker_reconnect_interval = 30
+
 have_data = False
 
-def handle_mqtt_connect(client):
-    print("Connected to MQTT broker!")
-    #client.subscribe("zigbee2mqtt/#")
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    #format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
-    
-def handle_mqtt_message(client, message):
-    #print("received from queue", msg)
-    try:
-        decoded_message = ""#str(message.payload.decode("utf-8"))
-        print(f"topic: {message.topic}, payload: ...{decoded_message}")
-        #jmsg = json.loads(decoded_message)
-        #print(f"received: {jmsg}")
-    except ValueError as e:
-        return False
+# Global flag for graceful shutdown
+shutdown_flag = False
 
-class SIGINT_handler():
-    def __init__(self):
-        self.SIGINT = False
+def signal_handler(sig, frame):
+    """Handle SIGINT (Ctrl+C) for graceful shutdown."""
+    global shutdown_flag
+    logger.info("\nReceived SIGINT, initiating graceful shutdown...")
+    shutdown_flag = True
 
-    def signal_handler(self, signal, frame):
-        print('Going to stop...')
-        self.SIGINT = True
+def on_connect_callback(client, userdata, flags, rc):
+    """Callback when connected to MQTT broker."""
+    if rc == 0:
+        logger.info("✓ Connected successfully!")
+    else:
+        logger.error(f"✗ Connection failed with return code: {rc}")
 
-def publish_value(value):
-    mqtt.publish(broker_public_base_topic, value)
+def on_disconnect_callback(client, userdata, rc):
+    """Callback when disconnected from MQTT broker."""
+    if rc == 0:
+        logger.info("✓ Disconnected gracefully")
+    else:
+        logger.warning(f"⚠ Unexpected disconnect (return code: {rc})")
+
+def on_message_callback(client, userdata, message):
+    """Callback when a message is received."""
+    topic = message.topic
+    payload = message.payload.decode('utf-8')
+    logger.info(f"📨 Received message on '{topic}': {payload}")
 
 def get_enphase_details():
     global ojson
@@ -96,42 +111,84 @@ def get_enphase_details():
         
         have_data = True
 
-mqtt = MQTTHelper()
-mqtt.on_message = handle_mqtt_message
-mqtt.on_connect = handle_mqtt_connect
-mqtt.broker_ip = broker_ip
-mqtt.broker_port = broker_port
-mqtt.broker_username = broker_username
-mqtt.broker_password = broker_password
-
-
-handler = SIGINT_handler()
-signal.signal(signal.SIGINT, handler.signal_handler)
-
-ltime = int(time.time())
-sec_counter = poll_interval - 2
-
-while True:
-    time.sleep(0.2)
-
-    if handler.SIGINT:
-        break
-    mqtt.loop()
+def main():
+    global shutdown_flag
     
-    atime = int(time.time())
-    if ltime == atime:
-        continue
-    ltime = atime
-    sec_counter += 1
-    if sec_counter % poll_interval == 0:
-        if mqtt.isConnected():
-            get_enphase_details()
-    if sec_counter % 10 == 0:
-        if mqtt.isConnected():
-            if have_data == True:
-                ojson['pv']['last_update'] = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-                publish_value(json.dumps(ojson))
+    # Register signal handler for SIGINT
+    signal.signal(signal.SIGINT, signal_handler)
 
-mqtt.close()
+    # Create MQTT client
+    logger.info("Enphase2MQTT (c) 2024-2025 PA1DVB")
+    mqtt_client = MQTTClient(
+        broker=broker_ip, 
+        port=broker_port, 
+        client_id="Enphase2MQTT",
+        reconnect_interval=broker_reconnect_interval
+    )
+    
+    mqtt_client.set_auth(broker_username, broker_password)
 
-print("done...")
+    # Register callbacks
+    mqtt_client.on_connect(on_connect_callback)
+    mqtt_client.on_disconnect(on_disconnect_callback)
+    mqtt_client.on_message(on_message_callback)
+
+    # Connect to broker
+    connection_result = mqtt_client.connect()
+    
+    if connection_result:
+        logger.info("Successfully connected to MQTT Broker!")
+    else:
+        logger.warning("Initial MQTT connection failed - will retry in background")
+        logger.info(f"Auto-reconnect will attempt every {broker_reconnect_interval} seconds")
+
+    # Give it a moment to connect
+    time.sleep(1)
+    
+    """
+    # Subscribe to topics
+    logger.info("Subscribing to topics...")
+    mqtt_client.subscribe("test/topic1", qos=0)
+    mqtt_client.subscribe("test/topic2", qos=1)
+    mqtt_client.subscribe("test/#", qos=0)  # Wildcard subscription
+    
+    # Wait a bit for subscriptions to complete
+    time.sleep(0.5)
+    """
+
+    ltime = int(time.time())
+    sec_counter = poll_interval - 2
+
+    while not shutdown_flag:
+        # Process MQTT network events (includes auto-reconnect logic)
+        mqtt_client.loop(timeout=1.0)        
+
+        atime = int(time.time())
+        if ltime == atime:
+            continue
+        ltime = atime
+        sec_counter += 1
+        if sec_counter % poll_interval == 0:
+            if mqtt_client.is_connected():
+                get_enphase_details()
+        if sec_counter % 10 == 0:
+            if mqtt_client.is_connected():
+                if have_data == True:
+                    ojson['pv']['last_update'] = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+                    mqtt_client.publish(broker_public_base_topic, json.dumps(ojson))
+
+        # Small sleep to prevent CPU spinning
+        time.sleep(1)
+
+    # Graceful shutdown
+    logger.info("Shutting down...")
+    mqtt_client.disconnect()
+    
+    # Give time for disconnect to complete
+    time.sleep(1)
+    
+    logger.info("Goodbye!")
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())

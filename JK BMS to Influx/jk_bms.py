@@ -2,18 +2,20 @@
 
 """
 @Author: PA1DVB
-@Date: 24 June 2025
-@Version: 1.01
+@Date: 26 October 2025
+@Version: 1.02
 
 Special thanks to esphome-jk-bms,
 I found 80% of the fields by reverse engineering and the others from here
+
+@Version: 1.02 15 November 2025, beter MQTT disconnect/reconnect handling and enhancements
 
 needed libraries
 pip3 install requests paho-mqtt
 
 """
 
-from mqtt_helper import MQTTHelper
+from mqtt_helper import MQTTClient
 
 import json
 import time
@@ -21,7 +23,10 @@ import requests
 import serial
 import struct
 import signal
+import sys
+from datetime import datetime
 from struct import unpack_from
+import logging
 
 poll_interval = 10
 
@@ -43,46 +48,88 @@ broker_ip                = "192.168.0.90"
 broker_port              = 1883
 broker_username          = "domoticz"
 broker_password          = "123domoticz"
-broker_public_base_topic = "jk_pack_1/status"
+broker_reconnect_interval = 30
 
-def handle_mqtt_connect(client):
-    print("Connected to MQTT broker!")
-    #client.subscribe("zigbee2mqtt/#")
+command_status = b"\x10\x16\x20\x00\x01\x02\x00\x00"
+command_settings = b"\x10\x16\x1e\x00\x01\x02\x00\x00"
+command_about = b"\x10\x16\x1c\x00\x01\x02\x00\x00"
 
+RESP_BULK_HEADER = bytes([0x55, 0xAA, 0xEB, 0x90])  # Bulk download response
     
-def handle_mqtt_message(client, message):
-    #print("received from queue", msg)
-    try:
-        decoded_message = ""#str(message.payload.decode("utf-8"))
-        print(f"topic: {message.topic}, payload: ...{decoded_message}")
-        #jmsg = json.loads(decoded_message)
-        #print(f"received: {jmsg}")
-    except ValueError as e:
-        return False
+# Register addresses for bulk download triggers
+REG_TRIGGER_INFO = 0x161C  # Returns 0x90 bulk with register 0x1400 data
+REG_TRIGGER_CONFIG = 0x161E  # Returns 0x90 bulk with register 0x1000 data  
+REG_TRIGGER_STATUS = 0x1620  # Returns 0x90 bulk with register 0x1200 data
+    
 
-class SIGINT_handler():
-    def __init__(self):
-        self.SIGINT = False
+cell_count = 0
+capacity = 0
+max_battery_discharge_current = 0
+max_battery_charge_current = 0
+unique_identifier_tmp = ""
+version = ""
+hardware_version = ""
 
-    def signal_handler(self, signal, frame):
-        print('Going to stop...')
-        self.SIGINT = True
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    #format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
-def publish_value(value):
-    mqtt.publish(broker_public_base_topic, value)
+# Global MQTT client object
+mqtt_client = None
 
-def crc16mod(data: bytes, len: int, poly: hex = 0xA001) -> bytes:
+# Global flag for graceful shutdown
+shutdown_flag = False
+
+def signal_handler(sig, frame):
+    """Handle SIGINT (Ctrl+C) for graceful shutdown."""
+    global shutdown_flag
+    logger.info("\nReceived SIGINT, initiating graceful shutdown...")
+    shutdown_flag = True
+
+def on_connect_callback(client, userdata, flags, rc):
+    """Callback when connected to MQTT broker."""
+    if rc == 0:
+        logger.info("✓ Connected successfully!")
+    else:
+        logger.error(f"✗ Connection failed with return code: {rc}")
+
+def on_disconnect_callback(client, userdata, rc):
+    """Callback when disconnected from MQTT broker."""
+    if rc == 0:
+        logger.info("✓ Disconnected gracefully")
+    else:
+        logger.warning(f"⚠ Unexpected disconnect (return code: {rc})")
+
+def on_message_callback(client, userdata, message):
+    """Callback when a message is received."""
+    topic = message.topic
+    payload = message.payload.decode('utf-8')
+    logger.info(f"📨 Received message on '{topic}': {payload}")
+
+def _calculate_modbus_crc(data: bytes) -> int:
+    """
+    Calculate Modbus CRC16.
+    
+    Args:
+        data: Bytes to calculate CRC for
+        
+    Returns:
+        CRC16 value
+    """
     crc = 0xFFFF
-    for b2 in range(len):
-        byte = data[b2]
+    for byte in data:
         crc ^= byte
         for _ in range(8):
-            crc = ((crc >> 1) ^ poly
-                   if (crc & 0x0001)
-                   else crc >> 1)
+            if crc & 0x0001:
+                crc = (crc >> 1) ^ 0xA001
+            else:
+                crc >>= 1
+    return crc
 
-    return crc.to_bytes(2, byteorder='little')
-    
 def get16(data: bytes, offset: int) -> int:
     return (data[offset + 1] * 256) + data[offset]
  
@@ -168,71 +215,220 @@ def print_byte_array_len(byte_array, offset, len):
         hex_bytes = ' '.join('{:02x}'.format(b) for b in byte_array[i+offset:i+offset+16])
         print("{:08d}".format(i) + f': {hex_bytes}')    
 
-def readJKBMS(bms_serial, pack_id):
-    voltages=[0]*17
-    resistances=[0]*17
-    temps=[0]*6
+def _build_read_command(device_id: int, register: int, count: int = 1) -> bytes:
+    """
+    Build a Modbus read holding registers command (function 0x03 or 0x10).
+    For JK BMS, we use function 0x10 (write multiple) to trigger bulk responses.
     
-    highest_voltage = 0
-    lowest_voltage = 100
+    Args:
+        register: Register address
+        count: Number of registers to read
+        
+    Returns:
+        Complete Modbus command frame
+    """
+    # Function 0x10: Write Multiple Registers (used to trigger bulk download)
+    # Format: ADDR(1) | FUNC(1) | REG_H(1) | REG_L(1) | COUNT_H(1) | COUNT_L(1) | 
+    #         BYTES(1) | DATA(n) | CRC_L(1) | CRC_H(1)
+    
+    func = 0x10
+    data_bytes = count * 2  # 2 bytes per register
+    
+    frame = bytes([
+        device_id,
+        func,
+        (register >> 8) & 0xFF,
+        register & 0xFF,
+        (count >> 8) & 0xFF,
+        count & 0xFF,
+        data_bytes
+    ])
+    
+    # Add data payload (zeros for trigger registers)
+    frame += bytes([0x00, 0x00] * count)
+    
+    # Calculate and append CRC
+    crc = _calculate_modbus_crc(frame)
+    frame += bytes([crc & 0xFF, (crc >> 8) & 0xFF])
+    
+    return frame
 
-    array = bytearray(11)
-    array[0] = pack_id #//
-    array[1] = 0x10 #Function code
-    array[2] = 0x16 #Start Adress high
-    array[3] = 0x20 #Start Adress low
-    array[4] = 0    #numer of registers high
-    array[5] = 1    #number of registers low
-    array[6] = 2    #data length
-    array[7] = 0    #data
-    array[8] = 0    #data
+        
+def read_serial_data_jkbms_pb(bms_serial, pack_id : int, register: int, count: int = 1) -> bool:
+    
+    cmd = _build_read_command(pack_id, register, count);
 
-    crc16 = crc16mod(array,9)
-    array[9] = crc16[0]
-    array[10] = crc16[1]
-
-    #print_byte_array(array)
-
-    bms_serial.write(array)
+    bms_serial.write(cmd)
+    # wait for response
     time.sleep(0.350)
     bytesToRead = bms_serial.in_waiting
     if bytesToRead == 0:
         print("Nothing received from BMS!")
-        return
-    array2 = bytearray(bms_serial.read(bytesToRead))
+        return False
+    data = bytearray(bms_serial.read(bytesToRead))
+    if data is False:
+        return False
+    #print_byte_array(data)
+
+    # Look for bulk download response (0x55 0xAA 0xEB 0x90)
+    bulk_start = -1
+    for i in range(len(data) - 3):
+        if data[i:i+4] == RESP_BULK_HEADER:
+            bulk_start = i
+            break
+
+    if bulk_start == -1:
+        print("Error: Bulk download response (0x55 0xAA 0xEB 0x90) not found")
+        print(f"Received: {data.hex()}")
+        return False
+    return data
+
+def get_jk_settings(bms_serial, pack_id):
+    # After successful connection get_settings() will be called to set up the battery
+    # Set the current limits, populate cell count, etc
+    # Return True if success, False for failure
+    status_data = read_serial_data_jkbms_pb(bms_serial, pack_id, REG_TRIGGER_CONFIG, count=1)
+    if status_data is False:
+        return False
+    if status_data is NoneType:
+        print('no data received!')
+        return False
+
+    VolSmartSleep = unpack_from("<i", status_data, 6)[0] / 1000
+    VolCellUV = unpack_from("<i", status_data, 10)[0] / 1000
+    VolCellUVPR = unpack_from("<i", status_data, 14)[0] / 1000
+    VolCellOV = unpack_from("<i", status_data, 18)[0] / 1000
+    VolCellOVPR = unpack_from("<i", status_data, 22)[0] / 1000
+    VolBalanTrig = unpack_from("<i", status_data, 26)[0] / 1000
+    VolSOC_full = unpack_from("<i", status_data, 30)[0] / 1000
+    VolSOC_empty = unpack_from("<i", status_data, 34)[0] / 1000
+
+    VolRCV = unpack_from("<i", status_data, 38)[0] / 1000 # Voltage Cell Request Charge Voltage (RCV)
+    VolRFV = unpack_from("<i", status_data, 42)[0] / 1000 # Voltage Cell Request Float Voltage (RFV)
+    
+    VolSysPwrOff = unpack_from("<i", status_data, 46)[0] / 1000
+    CurBatCOC = unpack_from("<i", status_data, 50)[0] / 1000
+    TIMBatCOCPDly = unpack_from("<i", status_data, 54)[0]
+    TIMBatCOCPRDly = unpack_from("<i", status_data, 58)[0]
+    CurBatDcOC = unpack_from("<i", status_data, 62)[0] / 1000
+    TIMBatDcOCPDly = unpack_from("<i", status_data, 66)[0]
+    TIMBatDcOCPRDly = unpack_from("<i", status_data, 70)[0]
+    TIMBatSCPRDly = unpack_from("<i", status_data, 74)[0]
+    CurBalanMax = unpack_from("<i", status_data, 78)[0] / 1000
+    TMPBatCOT = unpack_from("<I", status_data, 82)[0] / 10
+    TMPBatCOTPR = unpack_from("<I", status_data, 86)[0] / 10
+    TMPBatDcOT = unpack_from("<I", status_data, 90)[0] / 10
+    TMPBatDcOTPR = unpack_from("<I", status_data, 94)[0] / 10
+    TMPBatCUT = unpack_from("<I", status_data, 98)[0] / 10
+    TMPBatCUTPR = unpack_from("<I", status_data, 102)[0] / 10
+    TMPMosOT = unpack_from("<I", status_data, 106)[0] / 10
+    TMPMosOTPR = unpack_from("<I", status_data, 110)[0] / 10
+    CellCount = unpack_from("<i", status_data, 114)[0]
+    BatChargeEN = unpack_from("<i", status_data, 118)[0]
+    BatDisChargeEN = unpack_from("<i", status_data, 122)[0]
+    BalanEN = unpack_from("<i", status_data, 126)[0]
+    CapBatCell = unpack_from("<i", status_data, 130)[0] / 1000
+    SCPDelay = unpack_from("<i", status_data, 134)[0]
+    StartBalVol = unpack_from("<i", status_data, 138)[0] / 1000
+
+    # count of all cells in pack
+    cell_count = CellCount
+
+    # total Capaity in Ah
+    capacity = CapBatCell
+
+    # Continued discharge current
+    max_battery_discharge_current = CurBatDcOC
+
+    # Continued charge current
+    max_battery_charge_current = CurBatCOC
+
+    print("VolSmartSleep: " + str(VolSmartSleep))
+    print("VolCellUV: " + str(VolCellUV))
+    print("VolCellUVPR: " + str(VolCellUVPR))
+    print("VolCellOV: " + str(VolCellOV))
+    print("VolCellOVPR: " + str(VolCellOVPR))
+    print("VolBalanTrig: " + str(VolBalanTrig))
+    print("VolSOC_full: " + str(VolSOC_full))
+    print("VolSOC_empty: " + str(VolSOC_empty))
+    
+    print("VolRCV: " + str(VolRCV))
+    print("VolRFV: " + str(VolRFV))
+    
+    print("VolSysPwrOff: " + str(VolSysPwrOff))
+    print("CurBatCOC: " + str(CurBatCOC))
+    print("TIMBatCOCPDly: " + str(TIMBatCOCPDly))
+    print("TIMBatCOCPRDly: " + str(TIMBatCOCPRDly))
+    print("CurBatDcOC: " + str(CurBatDcOC))
+    print("TIMBatDcOCPDly: " + str(TIMBatDcOCPDly))
+    print("TIMBatDcOCPRDly: " + str(TIMBatDcOCPRDly))
+    print("TIMBatSCPRDly: " + str(TIMBatSCPRDly))
+    print("CurBalanMax: " + str(CurBalanMax))
+    print("TMPBatCOT: " + str(TMPBatCOT))
+    print("TMPBatCOTPR: " + str(TMPBatCOTPR))
+    print("TMPBatDcOT: " + str(TMPBatDcOT))
+    print("TMPBatDcOTPR: " + str(TMPBatDcOTPR))
+    print("TMPBatCUT: " + str(TMPBatCUT))
+    print("TMPBatCUTPR: " + str(TMPBatCUTPR))
+    print("TMPMosOT: " + str(TMPMosOT))
+    print("TMPMosOTPR: " + str(TMPMosOTPR))
+    print("CellCount: " + str(CellCount))
+    print("BatChargeEN: " + str(BatChargeEN))
+    print("BatDisChargeEN: " + str(BatDisChargeEN))
+    print("BalanEN: " + str(BalanEN))
+    print("CapBatCell: " + str(CapBatCell))
+    print("SCPDelay: " + str(SCPDelay))
+    print("StartBalVol: " + str(StartBalVol))
+
+    status_data = read_serial_data_jkbms_pb(bms_serial, pack_id, REG_TRIGGER_INFO, count=1)
+    serial_nr = status_data[86:97].decode("utf-8")
+    vendor_id = status_data[6:18].decode("utf-8")
+    hw_version = (status_data[22:26].decode("utf-8") + " / " + status_data[30:35].decode("utf-8")).replace("\x00", "")
+    sw_version = status_data[30:34].decode("utf-8")  # will be overridden
+
+    unique_identifier_tmp = serial_nr
+    version = sw_version
+    hardware_version = hw_version
+
+    print("Serial Nr: " + str(serial_nr))
+    print("Vendor ID: " + str(vendor_id))
+    print("HW Version: " + str(hw_version))
+    print("SW Version: " + str(sw_version))
+
+    return True
+
+def get_jk_status(bms_serial, pack_id):
+    array2 = read_serial_data_jkbms_pb(bms_serial, pack_id, REG_TRIGGER_STATUS, count=1)
+    if array2 is False:
+        return False
 
     #print('len: ', len(array2))
     if debug == True:
         print_byte_array(array2)
     #return
 
-    if (array2[0] != 0x55):
-        print("Invalid data received!")
-        return
-    if (array2[1] != 0xAA):
-        print("Invalid data received!")
-        return
-
-    FrameHeader_1 = array2[2]
-    FrameHeader_2 = array2[3]
-
-    if (FrameHeader_1 != 0xEB):
-        print("Invalid Frame Header 1!")
-        return
-    if (FrameHeader_2 != 0x90):
-        print("Invalid data received!")
-        return
-
+    """
+    
+    Seems returned device id is not correct (always 2?)
+    
     pid = array2[4]
     if (pid != pack_id):
-        print("Invalid data received! (pack_id mismatch)")
+        print("Invalid data received! (pack_id mismatch: " + str(pid) + "/" + str(pack_id) + ")")
         return
-
+    """
+    
     cmd = array2[5]
     #print('FrameType/Cmd:', cmd)
     if ((cmd != 0x00) & (cmd != 0x05)):
         print("Invalid data received! (cmd mismatch)")
-        return
+        return False
+
+    voltages=[0]*17
+    resistances=[0]*17
+    temps=[0]*6
+    
+    highest_voltage = 0
+    lowest_voltage = 100
 
     tot_cells = 16
 
@@ -547,7 +743,13 @@ def readJKBMS(bms_serial, pack_id):
     Discharge_Enabled = 1 if discharge != 0 else 0
     Balance_Enabled = 1 if bal != 0 else 0
 
+    # Get current local date and time
+    now = datetime.now()
+    # Convert to string in format "YYYY-MM-DD HH:MM:SS"
+    date_string = now.strftime('%Y-%m-%d %H:%M:%S')
+
     bd = {
+        "last_polled": date_string,
         "voltage_cell01": voltages[1],
         "voltage_cell02": voltages[2],
         "voltage_cell03": voltages[3],
@@ -622,84 +824,88 @@ def sendJKBMS(bms_serial, pack_id, data):
     timestamp = int(time.time())
     payload = '';
     
+    battname = 'jk'
+    if pack_id > 1:
+        battname += '_' + str(pack_id)
+    
     #voltages
-    payload += f'jk,pack={pack_id},cell=1,type=voltage value={data["voltage_cell01"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=2,type=voltage value={data["voltage_cell02"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=3,type=voltage value={data["voltage_cell03"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=4,type=voltage value={data["voltage_cell04"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=5,type=voltage value={data["voltage_cell05"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=6,type=voltage value={data["voltage_cell06"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=7,type=voltage value={data["voltage_cell07"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=8,type=voltage value={data["voltage_cell08"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=9,type=voltage value={data["voltage_cell09"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=10,type=voltage value={data["voltage_cell10"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=11,type=voltage value={data["voltage_cell11"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=12,type=voltage value={data["voltage_cell12"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=13,type=voltage value={data["voltage_cell13"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=14,type=voltage value={data["voltage_cell14"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=15,type=voltage value={data["voltage_cell15"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},cell=16,type=voltage value={data["voltage_cell16"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=1,type=voltage value={data["voltage_cell01"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=2,type=voltage value={data["voltage_cell02"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=3,type=voltage value={data["voltage_cell03"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=4,type=voltage value={data["voltage_cell04"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=5,type=voltage value={data["voltage_cell05"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=6,type=voltage value={data["voltage_cell06"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=7,type=voltage value={data["voltage_cell07"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=8,type=voltage value={data["voltage_cell08"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=9,type=voltage value={data["voltage_cell09"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=10,type=voltage value={data["voltage_cell10"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=11,type=voltage value={data["voltage_cell11"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=12,type=voltage value={data["voltage_cell12"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=13,type=voltage value={data["voltage_cell13"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=14,type=voltage value={data["voltage_cell14"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=15,type=voltage value={data["voltage_cell15"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},cell=16,type=voltage value={data["voltage_cell16"]} {timestamp}\n'
 
     #min/max/diff
-    payload += f'jk,pack={pack_id},type=lowest_voltage value={data["lowest_voltage"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=highest_voltage value={data["highest_voltage"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=voltage_diff value={data["voltage_diff"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=v_avg_cell value={data["v_avg_cell"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=lowest_voltage value={data["lowest_voltage"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=highest_voltage value={data["highest_voltage"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=voltage_diff value={data["voltage_diff"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=v_avg_cell value={data["v_avg_cell"]} {timestamp}\n'
  
     #temps
-    payload += f'jk,pack={pack_id},temp=1,type=temperate value={data["battery_t1"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},temp=2,type=temperate value={data["battery_t2"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},temp=3,type=temperate value={data["battery_t3"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},temp=4,type=temperate value={data["battery_t4"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},temp=5,type=temperate value={data["battery_t5"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},temp=powertube,type=temperate value={data["power_tube_temp"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},temp=1,type=temperate value={data["battery_t1"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},temp=2,type=temperate value={data["battery_t2"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},temp=3,type=temperate value={data["battery_t3"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},temp=4,type=temperate value={data["battery_t4"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},temp=5,type=temperate value={data["battery_t5"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},temp=powertube,type=temperate value={data["power_tube_temp"]} {timestamp}\n'
 
     #others
-    payload += f'jk,pack={pack_id},type=battery_voltage value={data["battery_voltage"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=battery_current value={data["battery_current"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=battery_power value={data["battery_power"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=battery_kw value={data["battery_kw"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=balance_current value={data["balance_current"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=balance_action value={data["balance_action"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=soh value={data["soh"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=soc value={data["soc"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=cycle_count value={data["cycle_count"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=power_on_times value={data["power_on_times"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=battery_voltage value={data["battery_voltage"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=battery_current value={data["battery_current"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=battery_power value={data["battery_power"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=battery_kw value={data["battery_kw"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=balance_current value={data["balance_current"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=balance_action value={data["balance_action"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=soh value={data["soh"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=soc value={data["soc"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=cycle_count value={data["cycle_count"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=power_on_times value={data["power_on_times"]} {timestamp}\n'
     
-    payload += f'jk,pack={pack_id},type=remain_batt_cap value={data["remain_batt_cap"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=remain_charge_time value={data["remain_charge_time"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=remain_discharge_time value={data["remain_discharge_time"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=remain_batt_cap value={data["remain_batt_cap"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=remain_charge_time value={data["remain_charge_time"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=remain_discharge_time value={data["remain_discharge_time"]} {timestamp}\n'
     
-    payload += f'jk,pack={pack_id},type=alarm32 value={data["alarm32"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm32 value={data["alarm32"]} {timestamp}\n'
     
     
     #alarms
-    payload += f'jk,pack={pack_id},type=alarm,id=Wire_resistance value={data["Wire_resistance"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=MOS_OTP value={data["MOS_OTP"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Cell_quantity value={data["Cell_quantity"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Current_sensor_error value={data["Current_sensor_error"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Cell_OVP value={data["Cell_OVP"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Battery_OVP value={data["Battery_OVP"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Charge_OCP value={data["Charge_OCP"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Charge_SCP value={data["Charge_SCP"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Charge_OTP value={data["Charge_OTP"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Charge_UTP value={data["Charge_UTP"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=CPU_Aux_comm_error value={data["CPU_Aux_comm_error"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Cell_UVP value={data["Cell_UVP"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Batt_UVP value={data["Batt_UVP"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Discharge_OCP value={data["Discharge_OCP"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Discharge_SCP value={data["Discharge_SCP"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Charge_MOS value={data["Charge_MOS"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Discharge_MOS value={data["Discharge_MOS"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=GPS_Disconneted value={data["GPS_Disconneted"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Modify_PWD_in_time value={data["Modify_PWD_in_time"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Discharge_On_Failed value={data["Discharge_On_Failed"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Battery_Over_Temp_Alarm value={data["Battery_Over_Temp_Alarm"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Temperature_sensor_anomaly value={data["Temperature_sensor_anomaly"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=PLCModule_anomaly value={data["PLCModule_anomaly"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Charging_Status value={data["Charging_Status"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Discharge_Status value={data["Discharge_Status"]} {timestamp}\n'
-    payload += f'jk,pack={pack_id},type=alarm,id=Balance_Status value={data["Balance_Status"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Wire_resistance value={data["Wire_resistance"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=MOS_OTP value={data["MOS_OTP"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Cell_quantity value={data["Cell_quantity"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Current_sensor_error value={data["Current_sensor_error"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Cell_OVP value={data["Cell_OVP"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Battery_OVP value={data["Battery_OVP"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Charge_OCP value={data["Charge_OCP"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Charge_SCP value={data["Charge_SCP"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Charge_OTP value={data["Charge_OTP"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Charge_UTP value={data["Charge_UTP"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=CPU_Aux_comm_error value={data["CPU_Aux_comm_error"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Cell_UVP value={data["Cell_UVP"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Batt_UVP value={data["Batt_UVP"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Discharge_OCP value={data["Discharge_OCP"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Discharge_SCP value={data["Discharge_SCP"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Charge_MOS value={data["Charge_MOS"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Discharge_MOS value={data["Discharge_MOS"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=GPS_Disconneted value={data["GPS_Disconneted"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Modify_PWD_in_time value={data["Modify_PWD_in_time"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Discharge_On_Failed value={data["Discharge_On_Failed"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Battery_Over_Temp_Alarm value={data["Battery_Over_Temp_Alarm"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Temperature_sensor_anomaly value={data["Temperature_sensor_anomaly"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=PLCModule_anomaly value={data["PLCModule_anomaly"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Charging_Status value={data["Charging_Status"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Discharge_Status value={data["Discharge_Status"]} {timestamp}\n'
+    payload += f'{battname},pack={pack_id},type=alarm,id=Balance_Status value={data["Balance_Status"]} {timestamp}\n'
 
     #print(payload)
 
@@ -716,48 +922,98 @@ try:
     bms_serial.exclusive = True
     bms_serial.timeout  = 0.3
 except:
-    print("BMS not found.")
+    print("Serial device not found.")
     exit(1)
 
-mqtt = MQTTHelper()
-mqtt.on_message = handle_mqtt_message
-mqtt.on_connect = handle_mqtt_connect
-mqtt.broker_ip = broker_ip
-mqtt.broker_port = broker_port
-mqtt.broker_username = broker_username
-mqtt.broker_password = broker_password
-mqtt.client_id = 'jk_bms'
-
-handler = SIGINT_handler()
-signal.signal(signal.SIGINT, handler.signal_handler)
-
-pack_id = 2
-
-ltime = int(time.time())
-sec_counter = poll_interval - 2
-
-while True:
-    time.sleep(0.2)
-
-    if handler.SIGINT:
-        break
-    mqtt.loop()
+def handleJKBMS(bms_serial, pack_id):
+    data = get_jk_status(bms_serial, pack_id)
+    if data != False:
+        sendJKBMS(bms_serial, pack_id, data)
+        publish_topic = 'jk_pack_' + str(pack_id) + '/status'
+        mqtt_client.publish(publish_topic, json.dumps(data))
     
-    atime = int(time.time())
-    if ltime == atime:
-        continue
-    ltime = atime
-    sec_counter += 1
-    if sec_counter % poll_interval == 0:
-        if mqtt.isConnected():
-            data = readJKBMS(bms_serial, pack_id)
-            if data == None:
-                print('Read bms failed')
-                exit(1)
-            sendJKBMS(bms_serial, pack_id, data)
-            publish_value(json.dumps(data))
-            if debug == True:
-                print('Done testing ;)')
-                exit(1)
+# get_jk_settings(bms_serial, pack_id)
+# exit (1)
 
+def main():
+    global shutdown_flag, mqtt_client
+    
+    # Register signal handler for SIGINT
+    signal.signal(signal.SIGINT, signal_handler)
 
+    # Create MQTT client
+    logger.info("JK BMS to InfluxDB/MQTT (c) 2024-2025 PA1DVB")
+    mqtt_client = MQTTClient(
+        broker=broker_ip, 
+        port=broker_port, 
+        client_id="JK2InfluxDB",
+        reconnect_interval=broker_reconnect_interval
+    )
+    
+    mqtt_client.set_auth(broker_username, broker_password)
+
+    # Register callbacks
+    mqtt_client.on_connect(on_connect_callback)
+    mqtt_client.on_disconnect(on_disconnect_callback)
+    mqtt_client.on_message(on_message_callback)
+
+    # Connect to broker
+    connection_result = mqtt_client.connect()
+    
+    if connection_result:
+        logger.info("Successfully connected to MQTT Broker!")
+    else:
+        logger.warning("Initial MQTT connection failed - will retry in background")
+        logger.info(f"Auto-reconnect will attempt every {broker_reconnect_interval} seconds")
+
+    # Give it a moment to connect
+    time.sleep(1)
+    
+    """
+    # Subscribe to topics
+    logger.info("Subscribing to topics...")
+    mqtt_client.subscribe("test/topic1", qos=0)
+    mqtt_client.subscribe("test/topic2", qos=1)
+    mqtt_client.subscribe("test/#", qos=0)  # Wildcard subscription
+    
+    # Wait a bit for subscriptions to complete
+    time.sleep(0.5)
+    """
+
+    ltime = int(time.time())
+    sec_counter = poll_interval - 2
+
+    while not shutdown_flag:
+        # Process MQTT network events (includes auto-reconnect logic)
+        mqtt_client.loop(timeout=1.0)        
+
+        atime = int(time.time())
+        if ltime == atime:
+            continue
+        ltime = atime
+        sec_counter += 1
+        if sec_counter % poll_interval == 0:
+            if mqtt_client.is_connected():
+                handleJKBMS(bms_serial, 1)
+                handleJKBMS(bms_serial, 2)
+                if debug == True:
+                    print('Done testing ;)')
+                    exit(1)
+        # Small sleep to prevent CPU spinning
+        time.sleep(1)
+
+    # Graceful shutdown
+    logger.info("Shutting down...")
+    mqtt_client.disconnect()
+    
+    # Give time for disconnect to complete
+    time.sleep(1)
+    
+    logger.info("Goodbye!")
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())
+
+if __name__ == "__main__":
+    sys.exit(main())

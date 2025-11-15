@@ -1,111 +1,282 @@
 import paho.mqtt.client as mqtt
-import json
 import time
+import logging
+from typing import Callable, Optional, Dict, Any, NamedTuple
 from queue import Queue
+from collections import namedtuple
 
-class MQTTHelper():
-    client = None
-    q = None
-    on_connect = None
-    on_disconnect = None
-    on_message = None
-    verbose = False
-    broker_ip = "127.0.0.1"
-    broker_port = 1883
-    broker_username = ""
-    broker_password = ""
+# Message structure for the queue
+QueuedMessage = namedtuple('QueuedMessage', ['topic', 'payload', 'qos', 'retain'])
+
+class MQTTClient:
+    """
+    MQTT Client wrapper with automatic reconnection and event callbacks.
+    """
     
-    need_Reconnect = True
-    last_retry_time = time.time() - 20
-    
-    def __init__(self):
-        self.q = Queue()
+    def __init__(self, broker: str, port: int = 1883, client_id: str = "", 
+                 reconnect_interval: int = 30):
+        """
+        Initialize MQTT client.
         
-    def isConnected(self):
-        if self.client is None:
-            return False
-        return self.client.connected_flag
+        Args:
+            broker: MQTT broker hostname or IP
+            port: MQTT broker port (default: 1883)
+            client_id: Unique client identifier (auto-generated if empty)
+            reconnect_interval: Time in seconds between reconnection attempts (default: 30)
+        """
+        self.broker = broker
+        self.port = port
+        self.reconnect_interval = reconnect_interval
+        self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, client_id)
+        
+        # Internal callbacks
+        self.client.on_connect = self._on_connect
+        self.client.on_disconnect = self._on_disconnect
+        self.client.on_message = self._on_message
+        
+        # User callbacks
+        self._user_on_connect: Optional[Callable] = None
+        self._user_on_disconnect: Optional[Callable] = None
+        self._user_on_message: Optional[Callable] = None
+        
+        # Subscriptions to restore after reconnect
+        self._subscriptions: Dict[str, int] = {}
+        
+        # Connection state
+        self._connected = False
+        self._running = False
+        self._last_reconnect_attempt = 0
+        
+        # Message queue for offline publishing
+        self._message_queue: Queue = Queue()
+        
+        # Logging
+        self.logger = logging.getLogger(__name__)
     
-    def on_mqtt_connect(self, client, userdata, flags, rc):
-        if rc==0:
-            client.connected_flag=True
-            client.disconnect_flag=False
-            print("connected OK")
-            if self.on_connect:
-                self.on_connect(client)
+    def set_auth(self, username: str, password: str):
+        """Set username and password for broker authentication."""
+        self.client.username_pw_set(username, password)
+    
+    def on_connect(self, callback: Callable[[str, Any, Dict, int], None]):
+        """
+        Set callback for connection events.
+        
+        Callback signature: callback(client, userdata, flags, rc)
+        """
+        self._user_on_connect = callback
+    
+    def on_disconnect(self, callback: Callable[[str, Any, int], None]):
+        """
+        Set callback for disconnection events.
+        
+        Callback signature: callback(client, userdata, rc)
+        """
+        self._user_on_disconnect = callback
+    
+    def on_message(self, callback: Callable[[str, Any, Any], None]):
+        """
+        Set callback for received messages.
+        
+        Callback signature: callback(client, userdata, message)
+        """
+        self._user_on_message = callback
+    
+    def _on_connect(self, client, userdata, flags, rc):
+        """Internal connect callback."""
+        self._connected = (rc == 0)
+        
+        if rc == 0:
+            self.logger.info(f"Connected to MQTT broker at {self.broker}:{self.port}")
+            # Restore subscriptions after reconnect
+            for topic, qos in self._subscriptions.items():
+                self.logger.info(f"Re-subscribing to {topic}")
+                client.subscribe(topic, qos)
+            
+            # Process queued messages
+            self._process_message_queue()
         else:
-            print("Bad connection Returned code= ",rc)
-
-    def on_mqtt_disconnect(self, client, userdata, rc):
-        if rc != 0:
-            print("MQTT-Broker disconnected, reason: "  +str(rc))
-            self.last_retry_time = time.time()
-        client.connected_flag=False
-        client.disconnect_flag=True
-        if self.on_disconnect:
-            self.on_disconnect(client)
+            self.logger.error(f"Connection failed with code {rc}")
         
-    def on_mqtt_message(self, client, userdata, message):
-        client.q.put(message)
-        
-    def connect_to_mqtt(self):
-        mqtt.Client.connected_flag=False
-        mqtt.Client.disconnect_flag=False
-        client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, "enphase2mqtt")
-        client.on_connect=self.on_mqtt_connect
-        client.on_disconnect=self.on_mqtt_disconnect
-        client.on_message = self.on_mqtt_message
-        client.q = self.q
-        client.loop_start()
-        if self.broker_username != "":
-            client.username_pw_set(self.broker_username, self.broker_password)
+        # Call user callback
+        if self._user_on_connect:
+            self._user_on_connect(client, userdata, flags, rc)
     
-        print(f"Connecting to MQTT-Broker: {self.broker_ip}:{self.broker_port}")
+    def _on_disconnect(self, client, userdata, rc):
+        """Internal disconnect callback."""
+        self._connected = False
+        
+        if rc != 0:
+            self.logger.warning(f"Unexpected disconnect (code: {rc}), will attempt reconnect")
+        else:
+            self.logger.info("Disconnected from MQTT broker")
+        
+        # Call user callback
+        if self._user_on_disconnect:
+            self._user_on_disconnect(client, userdata, rc)
+    
+    def _on_message(self, client, userdata, message):
+        """Internal message callback."""
+        self.logger.debug(f"Message received on {message.topic}: {message.payload.decode()}")
+        
+        # Call user callback
+        if self._user_on_message:
+            self._user_on_message(client, userdata, message)
+    
+    def connect(self) -> bool:
+        """
+        Connect to MQTT broker.
+        Does not fail if connection is unsuccessful - loop() will retry.
+        
+        Returns:
+            True if connection initiated successfully, False otherwise
+        """
+        try:
+            self.logger.info(f"Connecting to {self.broker}:{self.port}...")
+            self.client.connect(self.broker, self.port, keepalive=60)
+            self._running = True
+            self._last_reconnect_attempt = time.time()
+            return True
+        except Exception as e:
+            self.logger.warning(f"Initial connection failed: {e}")
+            self.logger.info(f"Will retry connection every {self.reconnect_interval} seconds in loop()")
+            self._running = True  # Still set running to True so loop() will retry
+            self._last_reconnect_attempt = time.time()
+            return False
+    
+    def disconnect(self):
+        """Disconnect from MQTT broker."""
+        self._running = False
+        if self._connected:
+            self.logger.info("Disconnecting from MQTT broker...")
+            self.client.disconnect()
+    
+    def subscribe(self, topic: str, qos: int = 0):
+        """
+        Subscribe to a topic.
+        
+        Args:
+            topic: Topic string or pattern
+            qos: Quality of Service level (0, 1, or 2)
+        """
+        self._subscriptions[topic] = qos
+        if self._connected:
+            self.logger.info(f"Subscribing to {topic}")
+            self.client.subscribe(topic, qos)
+    
+    def unsubscribe(self, topic: str):
+        """Unsubscribe from a topic."""
+        if topic in self._subscriptions:
+            del self._subscriptions[topic]
+        if self._connected:
+            self.logger.info(f"Unsubscribing from {topic}")
+            self.client.unsubscribe(topic)
+    
+    def publish(self, topic: str, payload: str, qos: int = 0, retain: bool = False):
+        """
+        Publish a message to a topic.
+        If not connected, the message is queued for later delivery.
+        
+        Args:
+            topic: Topic to publish to
+            payload: Message payload
+            qos: Quality of Service level
+            retain: Retain flag
+        """
+        if self._connected:
+            try:
+                result = self.client.publish(topic, payload, qos, retain)
+                if result.rc == mqtt.MQTT_ERR_SUCCESS:
+                    self.logger.debug(f"Published to {topic}: {payload}")
+                else:
+                    self.logger.warning(f"Publish failed, queuing message for {topic}")
+                    self._queue_message(topic, payload, qos, retain)
+            except Exception as e:
+                self.logger.error(f"Publish error: {e}, queuing message")
+                self._queue_message(topic, payload, qos, retain)
+        else:
+            self.logger.debug(f"Not connected, queuing message for {topic}")
+            self._queue_message(topic, payload, qos, retain)
+    
+    def _queue_message(self, topic: str, payload: str, qos: int, retain: bool):
+        """Add a message to the queue."""
+        msg = QueuedMessage(topic, payload, qos, retain)
+        self._message_queue.put(msg)
+        self.logger.debug(f"Message queued (queue size: {self._message_queue.qsize()})")
+    
+    def _process_message_queue(self):
+        """Process all queued messages."""
+        if self._message_queue.empty():
+            return
+        
+        self.logger.info(f"Processing {self._message_queue.qsize()} queued messages...")
+        
+        while not self._message_queue.empty() and self._connected:
+            try:
+                msg = self._message_queue.get_nowait()
+                self.client.publish(msg.topic, msg.payload, msg.qos, msg.retain)
+                self.logger.debug(f"Queued message published to {msg.topic}")
+            except Exception as e:
+                self.logger.error(f"Error publishing queued message: {e}")
+                # Put message back in queue
+                self._message_queue.put(msg)
+                break
+    
+    def _attempt_reconnect(self):
+        """Attempt to reconnect to the broker."""
+        current_time = time.time()
+        
+        # Check if enough time has passed since last attempt
+        if current_time - self._last_reconnect_attempt < self.reconnect_interval:
+            return
+        
+        self._last_reconnect_attempt = current_time
+        self.logger.info(f"Attempting to reconnect to {self.broker}:{self.port}...")
         
         try:
-            client.connect(self.broker_ip, self.broker_port)
-            #client.loop_forever()
-            wait_counter = 0
-            while not client.connected_flag: #wait in loop
-                #print(".", end="")
-                time.sleep(0.5)
-                wait_counter+=1
-                if wait_counter == 10:
-                    print("could not connect to MQTT broker, will retry again soon...")
-                    return None
-            return client
-        except Exception as ex:
-            print(f"Exception: {ex}")
-            return None
-
-    def close(self):
-        if self.client is not None:
-            self.client.loop_stop()    #Stop loop 
-            self.client.disconnect() # disconnect
-
-    def publish(self, topic, payload, qos=0, retain=False):
-        if self.client is not None:
-            self.client.publish(topic, payload, qos, retain);
-        else:
-            print("publish error: Not connected!")
-
-    def loop(self):
-        if self.client is None:
-            now  = time.time()
-            tdiff = int(now - self.last_retry_time)
-            if tdiff > 10:
-                self.client = self.connect_to_mqtt()
-                self.last_retry_time = time.time()
-                if self.client is None:
-                    return
-        else:
-            if self.client.disconnect_flag == True:
-                self.client = None #force reconnect
-                return
-        while not self.q.empty():
-            message = self.q.get()
-            if message is None:
-                continue
-            if self.on_message:
-                self.on_message(self.client, message)
-
+            # Try reconnect first (for existing connection)
+            self.client.reconnect()
+        except Exception as reconnect_error:
+            # If reconnect fails, try a fresh connect (for initial connection failure)
+            try:
+                self.client.connect(self.broker, self.port, keepalive=60)
+            except Exception as connect_error:
+                self.logger.warning(f"Connection attempt failed: {connect_error}")
+    
+    def loop(self, timeout: float = 1.0):
+        """
+        Process network events. Should be called regularly.
+        Handles automatic reconnection if disconnected.
+        
+        Args:
+            timeout: Maximum time to block in seconds
+        """
+        if self._running:
+            # If not connected, attempt reconnection
+            if not self._connected:
+                self._attempt_reconnect()
+            
+            # Process network events
+            self.client.loop(timeout)
+    
+    def loop_forever(self):
+        """
+        Run blocking loop. Handles reconnection automatically.
+        """
+        self.client.loop_forever()
+    
+    def is_connected(self) -> bool:
+        """Check if currently connected to broker."""
+        return self._connected
+    
+    def get_queue_size(self) -> int:
+        """Get the number of messages in the queue."""
+        return self._message_queue.qsize()
+    
+    def clear_queue(self):
+        """Clear all queued messages."""
+        while not self._message_queue.empty():
+            try:
+                self._message_queue.get_nowait()
+            except:
+                break
+        self.logger.info("Message queue cleared")

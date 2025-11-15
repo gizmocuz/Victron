@@ -3,17 +3,18 @@
 """
 @Author: PA1DVB
 @Date: 20 December 2023
-@Version: 1.05
+@Version: 1.06
 
 @Version: 1.04 22 March 2025, added alarms
 @Version: 1.05 29 June 2025, added MQTT Push
+@Version: 1.06 15 November 2025, beter MQTT disconnect/reconnect handling and enhancements
 
 needed libraries
 pip3 install requests paho-mqtt
 
 """
 
-from mqtt_helper import MQTTHelper
+from mqtt_helper import MQTTClient
 
 import json
 import time
@@ -21,6 +22,9 @@ import requests
 import serial
 import struct
 import signal
+import sys
+import logging
+from datetime import datetime
 
 poll_interval = 10
 
@@ -43,32 +47,44 @@ broker_port              = 1883
 broker_username          = "domoticz"
 broker_password          = "123domoticz"
 broker_public_base_topic = "basen_pack_1/status"
+broker_reconnect_interval = 30
 
-def handle_mqtt_connect(client):
-    print("Connected to MQTT broker!")
-    #client.subscribe("zigbee2mqtt/#")
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    #format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
-    
-def handle_mqtt_message(client, message):
-    #print("received from queue", msg)
-    try:
-        decoded_message = ""#str(message.payload.decode("utf-8"))
-        print(f"topic: {message.topic}, payload: ...{decoded_message}")
-        #jmsg = json.loads(decoded_message)
-        #print(f"received: {jmsg}")
-    except ValueError as e:
-        return False
+# Global flag for graceful shutdown
+shutdown_flag = False
 
-class SIGINT_handler():
-    def __init__(self):
-        self.SIGINT = False
+def signal_handler(sig, frame):
+    """Handle SIGINT (Ctrl+C) for graceful shutdown."""
+    global shutdown_flag
+    logger.info("\nReceived SIGINT, initiating graceful shutdown...")
+    shutdown_flag = True
 
-    def signal_handler(self, signal, frame):
-        print('Going to stop...')
-        self.SIGINT = True
+def on_connect_callback(client, userdata, flags, rc):
+    """Callback when connected to MQTT broker."""
+    if rc == 0:
+        logger.info("✓ Connected successfully!")
+    else:
+        logger.error(f"✗ Connection failed with return code: {rc}")
 
-def publish_value(value):
-    mqtt.publish(broker_public_base_topic, value)
+def on_disconnect_callback(client, userdata, rc):
+    """Callback when disconnected from MQTT broker."""
+    if rc == 0:
+        logger.info("✓ Disconnected gracefully")
+    else:
+        logger.warning(f"⚠ Unexpected disconnect (return code: {rc})")
+
+def on_message_callback(client, userdata, message):
+    """Callback when a message is received."""
+    topic = message.topic
+    payload = message.payload.decode('utf-8')
+    logger.info(f"📨 Received message on '{topic}': {payload}")
 
 
 try:
@@ -320,7 +336,13 @@ def readBMS(bms, pack_id):
     Pack_Under_Prot = 1 if (flogbuff[10] & 8) != 0 else 0
     Full_Cha_Prot = 1 if (flogbuff[11] & 32) != 0 else 0
 
+    # Get current local date and time
+    now = datetime.now()
+    # Convert to string in format "YYYY-MM-DD HH:MM:SS"
+    date_string = now.strftime('%Y-%m-%d %H:%M:%S')
+
     bd = {
+        "last_polled": date_string,
         "voltage_cell01": voltages[1],
         "voltage_cell02": voltages[2],
         "voltage_cell03": voltages[3],
@@ -525,44 +547,90 @@ def sendBMS(bms, pack_id, data):
     if response.status_code >= 400:
         print("response: Code: " + str(response.status_code) + ", Text: " + response.text)
 
-mqtt = MQTTHelper()
-mqtt.on_message = handle_mqtt_message
-mqtt.on_connect = handle_mqtt_connect
-mqtt.broker_ip = broker_ip
-mqtt.broker_port = broker_port
-mqtt.broker_username = broker_username
-mqtt.broker_password = broker_password
-mqtt.client_id = 'basen_bms'
-
-handler = SIGINT_handler()
-signal.signal(signal.SIGINT, handler.signal_handler)
-
-pack_id = 1 
-
-ltime = int(time.time())
-sec_counter = poll_interval - 2
-
-while True:
-    time.sleep(0.2)
-
-    if handler.SIGINT:
-        break
-    mqtt.loop()
+def main():
+    global shutdown_flag
     
-    atime = int(time.time())
-    if ltime == atime:
-        continue
-    ltime = atime
-    sec_counter += 1
-    if sec_counter % poll_interval == 0:
-        if mqtt.isConnected():
-            data = readBMS(bms, pack_id)
-            if data == None:
-                print('Read bms failed')
-                continue
-            sendBMS(bms, pack_id, data)
-            publish_value(json.dumps(data))
-            if debug == True:
-                print('Done testing ;)')
-                exit(1)
+    # Register signal handler for SIGINT
+    signal.signal(signal.SIGINT, signal_handler)
+
+    # Create MQTT client
+    logger.info("Basen to InfluxDB/MQTT (c) 2024-2025 PA1DVB")
+    mqtt_client = MQTTClient(
+        broker=broker_ip, 
+        port=broker_port, 
+        client_id="Basen2InfluxDB",
+        reconnect_interval=broker_reconnect_interval
+    )
+    
+    mqtt_client.set_auth(broker_username, broker_password)
+
+    # Register callbacks
+    mqtt_client.on_connect(on_connect_callback)
+    mqtt_client.on_disconnect(on_disconnect_callback)
+    mqtt_client.on_message(on_message_callback)
+
+    # Connect to broker
+    connection_result = mqtt_client.connect()
+    
+    if connection_result:
+        logger.info("Successfully connected to MQTT Broker!")
+    else:
+        logger.warning("Initial MQTT connection failed - will retry in background")
+        logger.info(f"Auto-reconnect will attempt every {broker_reconnect_interval} seconds")
+
+    # Give it a moment to connect
+    time.sleep(1)
+    
+    """
+    # Subscribe to topics
+    logger.info("Subscribing to topics...")
+    mqtt_client.subscribe("test/topic1", qos=0)
+    mqtt_client.subscribe("test/topic2", qos=1)
+    mqtt_client.subscribe("test/#", qos=0)  # Wildcard subscription
+    
+    # Wait a bit for subscriptions to complete
+    time.sleep(0.5)
+    """
+
+    pack_id = 1 
+
+    ltime = int(time.time())
+    sec_counter = poll_interval - 2
+
+    while not shutdown_flag:
+        # Process MQTT network events (includes auto-reconnect logic)
+        mqtt_client.loop(timeout=1.0)        
+        
+        atime = int(time.time())
+        if ltime == atime:
+            continue
+
+        ltime = atime
+        sec_counter += 1
+        if sec_counter % poll_interval == 0:
+            if mqtt_client.is_connected():
+                data = readBMS(bms, pack_id)
+                if data == None:
+                    print('Read bms failed')
+                    continue
+                sendBMS(bms, pack_id, data)
+                mqtt_client.publish(broker_public_base_topic, json.dumps(data))
+                if debug == True:
+                    print('Done testing ;)')
+                    exit(1)
+        # Small sleep to prevent CPU spinning
+        time.sleep(1)
+
+    # Graceful shutdown
+    logger.info("Shutting down...")
+    mqtt_client.disconnect()
+    
+    # Give time for disconnect to complete
+    time.sleep(1)
+    
+    logger.info("Goodbye!")
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())
 
