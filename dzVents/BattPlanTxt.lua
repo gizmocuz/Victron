@@ -1,9 +1,17 @@
 return {
 	active = true,
-	logging = { level = domoticz.LOG_NORMAL, marker = "batt_plan_txt" },
+	logging = {
+	    --level = domoticz.LOG_INFO,
+	    marker = "batt_plan_txt"
+    },
 	on = {
 		devices = {
-		    'BattTest' },
+            'BattTest'
+        },
+        variables = {
+            'charge_scheme_today',
+            'charge_scheme_tomorrow'
+        },
 		timer = {
 		    'at 00:02',
 		    'at 01:02',
@@ -21,42 +29,57 @@ return {
         local today_str = ""
         local tomorrow_str = ""
 
-        local last_state = "idle"
-
-        if (today["status"] == true) then
-            if (d_today == today["datum"]) then
-                for th, v in pairs(today["data"]) do
-                    if (v.hour_type ~= last_state) then
-                        if (v.hour_type ~= "idle") then
-                            if (today_str ~= "") then
-                                today_str = today_str .. "\n"
-                            end
-                            today_str = today_str .. string.format("TD: %02d:00 %s", v.iHour, v.hour_type)
-                        else
-                            today_str = today_str .. string.format(" -> %02d:00 (%.2f%%)", v.iHour, v.battery_capacity_percentage)
-                        end
+        -- Local Functions go here =============
+        local function makePlan(data, dStr)
+            local day_str = ""
+            local last_state = ""
+            for th, v in pairs(data) do
+                if (v.hour_type ~= last_state) then
+                    local hhmm = string.match(v.datum, "%d%d:%d%d")
+                    if (last_state ~= "") then
+                        -- Finish current line
+                        day_str = day_str .. string.format(" -> %s (%.2f%%)", hhmm, v.battery_capacity_percentage) .. "\n"
+                    end
+                    if (v.hour_type ~= "idle") then
+                        day_str = day_str .. dStr .. string.format(": %s %s", hhmm, v.hour_type)
                         last_state = v.hour_type
+                    else
+                        last_state = "";
                     end
                 end
             end
+            if (day_str == "") then
+                if (dStr == "TD") then
+                    day_str = '<font color="purple">Today no charge day...</font>'
+                else
+                    day_str = '<font color="purple">Tomorrow no charge day...</font>'
+                end
+            end
+            return day_str
         end
 
-        last_state = "idle"
+        if (today["status"] == true) then
+            if (d_today == today["datum"]) then
+                today_str = makePlan(today["data"], "TD")
+            else
+                today_str = string.format('<font color="red">Today has wrong data !?</font>, %s, %s', d_today, today["datum"])
+                --today_str = '<font color="red">Today has wrong data !?</font>' .. d_today .. ', ' .. today["datum"]
+            end
+        else
+            today_str = '<font color="red">No Today data !?</font>'
+        end
+
         if (tomorrow["status"] == true) then
             if (d_tomorrow == tomorrow["datum"]) then
-                for th, v in pairs(tomorrow["data"]) do
-                    if (v.hour_type ~= last_state) then
-                        if (v.hour_type ~= "idle") then
-                            if (today_str ~= "") then
-                                today_str = today_str .. "\n"
-                            end
-                            today_str = today_str .. string.format("TM: %02d:00 %s", v.iHour, v.hour_type)
-                        else
-                            today_str = today_str .. string.format(" -> %02d:00 (%.2f%%)", v.iHour, v.battery_capacity_percentage)
-                        end
-                        last_state = v.hour_type
-                    end
-                end
+                tomorrow_str = makePlan(tomorrow["data"], "TM")
+            else
+                tomorrow_str = '<font color="red">Tomorrow has wrong data !?</font>'
+            end
+        else
+            -- Only alert when time is later than 3 PM (15:00)
+            local hour = tonumber(os.date("%H"))
+            if hour >= 15 then
+                tomorrow_str = '<font color="red">No Tomorrow data !?</font>'
             end
         end
 
@@ -69,7 +92,5 @@ return {
         end
 
 		dz.devices('Battery Plan').updateText(final_str)
-        
 	end
 }
-

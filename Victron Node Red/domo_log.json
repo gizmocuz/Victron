@@ -1,0 +1,212 @@
+[
+    {
+        "id": "13fd8d3e42908a31",
+        "type": "tab",
+        "label": "domo_log",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4943b9a1398b4d9d",
+        "type": "function",
+        "z": "13fd8d3e42908a31",
+        "name": "log_domo",
+        "func": "let str = msg.payload;\nlet alert = encodeURIComponent(str);\nlet level=msg.topic\nmsg.url = \"http://192.168.0.90:8080/json.htm?type=command&param=addlogmessage&message=\"+alert+\"&level=\"+level;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 220,
+        "y": 100,
+        "wires": [
+            [
+                "54ff11746108429f"
+            ]
+        ]
+    },
+    {
+        "id": "54ff11746108429f",
+        "type": "http request",
+        "z": "13fd8d3e42908a31",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": false,
+        "url": "",
+        "persist": false,
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 430,
+        "y": 120,
+        "wires": [
+            [
+                "dae890e2161d6a61"
+            ]
+        ]
+    },
+    {
+        "id": "44d07b9e813b1e68",
+        "type": "link in",
+        "z": "13fd8d3e42908a31",
+        "name": "log_domo",
+        "links": [
+            "47ac3bb0d650e7cd",
+            "50726057d964075f",
+            "d72e4c9c76c0a54b",
+            "198705d9b12167f3",
+            "99ad6f3fc2443ad9"
+        ],
+        "x": 65,
+        "y": 100,
+        "wires": [
+            [
+                "4943b9a1398b4d9d"
+            ]
+        ]
+    },
+    {
+        "id": "dae890e2161d6a61",
+        "type": "debug",
+        "z": "13fd8d3e42908a31",
+        "name": "Domo result",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "6744f5332974af3d",
+        "type": "inject",
+        "z": "13fd8d3e42908a31",
+        "name": "Node Red Log",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "2",
+        "payload": "Node Red restarted",
+        "payloadType": "str",
+        "x": 140,
+        "y": 220,
+        "wires": [
+            [
+                "47ac3bb0d650e7cd"
+            ]
+        ]
+    },
+    {
+        "id": "47ac3bb0d650e7cd",
+        "type": "link out",
+        "z": "13fd8d3e42908a31",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "44d07b9e813b1e68"
+        ],
+        "x": 295,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "05d89bda971debf5",
+        "type": "function",
+        "z": "13fd8d3e42908a31",
+        "name": "alert_domo",
+        "func": "let str = msg.payload;\nlet alert = encodeURIComponent(str);\nlet subject=msg.topic\nmsg.url = \"http://192.168.0.90:8080/json.htm?type=command&param=sendnotification&subject=\"+subject+\"&body=\"+alert;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 210,
+        "y": 160,
+        "wires": [
+            [
+                "54ff11746108429f"
+            ]
+        ]
+    },
+    {
+        "id": "1ade85b91dd1ef10",
+        "type": "link in",
+        "z": "13fd8d3e42908a31",
+        "name": "alert_domo",
+        "links": [
+            "cb675392ac82f529",
+            "99ad6f3fc2443ad9",
+            "c98ba4a4240e9149",
+            "34d0e700c095c17d"
+        ],
+        "x": 65,
+        "y": 160,
+        "wires": [
+            [
+                "05d89bda971debf5"
+            ]
+        ]
+    },
+    {
+        "id": "1286c1e855b91cf4",
+        "type": "inject",
+        "z": "13fd8d3e42908a31",
+        "name": "Node Red Alert",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "ALERT",
+        "payload": "Node Red restarted",
+        "payloadType": "str",
+        "x": 140,
+        "y": 280,
+        "wires": [
+            [
+                "cb675392ac82f529"
+            ]
+        ]
+    },
+    {
+        "id": "cb675392ac82f529",
+        "type": "link out",
+        "z": "13fd8d3e42908a31",
+        "name": "link out 2",
+        "mode": "link",
+        "links": [
+            "1ade85b91dd1ef10"
+        ],
+        "x": 295,
+        "y": 280,
+        "wires": []
+    }
+]

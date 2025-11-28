@@ -3,7 +3,10 @@
 -- should be atleast 1 minute OK before we return to our previous value
 
 return {
-	logging = { level = domoticz.LOG_NORMAL, marker = "batt_power_monitor" },
+	logging = {
+	    --level = domoticz.LOG_INFO,
+	    marker = "batt_power_monitor"
+    },
 	on = {
 		timer = { 'every minute' },
 		devices = { 'Battery Mode', 'Battery SOC', 'Grid L3 Watt' },
@@ -16,7 +19,9 @@ return {
 
 	execute = function(dz, dev)
 		local max_usage = dz.variables('batt_max_grid_usage').value
-        local current_usage = dz.devices('Grid L3 Watt').actualWatt
+        local current_usage_L1 = dz.devices('Grid L1 Watt').actualWatt
+        local current_usage_L2 = dz.devices('Grid L2 Watt').actualWatt
+        local current_usage_L3 = dz.devices('Grid L3 Watt').actualWatt
 
 	    local batt_sp = dz.devices('ESS Setpoint')
 	    local batt_sp_value = batt_sp.setPoint
@@ -33,11 +38,11 @@ return {
 		else
             local have_overload = false    
             if (batt_state.state == 'Charging') then
-			    if (current_usage > max_usage) then 
+			    if ((current_usage_L1 > max_usage) or (current_usage_L2 > max_usage) or (current_usage_L3 > max_usage)) then 
 			        have_overload = true
 			    end
             elseif (batt_state.state == 'Discharging') then
-			    if (current_usage < -max_usage) then 
+			    if ((current_usage_L1 < -max_usage) or (current_usage_L2 < -max_usage) or (current_usage_L3 < -max_usage)) then 
 			        have_overload = true
 			    end
             end
@@ -46,7 +51,7 @@ return {
 				if (dz.data.adjusted == 0) then
     				dz.data.adjusted = 1
     				dz.data.org_setpoint_value = batt_sp_value;
-				    dz.log('Stopping discharging to not overload the grid: Current Usage: ' .. current_usage)
+				    dz.log('Stopping ' .. batt_state.state .. '  to not overload the grid: Current Usage: L1/L2/L3:' .. current_usage_L1 .. '/' .. current_usage_L2 .. '/' .. current_usage_L3)
 				end
 				dz.data.adjusted_time = os.time()
 				if (batt_sp_value ~= idle_rate) then

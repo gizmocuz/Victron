@@ -1,0 +1,1011 @@
+[
+    {
+        "id": "ddb33f2863df98a5",
+        "type": "tab",
+        "label": "Watt/kWh/Log/Monitor",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4294fa5adf1d40cc",
+        "type": "group",
+        "z": "ddb33f2863df98a5",
+        "name": "AC-In Power Usage",
+        "style": {
+            "stroke": "#a4a4a4",
+            "fill": "#7fb7df",
+            "label": true,
+            "color": "#ffffff"
+        },
+        "nodes": [
+            "7b60dc31a2076b1f",
+            "b586e0714822d972",
+            "11f92e80b464a1d6",
+            "2ec063d33b8a7f84",
+            "c0976c39fde7935c",
+            "e473f1d46fb5501d",
+            "6bd89a5474aadd23",
+            "95d5a72a62e48b55",
+            "e658be2b36231f2a",
+            "50b5220643150202",
+            "bb2045292b7784e9"
+        ],
+        "x": 14,
+        "y": 19,
+        "w": 752,
+        "h": 202
+    },
+    {
+        "id": "c70320bdd34da074",
+        "type": "group",
+        "z": "ddb33f2863df98a5",
+        "name": "AC-Out-1 Power Usage",
+        "style": {
+            "stroke": "#a4a4a4",
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#ffffff"
+        },
+        "nodes": [
+            "7d4442e8b3be559b",
+            "703433ba501facff",
+            "10a1dc4d89e95cf7",
+            "1971b9c044f82cb2",
+            "dff804ee95a86520",
+            "d576dd0ccd6f6e4d",
+            "b8e7d7de824ff8a6",
+            "7e5f583d20e15433",
+            "1d0f9f6628358241",
+            "a4a0fc1ffb8922e1",
+            "954eafb592ded153"
+        ],
+        "x": 14,
+        "y": 239,
+        "w": 752,
+        "h": 202
+    },
+    {
+        "id": "47e7ac41789299da",
+        "type": "group",
+        "z": "ddb33f2863df98a5",
+        "name": "Grid",
+        "style": {
+            "fill": "#ffefbf",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "e47dc594821908f6",
+            "6cdbabcda9bb1bf0",
+            "24ccb95d5cd0531a",
+            "afc2538e4de57b73",
+            "581f56ae065b75ef",
+            "d3d3bb4f0f6580d2",
+            "9f57393bfcc1edd5"
+        ],
+        "x": 14,
+        "y": 459,
+        "w": 402,
+        "h": 162
+    },
+    {
+        "id": "52734a5bffcceeef",
+        "type": "group",
+        "z": "ddb33f2863df98a5",
+        "name": "Power Over/Underflow Monitor",
+        "style": {
+            "fill": "#dbcbe7",
+            "label": true,
+            "color": "#ffffff"
+        },
+        "nodes": [
+            "7fd426c7ab23f005",
+            "5c2e7043235b2a67",
+            "51c59a043f433e82",
+            "aacbe0c5d5d3ed9d",
+            "cc6d46e29053cd76",
+            "0460462083e78ff0"
+        ],
+        "x": 14,
+        "y": 639,
+        "w": 872,
+        "h": 162
+    },
+    {
+        "id": "e47dc594821908f6",
+        "type": "change",
+        "z": "ddb33f2863df98a5",
+        "g": "47e7ac41789299da",
+        "name": "T=Watt L2",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "grid_l2_w",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 250,
+        "y": 540,
+        "wires": [
+            [
+                "9f57393bfcc1edd5"
+            ]
+        ]
+    },
+    {
+        "id": "6cdbabcda9bb1bf0",
+        "type": "victron-input-system",
+        "z": "ddb33f2863df98a5",
+        "g": "47e7ac41789299da",
+        "service": "com.victronenergy.system/0",
+        "path": "/Ac/Grid/L1/Power",
+        "serviceObj": {
+            "service": "com.victronenergy.system/0",
+            "name": "Venus system"
+        },
+        "pathObj": {
+            "path": "/Ac/Grid/L1/Power",
+            "type": "float",
+            "name": "Grid L1 (W)"
+        },
+        "name": "L1 W",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 90,
+        "y": 500,
+        "wires": [
+            [
+                "d3d3bb4f0f6580d2"
+            ]
+        ]
+    },
+    {
+        "id": "24ccb95d5cd0531a",
+        "type": "victron-input-system",
+        "z": "ddb33f2863df98a5",
+        "g": "47e7ac41789299da",
+        "service": "com.victronenergy.system/0",
+        "path": "/Ac/Grid/L2/Power",
+        "serviceObj": {
+            "service": "com.victronenergy.system/0",
+            "name": "Venus system"
+        },
+        "pathObj": {
+            "path": "/Ac/Grid/L2/Power",
+            "type": "float",
+            "name": "Grid L2 (W)"
+        },
+        "name": "L2 W",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 90,
+        "y": 540,
+        "wires": [
+            [
+                "e47dc594821908f6"
+            ]
+        ]
+    },
+    {
+        "id": "afc2538e4de57b73",
+        "type": "victron-input-system",
+        "z": "ddb33f2863df98a5",
+        "g": "47e7ac41789299da",
+        "service": "com.victronenergy.system/0",
+        "path": "/Ac/Grid/L3/Power",
+        "serviceObj": {
+            "service": "com.victronenergy.system/0",
+            "name": "Venus system"
+        },
+        "pathObj": {
+            "path": "/Ac/Grid/L3/Power",
+            "type": "float",
+            "name": "Grid L3 (W)"
+        },
+        "name": "L3 W",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 90,
+        "y": 580,
+        "wires": [
+            [
+                "581f56ae065b75ef"
+            ]
+        ]
+    },
+    {
+        "id": "581f56ae065b75ef",
+        "type": "change",
+        "z": "ddb33f2863df98a5",
+        "g": "47e7ac41789299da",
+        "name": "T=Watt L3",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "grid_l3_w",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 250,
+        "y": 580,
+        "wires": [
+            [
+                "9f57393bfcc1edd5"
+            ]
+        ]
+    },
+    {
+        "id": "d3d3bb4f0f6580d2",
+        "type": "change",
+        "z": "ddb33f2863df98a5",
+        "g": "47e7ac41789299da",
+        "name": "T=Watt L1",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "grid_l1_w",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 250,
+        "y": 500,
+        "wires": [
+            [
+                "9f57393bfcc1edd5"
+            ]
+        ]
+    },
+    {
+        "id": "7b60dc31a2076b1f",
+        "type": "victron-input-vebus",
+        "z": "ddb33f2863df98a5",
+        "g": "4294fa5adf1d40cc",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Energy/AcIn1ToInverter",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Energy/AcIn1ToInverter",
+            "type": "float",
+            "name": "Energy AcIn1 to Inverter (kWh)"
+        },
+        "initial": "",
+        "name": "Input (kWh)",
+        "onlyChanges": true,
+        "roundValues": "3",
+        "x": 110,
+        "y": 180,
+        "wires": [
+            [
+                "50b5220643150202"
+            ]
+        ]
+    },
+    {
+        "id": "b586e0714822d972",
+        "type": "victron-input-vebus",
+        "z": "ddb33f2863df98a5",
+        "g": "4294fa5adf1d40cc",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Ac/ActiveIn/L1/P",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Ac/ActiveIn/L1/P",
+            "type": "float",
+            "name": "Input power phase 1 (W)"
+        },
+        "initial": "",
+        "name": "Input Phase 1 (W)",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 130,
+        "y": 60,
+        "wires": [
+            [
+                "e473f1d46fb5501d"
+            ]
+        ]
+    },
+    {
+        "id": "11f92e80b464a1d6",
+        "type": "join",
+        "z": "ddb33f2863df98a5",
+        "g": "4294fa5adf1d40cc",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": true,
+        "timeout": "",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 450,
+        "y": 100,
+        "wires": [
+            [
+                "e658be2b36231f2a"
+            ]
+        ]
+    },
+    {
+        "id": "2ec063d33b8a7f84",
+        "type": "victron-input-vebus",
+        "z": "ddb33f2863df98a5",
+        "g": "4294fa5adf1d40cc",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Ac/ActiveIn/L2/P",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Ac/ActiveIn/L2/P",
+            "type": "float",
+            "name": "Input power phase 2 (W)"
+        },
+        "initial": "",
+        "name": "Input Phase 2 (W)",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "6bd89a5474aadd23"
+            ]
+        ]
+    },
+    {
+        "id": "c0976c39fde7935c",
+        "type": "victron-input-vebus",
+        "z": "ddb33f2863df98a5",
+        "g": "4294fa5adf1d40cc",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Ac/ActiveIn/L3/P",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Ac/ActiveIn/L3/P",
+            "type": "float",
+            "name": "Input power phase 3 (W)"
+        },
+        "initial": "",
+        "name": "Input Phase 3 (W)",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 130,
+        "y": 140,
+        "wires": [
+            [
+                "95d5a72a62e48b55"
+            ]
+        ]
+    },
+    {
+        "id": "e473f1d46fb5501d",
+        "type": "change",
+        "z": "ddb33f2863df98a5",
+        "g": "4294fa5adf1d40cc",
+        "name": "T=phase_1",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mp_acin_L1",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 60,
+        "wires": [
+            [
+                "11f92e80b464a1d6",
+                "bb2045292b7784e9"
+            ]
+        ]
+    },
+    {
+        "id": "6bd89a5474aadd23",
+        "type": "change",
+        "z": "ddb33f2863df98a5",
+        "g": "4294fa5adf1d40cc",
+        "name": "T=phase_2",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mp_acin_L2",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 100,
+        "wires": [
+            [
+                "11f92e80b464a1d6",
+                "bb2045292b7784e9"
+            ]
+        ]
+    },
+    {
+        "id": "95d5a72a62e48b55",
+        "type": "change",
+        "z": "ddb33f2863df98a5",
+        "g": "4294fa5adf1d40cc",
+        "name": "T=phase_3",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mp_acin_L3",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 140,
+        "wires": [
+            [
+                "11f92e80b464a1d6",
+                "bb2045292b7784e9"
+            ]
+        ]
+    },
+    {
+        "id": "e658be2b36231f2a",
+        "type": "function",
+        "z": "ddb33f2863df98a5",
+        "g": "4294fa5adf1d40cc",
+        "name": "Combine",
+        "func": "let total = 0;\nif (msg.payload.mp_acin_L1 != null) {\n    total += msg.payload.mp_acin_L1;\n}\nif (msg.payload.mp_acin_L2 != null) {\n    total += msg.payload.mp_acin_L2;\n}\nif (msg.payload.mp_acin_L3 != null) {\n    total += msg.payload.mp_acin_L3;\n}\nmsg.topic = \"inv_acin_w\"\nmsg.payload = total;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 100,
+        "wires": [
+            [
+                "bb2045292b7784e9"
+            ]
+        ]
+    },
+    {
+        "id": "50b5220643150202",
+        "type": "change",
+        "z": "ddb33f2863df98a5",
+        "g": "4294fa5adf1d40cc",
+        "name": "T=inv_acin_kwh",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "inv_acin_kwh",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 180,
+        "wires": [
+            [
+                "bb2045292b7784e9"
+            ]
+        ]
+    },
+    {
+        "id": "bb2045292b7784e9",
+        "type": "link out",
+        "z": "ddb33f2863df98a5",
+        "g": "4294fa5adf1d40cc",
+        "name": "ToMQTT",
+        "mode": "link",
+        "links": [
+            "04b33f5ed2e152e1"
+        ],
+        "x": 725,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "7d4442e8b3be559b",
+        "type": "victron-input-vebus",
+        "z": "ddb33f2863df98a5",
+        "g": "c70320bdd34da074",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Energy/InverterToAcOut",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Energy/InverterToAcOut",
+            "type": "float",
+            "name": "Inverter To AcOut (kWh)"
+        },
+        "initial": "",
+        "name": "Output (kWh)",
+        "onlyChanges": true,
+        "roundValues": "3",
+        "x": 110,
+        "y": 400,
+        "wires": [
+            [
+                "a4a0fc1ffb8922e1"
+            ]
+        ]
+    },
+    {
+        "id": "703433ba501facff",
+        "type": "victron-input-vebus",
+        "z": "ddb33f2863df98a5",
+        "g": "c70320bdd34da074",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Ac/Out/L1/P",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Ac/Out/L1/P",
+            "type": "float",
+            "name": "Output power phase 1 (W)"
+        },
+        "initial": "",
+        "name": "Output Phase 1 (W)",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 130,
+        "y": 280,
+        "wires": [
+            [
+                "d576dd0ccd6f6e4d"
+            ]
+        ]
+    },
+    {
+        "id": "10a1dc4d89e95cf7",
+        "type": "join",
+        "z": "ddb33f2863df98a5",
+        "g": "c70320bdd34da074",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": true,
+        "timeout": "",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 450,
+        "y": 320,
+        "wires": [
+            [
+                "1d0f9f6628358241"
+            ]
+        ]
+    },
+    {
+        "id": "1971b9c044f82cb2",
+        "type": "victron-input-vebus",
+        "z": "ddb33f2863df98a5",
+        "g": "c70320bdd34da074",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Ac/Out/L2/P",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Ac/Out/L2/P",
+            "type": "float",
+            "name": "Output power phase 2 (W)"
+        },
+        "initial": "",
+        "name": "Output Phase 2 (W)",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 130,
+        "y": 320,
+        "wires": [
+            [
+                "b8e7d7de824ff8a6"
+            ]
+        ]
+    },
+    {
+        "id": "dff804ee95a86520",
+        "type": "victron-input-vebus",
+        "z": "ddb33f2863df98a5",
+        "g": "c70320bdd34da074",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Ac/Out/L3/P",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Ac/Out/L3/P",
+            "type": "float",
+            "name": "Output power phase 3 (W)"
+        },
+        "initial": "",
+        "name": "Output Phase 3 (W)",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 130,
+        "y": 360,
+        "wires": [
+            [
+                "7e5f583d20e15433"
+            ]
+        ]
+    },
+    {
+        "id": "d576dd0ccd6f6e4d",
+        "type": "change",
+        "z": "ddb33f2863df98a5",
+        "g": "c70320bdd34da074",
+        "name": "T=phase_1",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mp_acout1_L1",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 280,
+        "wires": [
+            [
+                "10a1dc4d89e95cf7",
+                "954eafb592ded153"
+            ]
+        ]
+    },
+    {
+        "id": "b8e7d7de824ff8a6",
+        "type": "change",
+        "z": "ddb33f2863df98a5",
+        "g": "c70320bdd34da074",
+        "name": "T=phase_2",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mp_acout1_L2",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 320,
+        "wires": [
+            [
+                "10a1dc4d89e95cf7",
+                "954eafb592ded153"
+            ]
+        ]
+    },
+    {
+        "id": "7e5f583d20e15433",
+        "type": "change",
+        "z": "ddb33f2863df98a5",
+        "g": "c70320bdd34da074",
+        "name": "T=phase_3",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mp_acout1_L3",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 360,
+        "wires": [
+            [
+                "10a1dc4d89e95cf7",
+                "954eafb592ded153"
+            ]
+        ]
+    },
+    {
+        "id": "1d0f9f6628358241",
+        "type": "function",
+        "z": "ddb33f2863df98a5",
+        "g": "c70320bdd34da074",
+        "name": "Combine",
+        "func": "let total = 0;\nif (msg.payload.mp_acout1_L1 != null) {\n    total += msg.payload.mp_acout1_L1;\n}\nif (msg.payload.mp_acout1_L2 != null) {\n    total += msg.payload.mp_acout1_L2;\n}\nif (msg.payload.mp_acout1_L3 != null) {\n    total += msg.payload.mp_acout1_L3;\n}\nmsg.topic = \"inv_acout1_w\"\nmsg.payload = total;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 320,
+        "wires": [
+            [
+                "954eafb592ded153"
+            ]
+        ]
+    },
+    {
+        "id": "a4a0fc1ffb8922e1",
+        "type": "change",
+        "z": "ddb33f2863df98a5",
+        "g": "c70320bdd34da074",
+        "name": "T=inv_acout1_kwh",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "inv_acout1_kwh",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 570,
+        "y": 400,
+        "wires": [
+            [
+                "954eafb592ded153"
+            ]
+        ]
+    },
+    {
+        "id": "954eafb592ded153",
+        "type": "link out",
+        "z": "ddb33f2863df98a5",
+        "g": "c70320bdd34da074",
+        "name": "ToMQTT",
+        "mode": "link",
+        "links": [
+            "04b33f5ed2e152e1"
+        ],
+        "x": 725,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "9f57393bfcc1edd5",
+        "type": "link out",
+        "z": "ddb33f2863df98a5",
+        "g": "47e7ac41789299da",
+        "name": "ToMQTT",
+        "mode": "link",
+        "links": [
+            "04b33f5ed2e152e1"
+        ],
+        "x": 375,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "7fd426c7ab23f005",
+        "type": "function",
+        "z": "ddb33f2863df98a5",
+        "g": "52734a5bffcceeef",
+        "name": "Power Monitor",
+        "func": "let data = context.global.data || {};\n\nif (data[\"ess_setpoint\"] == undefined) {\n    return null;\n}\nlet setpoint = data[\"ess_setpoint\"] || 0;\nlet new_setpoint = setpoint;\n\nlet L1 = data[\"grid_l1_w\"] || 0;\nlet L2 = data[\"grid_l2_w\"] || 0;\nlet L3 = data[\"grid_l3_w\"] || 0;\nlet num_multi = context.global.number_of_multiplus;\n\nlet max_phase_power = context.global.max_phase_power;\nlet idle_rate = context.global.idle_rate;\nlet adjusted = context.global.setpoint_adjusted || false;\n\n//max_phase_power = 1300;\n\n//node.warn(\"L1/L2/L3 = \" + L1 + \"/\" + L2 + \"/\" + L3)\n//node.warn(\"setpoint: \" + setpoint)\n//node.warn(\"In Power Monitor, adjusted is \" + adjusted)\n\nif (adjusted == false) {\n    if (setpoint > idle_rate) {\n        // charging\n    \tlet highest_phase_power = Math.max(L1, L2, L3);           // phase with the highest load\n        //node.warn(\"highest_phase_power: \" + highest_phase_power);\n        if (highest_phase_power > max_phase_power) {\n            node.warn(\"Charge overload adjust\");\n\n        \tlet highest_phase_power = Math.max(L1, L2, L3);           // phase with the highest load\n        \tlet delta = highest_phase_power - max_phase_power;            // how much over the max for the phase\n        \tnew_setpoint = Math.ceil(setpoint - (delta * num_multi));           // lower for each inverter as one setpoint for all\n        \tnode.warn(\"Diff = \" + delta + \" for a new setpoint of \" + new_setpoint);\n        \tnew_setpoint = Math.min(new_setpoint, idle_rate);\n        \tnode.warn(\"Setting new setpoint now to \" + new_setpoint);\n            if (context.global.original_setpoint === undefined) {\n                context.global.original_setpoint = new_setpoint;\n            }\n        \tcontext.global.setpoint_adjusted = true;\n        }\n    }\n    else if (setpoint < 0) { \n        //discharging\n    \tlet lowest_phase_power = Math.min(L1, L2, L3);           // phase with the highest load\n        //node.warn(\"lowest_phase_power: \" + lowest_phase_power);\n    \tif (lowest_phase_power < -max_phase_power) {\n        \tnode.warn(\"Discharge overload adjust\");\n    \n        \tlet delta = lowest_phase_power + max_phase_power;            // how much over the max for the phase\n        \tnew_setpoint = Math.floor(setpoint - (delta * num_multi));          // increase for each inverter as one setpoint for all\n        \tif (new_setpoint > 0)                                         // lets not switch to a charge state\n        \t{\n        \t    //keep in discharging state\n        \t    new_setpoint = -1;\n        \t}\n        \tnode.warn(\"Setting new setpoint now to \" + new_setpoint);\n            if (context.global.original_setpoint === undefined) {\n                context.global.original_setpoint = new_setpoint;\n            }\n        \tcontext.global.setpoint_adjusted = true;\n    \t}\n    }\n}\nelse {\n    // the setpoint was adjusted  \n\tif (setpoint > idle_rate)                                     // charging in an adjusted state\n\t{\n        node.warn(\"In Charge re-adjust\");\n\t\tlet highest_phase_power = Math.max(L1, L2, L3);     // find the phase with the highest power\n\t\tlet delta = max_phase_power - highest_phase_power;        // see if there is room to adjust\n\t\tnode.warn(\"Delta: \" + delta);\n\t \tif (delta > 150)                                    // only adjust if the diff is > 150W\n\t \t{\n\t \t    let original_setpoint = context.global.original_setpoint;\n\t\t\tnew_setpoint = Math.ceil(Math.min((setpoint + (delta * num_multi)), original_setpoint)); // add the delta to the setpoint but do not exceed original_setpoint\n\t\t\tnode.warn(\"Re-adjusting setpoint from \" + setpoint + \" to \" + new_setpoint + \" original was: \" + original_setpoint);\n\t\t\tif (new_setpoint == original_setpoint)\n\t\t\t{\n\t\t\t    context.global.original_setpoint = undefined;\n\t\t\t\tcontext.global.setpoint_adjusted = false;     // we are back at the original setpoint so set adjusted to false\n\t\t\t\tnode.warn(\"adjusted == false \" + new_setpoint + \" \" + original_setpoint);\n\t\t\t}\n\t\t}\n\t}\n\telse if (setpoint < 0)                                        // discharging in an adjusted stage\n\t{\n        node.warn(\"Discharge re-adjust\")\n\t\tlet lowest_phase_power = Math.min(L1, L2, L3);          // find the phase with the highest (negative) power\n\t\tlet delta = -max_phase_power - lowest_phase_power;      // see if there is room to adjust\n\t\tnode.warn(\"Delta: \" + delta);\n\t \tif (delta < -150)                                       // only adjust of diff > 150W\n\t \t{\n\t \t    let original_setpoint = context.global.original_setpoint;\n\t\t\tnew_setpoint = Math.floor(Math.max((setpoint - (delta * num_multi)), original_setpoint)); //add the delta to the setpoint but do not exceed original_setpoint\n\t\t\tnode.warn(\"Re-adjusting setpoint to \" + new_setpoint);\n\t\t\tif (new_setpoint == original_setpoint)\n\t\t\t{\n\t\t\t    context.global.original_setpoint = undefined;\n\t\t\t\tcontext.global.setpoint_adjusted = false;     // we are back at the original setpoint so set adjusted to false\n\t\t\t\tnode.warn(\"adjusted == false \" + new_setpoint + \" \" + original_setpoint);\n\t\t\t}\n\t\t}\n\t}\n}\n//node.warn(\"The end, setpoint: \" + setpoint + \" new: \" + new_setpoint);\n\nif (new_setpoint != setpoint)                                           // only adjust of the setpoint has changed\n{\n\tmsg.payload = new_setpoint;\n\tcontext.global.data[\"ess_setpoint\"] = new_setpoint; // this would be handled with the next victron setpoint update but for debugging\n\tnode.warn(\"Setting new setpoint now to \" + new_setpoint)\n\treturn null;//haha don't do it yet!\n\t//return msg;\n}\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 720,
+        "wires": [
+            [
+                "51c59a043f433e82",
+                "0460462083e78ff0"
+            ]
+        ]
+    },
+    {
+        "id": "5c2e7043235b2a67",
+        "type": "victron-output-ess",
+        "z": "ddb33f2863df98a5",
+        "g": "52734a5bffcceeef",
+        "service": "com.victronenergy.settings",
+        "path": "/Settings/CGwacs/AcPowerSetPoint",
+        "serviceObj": {
+            "service": "com.victronenergy.settings",
+            "name": "Venus settings"
+        },
+        "pathObj": {
+            "path": "/Settings/CGwacs/AcPowerSetPoint",
+            "type": "integer",
+            "name": "Grid set-point (W)",
+            "writable": true
+        },
+        "name": "",
+        "onlyChanges": false,
+        "x": 600,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "51c59a043f433e82",
+        "type": "debug",
+        "z": "ddb33f2863df98a5",
+        "g": "52734a5bffcceeef",
+        "name": "Grid Overload Adjust",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "aacbe0c5d5d3ed9d",
+        "type": "inject",
+        "z": "ddb33f2863df98a5",
+        "g": "52734a5bffcceeef",
+        "name": "Every 10 secs",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "3",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 720,
+        "wires": [
+            [
+                "7fd426c7ab23f005"
+            ]
+        ]
+    },
+    {
+        "id": "cc6d46e29053cd76",
+        "type": "http request",
+        "z": "ddb33f2863df98a5",
+        "g": "52734a5bffcceeef",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": false,
+        "url": "",
+        "persist": false,
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 790,
+        "y": 680,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0460462083e78ff0",
+        "type": "function",
+        "z": "ddb33f2863df98a5",
+        "g": "52734a5bffcceeef",
+        "name": "Log SP adjust to domo log",
+        "func": "let sp = msg.payload;\nlet alert = encodeURIComponent(\"Victron overload adjust to \"+sp)\nmsg.url = \"http://192.168.0.90:8080/json.htm?type=command&param=addlogmessage&message=\"+alert+\"&level=1\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 680,
+        "wires": [
+            [
+                "cc6d46e29053cd76"
+            ]
+        ]
+    }
+]

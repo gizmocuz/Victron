@@ -1,0 +1,3237 @@
+[
+    {
+        "id": "11c15729dad50c39",
+        "type": "tab",
+        "label": "HomeBatt",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "538434f8ada5abb4",
+        "type": "group",
+        "z": "11c15729dad50c39",
+        "name": "Report Status on change",
+        "style": {
+            "stroke": "#ffbfbf",
+            "fill": "#ffbfbf",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "ee7542bcad3b216c",
+            "2db89dacc5a82bb4",
+            "8da1b120b4eec60b",
+            "b233b5bf79af5971",
+            "be72015e9017285b",
+            "fb7455af236ed55f",
+            "20a5c72168cccf7e",
+            "598958ec9a9c8de0",
+            "d5014f155871290e",
+            "70ef6c4140c82cf3",
+            "21fefc9488202f42",
+            "57b85b918dc8b58a",
+            "45921ca6fe73540e",
+            "00e033553ab89f04",
+            "cda41a95cbfa126b",
+            "9a3ed4a17cfdf232",
+            "fbf67a6f4252ba21",
+            "49c367a2ee0ccd43",
+            "73c8292b08ced613",
+            "e697e78dd2476445",
+            "f684634197238553",
+            "0ad09ce64e47abdc",
+            "0cc4ffd6af2c92ed",
+            "45117e09372083fa",
+            "9afa29835011a413",
+            "57447ed22f5a3c27",
+            "c375d87f6ea3bb74",
+            "f6bbde458a85b6c6",
+            "0e11460ee019f369",
+            "404abbe7e621dc1f",
+            "60ddd275525b3f49",
+            "c08db8232c5fd37d",
+            "e0aa73f0d9258546",
+            "7d54a1b3cffc67b4",
+            "175c74606259bb38",
+            "426454ccf5f41ce9",
+            "44af7ae1d270db90",
+            "b56ef4d4767031c5",
+            "37ea20bd42d9fef6",
+            "379778cec535f398",
+            "7b96f665eb122495",
+            "615522e20c187a0e",
+            "07067fa9860f9e2f",
+            "2fde97888a47cbe5",
+            "7e6bb5e97122dcb5",
+            "29bf06e828834f98",
+            "ef39bdefab74d1dd",
+            "6cde60b4c7585891",
+            "5747688d3b58b44f",
+            "f23d66c23430238c",
+            "6f28f251feaec99c",
+            "840c6a167c2978d4",
+            "a8359c3bb7176b44",
+            "3ba65bd50d3c2520",
+            "e6571047b98d4d18",
+            "f9cde63fa478af22",
+            "bfa92a18fea9f6db",
+            "a6423dd0f1e82e68",
+            "4ada7c9f8dd3d3c1",
+            "08d57892154c3cb4",
+            "a7c4e9efa7a9ad71",
+            "62d135e4024d12da",
+            "b55619ca5fa84624",
+            "6f2b84af6c198677",
+            "ede92800fa8827c8",
+            "77168ea5a5341a8e",
+            "f26bbe4dd29ec42c",
+            "52635842ffb1ac5d",
+            "62ad99913dec0ba2",
+            "541f06a9d0f87b5d",
+            "b49b296aba2f2640"
+        ],
+        "x": 14,
+        "y": 179,
+        "w": 752,
+        "h": 1382
+    },
+    {
+        "id": "89166bbe87877070",
+        "type": "group",
+        "z": "11c15729dad50c39",
+        "name": "Domoticz Setpoint control",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "f6ccfa7a490be396",
+            "e81ad5b0626f8dda",
+            "80fb86b547b55555",
+            "ff6faae24728b12c",
+            "1dfbf5b367b5886e",
+            "bce98b1496d5ed45"
+        ],
+        "x": 9.714279174804688,
+        "y": 19,
+        "w": 756.2857208251953,
+        "h": 147.7142734527588
+    },
+    {
+        "id": "4173e8883e32011b",
+        "type": "group",
+        "z": "11c15729dad50c39",
+        "name": "Adjust charge parameters near the end",
+        "style": {
+            "fill": "#b797cf",
+            "label": true,
+            "color": "#ffffff"
+        },
+        "nodes": [
+            "c6dec17afbbc8ee9",
+            "d30b1877d0f240d0",
+            "186a96fe60498683",
+            "7a446c7d181c7c70"
+        ],
+        "x": 14,
+        "y": 1579,
+        "w": 972,
+        "h": 122
+    },
+    {
+        "id": "118adc3f7ab8b995",
+        "type": "group",
+        "z": "11c15729dad50c39",
+        "name": "Initialization",
+        "style": {
+            "fill": "#d1d1d1",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "83b22b4dba8cc16b",
+            "3531f89a0fac36ef",
+            "ec8aec609d3dbf27",
+            "4265710cca04214d"
+        ],
+        "x": 814,
+        "y": 19,
+        "w": 592,
+        "h": 122
+    },
+    {
+        "id": "46934fd70a864e7d",
+        "type": "group",
+        "z": "11c15729dad50c39",
+        "name": "Domoticz ESS Mode control",
+        "style": {
+            "fill": "#9363b7",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "8f683f08ca4e0d6d",
+            "d83916a2fe777e2f",
+            "4a2b5c0c4430540b",
+            "44e9c7638da28eda"
+        ],
+        "x": 14,
+        "y": 1719,
+        "w": 632,
+        "h": 122
+    },
+    {
+        "id": "1bf2cbfd211c76f8",
+        "type": "group",
+        "z": "11c15729dad50c39",
+        "name": "Domoticz Battery Mode/Status Control",
+        "style": {
+            "fill": "#ffcf3f",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "fe29b0e4487b02c0",
+            "19094210a4561364",
+            "c98824900c31e120",
+            "e4baf8667b014c1c",
+            "c7f7c335facd37dc",
+            "58bd39d70dc748f2",
+            "3cb12f5e806dadb9",
+            "88700a0ac035432a",
+            "5b7b8103806efc12",
+            "26c547fb7bc88cee",
+            "b6dfbbd90ef362fd"
+        ],
+        "x": 14,
+        "y": 1859,
+        "w": 832,
+        "h": 162
+    },
+    {
+        "id": "6cc3299294f7eb12",
+        "type": "group",
+        "z": "11c15729dad50c39",
+        "name": "Domoticz MP2 On/Off control",
+        "style": {
+            "fill": "#c8e7a7",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "439d1fa9e5c33602",
+            "b5790661fb4671dd",
+            "48e8905972378ed1"
+        ],
+        "x": 14,
+        "y": 2039,
+        "w": 632,
+        "h": 82
+    },
+    {
+        "id": "c8c0c009930503ea",
+        "type": "group",
+        "z": "11c15729dad50c39",
+        "name": "MQTT",
+        "style": {
+            "stroke": "#ff7f7f",
+            "fill": "#ffcf3f",
+            "label": true
+        },
+        "nodes": [
+            "c1e616f1b0178c12",
+            "c6aa46b57ccb73e5",
+            "2a3edab64145a089",
+            "3ec85e9cbf9159e7",
+            "04b33f5ed2e152e1",
+            "032e3829752acb0f",
+            "7a46db4de7d2a6f8",
+            "c89b03edc9d07f32"
+        ],
+        "x": 814,
+        "y": 119,
+        "w": 532,
+        "h": 182
+    },
+    {
+        "id": "c6dec17afbbc8ee9",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "4173e8883e32011b",
+        "name": "IF (SP > 0 && SOC > max_soc) THEN SP = 0W",
+        "func": "let data = context.global.data || {};\nlet soc = data[\"batt_soc\"];\nlet ess_setpoint = data[\"ess_setpoint\"];\n\nif (ess_setpoint > 0 && soc > context.global.max_soc) {\n    msg.payload = 0;\n    return msg;\n}\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 1620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d30b1877d0f240d0",
+        "type": "inject",
+        "z": "11c15729dad50c39",
+        "g": "4173e8883e32011b",
+        "name": "Every 10 secs",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "10",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 1620,
+        "wires": [
+            [
+                "c6dec17afbbc8ee9",
+                "7a446c7d181c7c70"
+            ]
+        ]
+    },
+    {
+        "id": "186a96fe60498683",
+        "type": "victron-output-ess",
+        "z": "11c15729dad50c39",
+        "g": "4173e8883e32011b",
+        "service": "com.victronenergy.settings",
+        "path": "/Settings/CGwacs/AcPowerSetPoint",
+        "serviceObj": {
+            "service": "com.victronenergy.settings",
+            "name": "Venus settings"
+        },
+        "pathObj": {
+            "path": "/Settings/CGwacs/AcPowerSetPoint",
+            "type": "integer",
+            "name": "Grid set-point (W)",
+            "writable": true
+        },
+        "name": "",
+        "onlyChanges": false,
+        "x": 820,
+        "y": 1640,
+        "wires": []
+    },
+    {
+        "id": "8f683f08ca4e0d6d",
+        "type": "mqtt in",
+        "z": "11c15729dad50c39",
+        "g": "46934fd70a864e7d",
+        "name": "ESS Mode",
+        "topic": "my_victron/set/ess_mode",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ee1bb25c871ce5fc",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 100,
+        "y": 1760,
+        "wires": [
+            [
+                "44e9c7638da28eda"
+            ]
+        ]
+    },
+    {
+        "id": "d83916a2fe777e2f",
+        "type": "debug",
+        "z": "11c15729dad50c39",
+        "g": "46934fd70a864e7d",
+        "name": "Update ESS Mode",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 470,
+        "y": 1800,
+        "wires": []
+    },
+    {
+        "id": "4a2b5c0c4430540b",
+        "type": "victron-output-ess",
+        "z": "11c15729dad50c39",
+        "g": "46934fd70a864e7d",
+        "service": "com.victronenergy.settings",
+        "path": "/Settings/CGwacs/Hub4Mode",
+        "serviceObj": {
+            "service": "com.victronenergy.settings",
+            "name": "Venus settings"
+        },
+        "pathObj": {
+            "path": "/Settings/CGwacs/Hub4Mode",
+            "type": "enum",
+            "name": "ESS mode",
+            "enum": {
+                "1": "Optimized mode or 'keep batteries charged' and phase compensation enabled",
+                "2": "Optimized mode or 'keep batteries charged' and phase compensation disabled",
+                "3": "External control"
+            },
+            "writable": true
+        },
+        "initial": "",
+        "name": "",
+        "onlyChanges": false,
+        "x": 500,
+        "y": 1760,
+        "wires": []
+    },
+    {
+        "id": "44e9c7638da28eda",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "46934fd70a864e7d",
+        "name": "Translate",
+        "func": "let new_mode = 0;\nif (msg.payload == \"Mode 1\")\n    new_mode = 1;\nelse if (msg.payload == \"Mode 2\")\n    new_mode = 2;\nelse\n    return null;\nmsg.payload = new_mode;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 240,
+        "y": 1760,
+        "wires": [
+            [
+                "4a2b5c0c4430540b",
+                "d83916a2fe777e2f"
+            ]
+        ]
+    },
+    {
+        "id": "ee7542bcad3b216c",
+        "type": "victron-input-ess",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.settings",
+        "path": "/Settings/CGwacs/AcPowerSetPoint",
+        "serviceObj": {
+            "service": "com.victronenergy.settings",
+            "name": "Venus settings"
+        },
+        "pathObj": {
+            "path": "/Settings/CGwacs/AcPowerSetPoint",
+            "type": "integer",
+            "name": "Grid set-point (W)"
+        },
+        "name": "Venus | Grid set-point (W)",
+        "onlyChanges": true,
+        "x": 150,
+        "y": 220,
+        "wires": [
+            [
+                "e81ad5b0626f8dda",
+                "7d54a1b3cffc67b4"
+            ]
+        ]
+    },
+    {
+        "id": "c1e616f1b0178c12",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "c8c0c009930503ea",
+        "name": "construct MQTT-AD",
+        "func": "// messages on output 1 will be rate limit\n\nlet final_topic = \"my_victron/\" + msg.topic + \"/state\";\n\nlet data_msg = context.global.data || {};\nlet data_timestamp = context.global.timetamp || {};\nlet topic = msg.topic;\n\nlet sendnow = false;\n\nif (typeof msg.sendnow !== 'undefined') {\n    sendnow = (msg.sendnow == true);\n}\n\ndata_msg[topic] = msg.payload;\ndata_timestamp[topic] = Date.now();\ncontext.global.data = data_msg;\ncontext.global.timetamp = data_timestamp;\n\n//still needed? (everything is in global now)\ncontext.global.victron_data = data_msg;\n\nmsg.topic = final_topic;\n\nlet msg2 = null;\n\nif (sendnow == true) {\n    //node.warn('send now: ' + msg.topic);\n    //send directly\n    msg2 = msg;\n    msg = null;\n}\n\nreturn [msg, msg2];\n",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1000,
+        "y": 160,
+        "wires": [
+            [
+                "3ec85e9cbf9159e7"
+            ],
+            [
+                "c89b03edc9d07f32"
+            ]
+        ]
+    },
+    {
+        "id": "80fb86b547b55555",
+        "type": "victron-output-ess",
+        "z": "11c15729dad50c39",
+        "g": "89166bbe87877070",
+        "service": "com.victronenergy.settings",
+        "path": "/Settings/CGwacs/AcPowerSetPoint",
+        "serviceObj": {
+            "service": "com.victronenergy.settings",
+            "name": "Venus settings"
+        },
+        "pathObj": {
+            "path": "/Settings/CGwacs/AcPowerSetPoint",
+            "type": "integer",
+            "name": "Grid set-point (W)",
+            "writable": true
+        },
+        "name": "",
+        "onlyChanges": false,
+        "x": 600,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "2db89dacc5a82bb4",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "Charge State",
+        "func": "msg.topic = \"charge_state\";\n\nif (msg.payload == 0)\n    msg.payload = \"Initialising\";\nelse if (msg.payload == 1)\n    msg.payload = \"Bulk\";\nelse if (msg.payload == 2)\n    msg.payload = \"Absorption\";\nelse if (msg.payload == 3)\n    msg.payload = \"Float\";\nelse if (msg.payload == 4)\n    msg.payload = \"Storage\";\nelse if (msg.payload == 5)\n    msg.payload = \"Absorb repeat\";\nelse if (msg.payload == 6)\n    msg.payload = \"Forced absorb\";\nelse if (msg.payload == 7)\n    msg.payload = \"Equalise\";\nelse if (msg.payload == 8)\n    msg.payload = \"Bulk stopped\";\nelse if (msg.payload == 9)\n    msg.payload = \"Unknown (\" + msg.payload + \")\";\nelse\n    msg.payload = \"Unknown? (\" + msg.payload + \")\";\nmsg.sendnow = true;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 800,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "8da1b120b4eec60b",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "ESS Mode",
+        "func": "msg.topic = \"ess_mode\";\nif (msg.payload == 1)\n    msg.payload = \"Mode 1\";\nelse if (msg.payload == 2)\n    msg.payload = \"Mode 2\";\nelse if (msg.payload == 3)\n    msg.payload = \"Mode 3\";\nelse\n    return null;\nmsg.sendnow = true;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 840,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "c6aa46b57ccb73e5",
+        "type": "mqtt out",
+        "z": "11c15729dad50c39",
+        "g": "c8c0c009930503ea",
+        "name": "Domoticz-MQTT",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ee1bb25c871ce5fc",
+        "x": 1000,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "2a3edab64145a089",
+        "type": "debug",
+        "z": "11c15729dad50c39",
+        "g": "c8c0c009930503ea",
+        "name": "JSON Output",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 990,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "b233b5bf79af5971",
+        "type": "victron-input-battery",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.battery/279",
+        "path": "/Dc/0/Voltage",
+        "serviceObj": {
+            "service": "com.victronenergy.battery/279",
+            "name": "SmartShunt 500A/50mV"
+        },
+        "pathObj": {
+            "path": "/Dc/0/Voltage",
+            "type": "float",
+            "name": "Battery voltage (V)"
+        },
+        "initial": "",
+        "name": "SmartShunt | Battery voltage (V)",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 170,
+        "y": 400,
+        "wires": [
+            [
+                "45921ca6fe73540e",
+                "49c367a2ee0ccd43",
+                "404abbe7e621dc1f"
+            ]
+        ]
+    },
+    {
+        "id": "be72015e9017285b",
+        "type": "victron-input-battery",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.battery/279",
+        "path": "/Dc/0/Current",
+        "serviceObj": {
+            "service": "com.victronenergy.battery/279",
+            "name": "SmartShunt 500A/50mV"
+        },
+        "pathObj": {
+            "path": "/Dc/0/Current",
+            "type": "float",
+            "name": "Battery current (A)"
+        },
+        "initial": "",
+        "name": "SmartShunt | Battery current (A)",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 170,
+        "y": 440,
+        "wires": [
+            [
+                "60ddd275525b3f49"
+            ]
+        ]
+    },
+    {
+        "id": "fb7455af236ed55f",
+        "type": "victron-input-temperature",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.temperature/24",
+        "path": "/Temperature",
+        "serviceObj": {
+            "service": "com.victronenergy.temperature/24",
+            "name": "Temp_1"
+        },
+        "pathObj": {
+            "path": "/Temperature",
+            "type": "float",
+            "name": "Temperature (°C)"
+        },
+        "name": "Temp1",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 90,
+        "y": 680,
+        "wires": [
+            [
+                "b56ef4d4767031c5"
+            ]
+        ]
+    },
+    {
+        "id": "20a5c72168cccf7e",
+        "type": "victron-input-temperature",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.temperature/24",
+        "path": "/Temperature",
+        "serviceObj": {
+            "service": "com.victronenergy.temperature/24",
+            "name": "Temp_1"
+        },
+        "pathObj": {
+            "path": "/Temperature",
+            "type": "float",
+            "name": "Temperature (°C)"
+        },
+        "name": "Temp2",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 90,
+        "y": 720,
+        "wires": [
+            [
+                "37ea20bd42d9fef6"
+            ]
+        ]
+    },
+    {
+        "id": "598958ec9a9c8de0",
+        "type": "victron-input-temperature",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.temperature/24",
+        "path": "/Temperature",
+        "serviceObj": {
+            "service": "com.victronenergy.temperature/24",
+            "name": "Temp_1"
+        },
+        "pathObj": {
+            "path": "/Temperature",
+            "type": "float",
+            "name": "Temperature (°C)"
+        },
+        "name": "Temp3",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 90,
+        "y": 760,
+        "wires": [
+            [
+                "379778cec535f398"
+            ]
+        ]
+    },
+    {
+        "id": "d5014f155871290e",
+        "type": "victron-input-vebus",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/VebusChargeState",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/VebusChargeState",
+            "type": "enum",
+            "name": "Charge state",
+            "enum": {
+                "0": "Initialising",
+                "1": "Bulk",
+                "2": "Absorption",
+                "3": "Float",
+                "4": "Storage",
+                "5": "Absorb repeat",
+                "6": "Forced absorb",
+                "7": "Equalise",
+                "8": "Bulk stopped",
+                "9": "Unknown"
+            }
+        },
+        "initial": "",
+        "name": "MultiPlus-II 48/5000 | Charge State",
+        "onlyChanges": true,
+        "x": 180,
+        "y": 800,
+        "wires": [
+            [
+                "2db89dacc5a82bb4"
+            ]
+        ]
+    },
+    {
+        "id": "70ef6c4140c82cf3",
+        "type": "victron-input-ess",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.settings",
+        "path": "/Settings/CGwacs/Hub4Mode",
+        "serviceObj": {
+            "service": "com.victronenergy.settings",
+            "name": "Venus settings"
+        },
+        "pathObj": {
+            "path": "/Settings/CGwacs/Hub4Mode",
+            "type": "enum",
+            "name": "ESS mode",
+            "enum": {
+                "1": "Optimized mode or 'keep batteries charged' and phase compensation enabled",
+                "2": "Optimized mode or 'keep batteries charged' and phase compensation disabled",
+                "3": "External control"
+            }
+        },
+        "initial": "",
+        "name": "ESS Mode",
+        "onlyChanges": true,
+        "x": 100,
+        "y": 840,
+        "wires": [
+            [
+                "8da1b120b4eec60b",
+                "00e033553ab89f04"
+            ]
+        ]
+    },
+    {
+        "id": "21fefc9488202f42",
+        "type": "victron-input-battery",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.battery/512",
+        "path": "/Dc/0/Temperature",
+        "serviceObj": {
+            "service": "com.victronenergy.battery/512",
+            "name": "BasenVT"
+        },
+        "pathObj": {
+            "path": "/Dc/0/Temperature",
+            "type": "float",
+            "name": "Battery temperature (°C)"
+        },
+        "initial": "",
+        "name": "Basen Battery | Temperature",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 160,
+        "y": 620,
+        "wires": [
+            [
+                "2fde97888a47cbe5"
+            ]
+        ]
+    },
+    {
+        "id": "83b22b4dba8cc16b",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "118adc3f7ab8b995",
+        "name": "Startup Function",
+        "func": "let discovery_topic = \"homeassistant\";\nlet root_topic = \"my_victron\";\nlet root_device_identifier = \"victron_0x027c2c0024013256\";\ncontext.global.batt_capacity = 14300 + 16000 + 16000; //Wh\n\ncontext.global.number_of_multiplus = 3;\ncontext.global.max_charge_setpoint = 10000; \ncontext.global.max_discharge_setpoint = 10000;\n\ncontext.global.batt_charge_rate = 9000;     //3000=90.7% see efficiency chart \ncontext.global.batt_discharge_rate = 9000;  //4126=90.8, 4750 = 89.6\n\ncontext.global.idle_rate = 110;\n\ncontext.global.max_phase_power = 5550;\n\ncontext.global.min_soc = 10;\ncontext.global.max_soc = 100; //Because we use a smartshunt and specified 55.2V as 100% (=90%)\n\ncontext.global.original_setpoint = undefined;\ncontext.global.wanted_setpoint = undefined;\ncontext.global.setpoint_adjusted = false;\n\ncontext.global.data = {};\n\nlet pobject = [\n    //\"name\": [\"object_type\", \"varname\", \"unique_id\", \"payload_on/unit\", \"payload_off\", \"step\"],\n\n    //Setpoint\n    { \"ESS Setpoint\": [\"climate\", \"ess_setpoint\", \"0x8000000002\", \"Watt\", \"-11000|11000\", 100] },\n\n    //Switches\n    { \"ESS Control Mode\": [\"select\", \"ess_mode\", \"0x8000000001\", \"Mode 1|Mode 2\", \"\", 0] },\n    { \"Battery Mode\": [\"select\", \"batt_mode\", \"0x800000000E\", \"Off|Idle|IQ Smart Mode|IQ Smart Mode + Balance|Grid Balance|Solar Charge|Charge|Discharge|Manual\", \"\", 0] },\n    { \"Battery State\": [\"select\", \"batt_state\", \"0x8000000014\", \"Off|Idle|Charging|Discharging\", \"\", 0] },\n    { \"MP2 On/Off state\": [\"switch\", \"mp2_switch_position\", \"0x800000000F\", \"On\", \"Off\", 0] },\n\n    //Sensors\n    { \"Battery Percentage\": [\"sensor\", \"batt_soc\", \"0x8000000003\", \"%\", \"\", 0] },\n    { \"Battery Voltage\": [\"sensor\", \"batt_voltage\", \"0x8000000004\", \"V\", \"\", 0] },\n    { \"Battery Amps\": [\"sensor\", \"batt_amps\", \"0x8000000005\", \"A\", \"\", 0] },\n    { \"Battery Temperature\": [\"sensor\", \"batt_temp\", \"0x800000000D\", \"\\u00b0C\", \"\", 0] },\n    { \"VMeter Grid L1 Watt\": [\"sensor\", \"grid_l1_w\", \"0x8000000006\", \"W\", \"\", 0] },\n    { \"VMeter Grid L2 Watt\": [\"sensor\", \"grid_l2_w\", \"0x8000000007\", \"W\", \"\", 0] },\n    { \"VMeter Grid L3 Watt\": [\"sensor\", \"grid_l3_w\", \"0x8000000008\", \"W\", \"\", 0] },\n    { \"Smartshunt Percentage\": [\"sensor\", \"smartshunt_soc\", \"0x8000000018\", \"%\", \"\", 0] },\n    { \"BasenVT Percentage\": [\"sensor\", \"basenvt_soc\", \"0x8000000010\", \"%\", \"\", 0] },\n    { \"BasenVT Voltage\": [\"sensor\", \"basenvt_voltage\", \"0x8000000011\", \"V\", \"\", 0] },\n    { \"BasenVT Amps\": [\"sensor\", \"basenvt_amps\", \"0x8000000013\", \"A\", \"\", 0] },\n    { \"Battery Capacity\": [\"sensor\", \"batt_capacity\", \"0x8000000012\", \"W\", \"\", 0] },\n    { \"Battery Charged kWh\": [\"sensor\", \"batt_charged_kwh\", \"0x8000000015_power\", \"kWh\", \"\", 0] },\n    { \"Battery Charged W\": [\"sensor\", \"batt_charged_w\", \"0x8000000015_energy\", \"W\", \"\", 0] },\n    { \"Battery Discharged kWh\": [\"sensor\", \"batt_discharged_kwh\", \"0x8000000016_power\", \"kWh\", \"\", 0] },\n    { \"Battery Discharged W\": [\"sensor\", \"batt_discharged_w\", \"0x8000000016_energy\", \"W\", \"\", 0] },\n    { \"MP2 AC-In kWh\": [\"sensor\", \"inv_acin_kwh\", \"0x8000000017_power\", \"kWh\", \"\", 0] },\n    { \"MP2 AC-In Charged W\": [\"sensor\", \"inv_acin_w\", \"0x8000000017_energy\", \"W\", \"\", 0] },\n    \n    { \"MP2 AC-Out-1 kWh\": [\"sensor\", \"inv_acout1_kwh\", \"0x8000000023_power\", \"kWh\", \"\", 0] },\n    { \"MP2 AC-Out-1 Watt\": [\"sensor\", \"inv_acout1_w\", \"0x8000000023_energy\", \"W\", \"\", 0] },\n\n    { \"MP2 AC-In L1\": [\"sensor\", \"mp_acin_L1\", \"0x8000000024_energy\", \"W\", \"\", 0] },\n    { \"MP2 AC-In L2\": [\"sensor\", \"mp_acin_L2\", \"0x8000000025_energy\", \"W\", \"\", 0] },\n    { \"MP2 AC-In L3\": [\"sensor\", \"mp_acin_L3\", \"0x8000000026_energy\", \"W\", \"\", 0] },\n\n    { \"MP2 AC-Out-1 L1\": [\"sensor\", \"mp_acout1_L1\", \"0x8000000027_energy\", \"W\", \"\", 0] },\n    { \"MP2 AC-Out-1 L2\": [\"sensor\", \"mp_acout1_L2\", \"0x8000000028_energy\", \"W\", \"\", 0] },\n    { \"MP2 AC-Out-1 L3\": [\"sensor\", \"mp_acout1_L3\", \"0x8000000029_energy\", \"W\", \"\", 0] },\n\n    { \"Combined SOC\": [\"sensor\", \"combined_soc\", \"0x8000000019\", \"%\", \"\", 0] },\n    { \"Combined kWh\": [\"sensor\", \"combined_kw\", \"0x800000001A\", \"W\", \"\", 0] },\n    { \"Combined Volt\": [\"sensor\", \"combined_volt\", \"0x8000000021\", \"V\", \"\", 0] },\n    { \"Combined Amps\": [\"sensor\", \"combined_amps\", \"0x8000000022\", \"A\", \"\", 0] },\n\n    { \"MPPT Watt\": [\"sensor\", \"mppt_w\", \"0x800000001B_energy\", \"W\", \"\", 0] },\n    { \"MPPT kWh\": [\"sensor\", \"mppt_kwh\", \"0x800000001B_power\", \"kWh\", \"\", 0] },\n    { \"MPPT Voltage\": [\"sensor\", \"mppt_voltage\", \"0x800000001D\", \"V\", \"\", 0] },\n    { \"MPPT Batt Amps\": [\"sensor\", \"mppt_batt_amps\", \"0x800000001E\", \"A\", \"\", 0] },\n    { \"MPPT Batt Voltage\": [\"sensor\", \"mppt_batt_voltage\", \"0x800000001F\", \"V\", \"\", 0] },\n\n    { \"TotalPV Watt\": [\"sensor\", \"totpv_w\", \"0x8000000020_energy\", \"W\", \"\", 0] },\n    { \"TotalPV kWh\": [\"sensor\", \"totpv_kwh\", \"0x8000000020_power\", \"kWh\", \"\", 0] },\n\n\n    //Temperatures\n    { \"Temp 1\": [\"sensor\", \"temp_1\", \"0x8000000009\", \"\\u00b0C\", \"\", 0] },\n    { \"Temp 2\": [\"sensor\", \"temp_2\", \"0x800000000A\", \"\\u00b0C\", \"\", 0] },\n    { \"Temp 3\": [\"sensor\", \"temp_3\", \"0x800000000B\", \"\\u00b0C\", \"\", 0] },\n    \n    //Text\n    { \"ESS Charge State\": [\"sensor\", \"charge_state\", \"0x800000000C\", \"text\", \"\", 0] },\n\n    //0x8000000019\n    //{ \"ev_driving_range\": [\"sensor\", \"random2\", \"0x800000000C\", \"km\", \"\", 1] },\n\n    //some other types\n    //{ \"is_locked\": [\"switch\", \"is_locked\", \"0x8000000001\", \"true\", \"false\", 0] },\n    //{ \"charge_door_open\": [\"binary_sensor\", \"ev_charge_port_door_is_open\", \"0x8000000002\", \"true\", \"false\", 0] },\n    //{ \"hood_open\": [\"binary_sensor\", \"hood_is_open\", \"0x8000000003\", \"true\", \"false\", 0] },\n    //{ \"air_temperature\": [\"sensor\", \"air_temperature\", \"0x8000000006\", \"\\u00b0C\", \"\", 1] },\n\n    //config objects, see Domoticz->Hardware->MQTT-AD->Setup\n    //{ \"ev_charge_limits_ac\": [\"number\", \"ev_charge_limits_ac\", \"0x8000001001\", \"\", \"\", 1] },\n    //{ \"ev_charge_limits_dc\": [\"number\", \"ev_charge_limits_ac\", \"0x8000001002\", \"\", \"\", 1] },\n];\n\nfunction createBinaryObject(root, name, varname, unique_id, payload_on = \"ON\", payload_off = \"OFF\")\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"model\": \"Node-Red\",\n            \"name\": \"BatteryControl\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"payload_on\"] = payload_on;\n    vjson[\"payload_off\"] = payload_off;\n    vjson[\"uniq_id\"] = unique_id;\n    //vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson;\n}\n\nfunction createLightObject(root, name, varname, unique_id, payload_on = \"ON\", payload_off = \"OFF\")\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"model\": \"Node-Red\",\n            \"name\": \"BatteryControl\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"payload_on\"] = payload_on;\n    vjson[\"payload_off\"] = payload_off;\n    vjson[\"cmd_t\"] = \"~/set/\" + varname;\n    vjson[\"uniq_id\"] = unique_id;\n    //vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson;\n}\n\nfunction createSelectObject(root, name, varname, unique_id, select_options)\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"model\": \"Node-Red\",\n            \"name\": \"BatteryControl\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n\n    vjson[\"options\"] = [];\n    select_options.split(\"|\").forEach(function (item) {\n        vjson[\"options\"].push(item);\n    });\n    vjson[\"cmd_t\"] = \"~/set/\" + varname;\n    vjson[\"uniq_id\"] = unique_id;\n    //vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson;\n}\n\nfunction createNumberObject(root, name, varname, unique_id, step = 1)\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"model\": \"Node-Red\",\n            \"name\": \"BatteryControl\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"step\"] = step;\n    vjson[\"cmd_t\"] = \"~/set/\" + varname;\n    vjson[\"uniq_id\"] = unique_id;\n    //vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    return vjson;\n}\n\nfunction createSensorObject(root, name, varname, unique_id, unit_of_measurement)\n{\n    let vjson = {\n        \"stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"model\": \"Node-Red\",\n            \"name\": \"BatteryControl\",\n            \"ids\": []\n        }\n    };\n\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"unit_of_meas\"] = unit_of_measurement;\n    \n    let state_class = \"measurement\";\n    \n    let device_class = \"\";\n    switch (unit_of_measurement)\n    {\n        case \"text\":\n            state_class = \"\";\n            break;\n        case \"%\":\n            if (\n                (name.indexOf('Batt') !== -1)\n                || (name.indexOf('batt') !== -1)\n                || (varname.indexOf('_soc') !== -1)\n            ) {\n                device_class = \"battery\";\n            } else {\n                device_class = \"percentage\";\n            }\n            break;\n        case \"°C\":\n        case \"C\":\n        case \"°F\":\n        case \"F\":\n            device_class = \"temperature\";\n            break;\n        case \"V\":\n        case \"mV\":\n            device_class = \"voltage\";\n            break;\n        case \"A\":\n        case \"mA\":\n            device_class = \"current\";\n            break;\n        case \"\\u00b0c\":\n        case \"\\u00b0C\":\n            device_class = \"temperature\";\n            break;\n        case \"W\":\n            device_class = \"power\";\n            break;\n        case \"kWh\":\n        case \"Wh\":\n            device_class = \"energy\";\n            state_class = \"total_increasing\";\n            break;\n    }\n\n    if (device_class != \"\")\n    {\n        vjson[\"device_class\"] = device_class;\n    }\n    if (state_class != \"\")\n    {\n        vjson[\"state_class\"] = state_class;\n    }\n    \n    //vjson[\"val_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n\n    return vjson\n}\n\nfunction createClimateObject(root, name, varname, unique_id, unit_of_measurement, min_value = 6.5, max_value = 35.0, step_size = 1.0)\n{\n    let device_identifier = unique_id;\n    if (device_identifier.indexOf(\"_\") != -1)\n    {\n        device_identifier = unique_id.split(\"_\")[0];\n    }\n    let vjson = {\n        \"temp_stat_t\": \"~/\" + varname + \"/state\",\n        \"dev\": {\n            \"manufacturer\": \"PA1DVB\",\n            \"model\": \"Node-Red\",\n            \"name\": \"BatteryControl\",\n            \"ids\": []\n        }\n    };\n    vjson.dev.ids.push(device_identifier);\n    vjson[\"~\"] = root;\n    vjson[\"name\"] = name;\n    vjson[\"uniq_id\"] = unique_id;\n    vjson[\"temp_unit\"] = unit_of_measurement;\n    vjson[\"temp_cmd_t\"] = \"~/set/\" + varname;\n    vjson[\"temp_stat_tpl\"] = \"{{ value_json.\" + varname + \" }}\";\n    vjson[\"temp_step\"] = step_size;\n    vjson[\"min_temp\"] = min_value;\n    vjson[\"max_temp\"] = max_value;\n    return vjson\n}\n\nnode.log(\"Flow Initialisation\");\n\npobject.forEach((vvar) => {\n    let name = Object.keys(vvar)[0];\n    let vobj = vvar[Object.keys(vvar)];\n    let object_type = vobj[0]\n    let varname = vobj[1]\n    let unique_id = vobj[2]\n\n    let jobj = null\n    if (object_type == \"light\") {\n        let payload_on = vobj[3]\n        let payload_off = vobj[4]\n        jobj = createLightObject(root_topic, name, varname, unique_id, payload_on, payload_off);\n    }\n    else if (object_type == \"switch\") {\n        let payload_on = vobj[3]\n        let payload_off = vobj[4]\n        jobj = createLightObject(root_topic, name, varname, unique_id, payload_on, payload_off);\n    }\n    else if (object_type == \"binary_sensor\") {\n        let payload_on = vobj[3]\n        let payload_off = vobj[4]\n        jobj = createBinaryObject(root_topic, name, varname, unique_id, payload_on, payload_off);\n    }\n    else if (object_type == \"select\") {\n        let soptions = vobj[3]\n        jobj = createSelectObject(root_topic, name, varname, unique_id, soptions);\n    }\n    else if (object_type == \"number\") {\n        let step = vobj[5]\n        jobj = createNumberObject(root_topic, name, varname, unique_id, step);\n    }\n    else if (object_type == \"sensor\") {\n        let unit_of_measurement = vobj[3]\n        jobj = createSensorObject(root_topic, name, varname, unique_id, unit_of_measurement);\n    }\n    else if (object_type == \"climate\") {\n        let unit_of_measurement = vobj[3]\n        let minmax = vobj[4];\n        let step_size = vobj[5]\n\n        let min_value = 6.5;\n        let max_value = 35;\n        let sresults = minmax.split(\"|\");\n        if (sresults.length == 2) {\n            min_value = parseFloat(sresults[0]);\n            max_value = parseFloat(sresults[1]);\n        }\n\n        jobj = createClimateObject(root_topic, name, varname, unique_id, unit_of_measurement, min_value, max_value, step_size);\n    }\n\n    if (jobj != null) {\n        if (unique_id.indexOf(\"_\") != -1)\n        {\n            unique_id = unique_id.split(\"_\")[0];\n        }\n        let dtopic = discovery_topic + \"/\" + object_type + \"/\" + unique_id + \"/\" + varname + \"/config\"\n        //node.log(\"publishing config ->: \" + dtopic);\n\n        msg.payload = jobj;\n        msg.topic = dtopic;\n        msg.retain = true;\n        node.send(msg);\n    }\n});\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1080,
+        "y": 60,
+        "wires": [
+            [
+                "ec8aec609d3dbf27",
+                "4265710cca04214d"
+            ]
+        ]
+    },
+    {
+        "id": "ff6faae24728b12c",
+        "type": "mqtt in",
+        "z": "11c15729dad50c39",
+        "g": "89166bbe87877070",
+        "name": "ESS Setpoint",
+        "topic": "my_victron/set/ess_setpoint",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ee1bb25c871ce5fc",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 60,
+        "wires": [
+            [
+                "bce98b1496d5ed45"
+            ]
+        ]
+    },
+    {
+        "id": "3531f89a0fac36ef",
+        "type": "inject",
+        "z": "11c15729dad50c39",
+        "g": "118adc3f7ab8b995",
+        "name": "Startup",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.3",
+        "topic": "online",
+        "payload": "true",
+        "payloadType": "str",
+        "x": 920,
+        "y": 60,
+        "wires": [
+            [
+                "83b22b4dba8cc16b"
+            ]
+        ]
+    },
+    {
+        "id": "fe29b0e4487b02c0",
+        "type": "mqtt in",
+        "z": "11c15729dad50c39",
+        "g": "1bf2cbfd211c76f8",
+        "name": "Battery Mode",
+        "topic": "my_victron/set/batt_mode",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ee1bb25c871ce5fc",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 1900,
+        "wires": [
+            [
+                "19094210a4561364",
+                "58bd39d70dc748f2"
+            ]
+        ]
+    },
+    {
+        "id": "19094210a4561364",
+        "type": "switch",
+        "z": "11c15729dad50c39",
+        "g": "1bf2cbfd211c76f8",
+        "name": "On or Off",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Off",
+                "vt": "str"
+            },
+            {
+                "t": "neq",
+                "v": "Off",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 280,
+        "y": 1940,
+        "wires": [
+            [
+                "e4baf8667b014c1c"
+            ],
+            [
+                "3cb12f5e806dadb9"
+            ]
+        ]
+    },
+    {
+        "id": "c98824900c31e120",
+        "type": "victron-output-vebus",
+        "z": "11c15729dad50c39",
+        "g": "1bf2cbfd211c76f8",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Mode",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Mode",
+            "type": "enum",
+            "name": "Switch Position",
+            "remarks": "<p>Note that <tt>/ModeIsAdjustable</tt> needs to be set to 1.</p> ",
+            "enum": {
+                "1": "Charger Only",
+                "2": "Inverter Only",
+                "3": "On",
+                "4": "Off"
+            },
+            "writable": true
+        },
+        "initial": "",
+        "name": "",
+        "onlyChanges": false,
+        "x": 690,
+        "y": 1960,
+        "wires": []
+    },
+    {
+        "id": "e4baf8667b014c1c",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "1bf2cbfd211c76f8",
+        "name": "System Off",
+        "func": "msg.payload = 4;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 1920,
+        "wires": [
+            [
+                "c7f7c335facd37dc",
+                "c98824900c31e120"
+            ]
+        ]
+    },
+    {
+        "id": "3cb12f5e806dadb9",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "1bf2cbfd211c76f8",
+        "name": "System On",
+        "func": "msg.payload = 3;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 1960,
+        "wires": [
+            [
+                "c7f7c335facd37dc",
+                "c98824900c31e120"
+            ]
+        ]
+    },
+    {
+        "id": "c7f7c335facd37dc",
+        "type": "debug",
+        "z": "11c15729dad50c39",
+        "g": "1bf2cbfd211c76f8",
+        "name": "ESS Switch Position",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 1920,
+        "wires": []
+    },
+    {
+        "id": "cda41a95cbfa126b",
+        "type": "victron-input-vebus",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Mode",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Mode",
+            "type": "enum",
+            "name": "Switch Position",
+            "enum": {
+                "1": "Charger Only",
+                "2": "Inverter Only",
+                "3": "On",
+                "4": "Off"
+            }
+        },
+        "initial": "",
+        "name": "",
+        "onlyChanges": true,
+        "x": 150,
+        "y": 880,
+        "wires": [
+            [
+                "fbf67a6f4252ba21",
+                "9a3ed4a17cfdf232"
+            ]
+        ]
+    },
+    {
+        "id": "9a3ed4a17cfdf232",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "MP2 On/Off State",
+        "func": "if (msg.payload == 3)\n    msg.payload = \"On\";\nelse\n    msg.payload = \"Off\";\nmsg.topic = \"mp2_switch_position\";\nmsg.sendnow = true;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 880,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "439d1fa9e5c33602",
+        "type": "mqtt in",
+        "z": "11c15729dad50c39",
+        "g": "6cc3299294f7eb12",
+        "name": "MP2 Switch Position",
+        "topic": "my_victron/set/mp2_switch_position",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ee1bb25c871ce5fc",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 2080,
+        "wires": [
+            [
+                "b5790661fb4671dd"
+            ]
+        ]
+    },
+    {
+        "id": "b5790661fb4671dd",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "6cc3299294f7eb12",
+        "name": "Translate",
+        "func": "let new_mode = 4;\nif (msg.payload == \"On\")\n    new_mode = 3;\nmsg.payload = new_mode;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 2080,
+        "wires": [
+            [
+                "48e8905972378ed1"
+            ]
+        ]
+    },
+    {
+        "id": "48e8905972378ed1",
+        "type": "victron-output-vebus",
+        "z": "11c15729dad50c39",
+        "g": "6cc3299294f7eb12",
+        "service": "com.victronenergy.vebus/276",
+        "path": "/Mode",
+        "serviceObj": {
+            "service": "com.victronenergy.vebus/276",
+            "name": "MultiPlus"
+        },
+        "pathObj": {
+            "path": "/Mode",
+            "type": "enum",
+            "name": "Switch Position",
+            "remarks": "<p>Note that <tt>/ModeIsAdjustable</tt> needs to be set to 1.</p> ",
+            "enum": {
+                "1": "Charger Only",
+                "2": "Inverter Only",
+                "3": "On",
+                "4": "Off"
+            },
+            "writable": true
+        },
+        "initial": "",
+        "name": "",
+        "onlyChanges": false,
+        "x": 510,
+        "y": 2080,
+        "wires": []
+    },
+    {
+        "id": "bce98b1496d5ed45",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "89166bbe87877070",
+        "name": "Check",
+        "func": "/*\nDomoticz script IQ mode stuurt Setpoint = 3000 --> In overload? -> Dan zet de gewenste waarde in backup_setpoint en doe niets, zo niet stuur hem door naar de multiplus\nDus je wilt tussentijds ontvangen/opslaan wat Domoticz zegt in de backup setpoint misschien, maar in het geval van een overload (setpoint_adjusted), dan niet de echt setpoint zetten maar opslaan in de backup setpoint waarde\nEn die nieuwe backup_setpoint waarde gebruiken in je overload berekening\n\n*/\n\nlet data = context.global.data || {};\nlet max_charge_setpoint = data[\"max_charge_setpoint\"];\nlet min_discharge_setpoint = -data[\"max_discharge_setpoint\"];\n\nif (msg.payload > max_charge_setpoint)\n    msg.payload = max_charge_setpoint;\nelse if (msg.payload < min_discharge_setpoint)\n    msg.payload = min_discharge_setpoint;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 250,
+        "y": 60,
+        "wires": [
+            [
+                "80fb86b547b55555",
+                "f6ccfa7a490be396"
+            ]
+        ]
+    },
+    {
+        "id": "58bd39d70dc748f2",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "1bf2cbfd211c76f8",
+        "name": "Battety Mode",
+        "func": "msg.topic = \"batt_mode\";\nmsg.sendnow = true;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 1900,
+        "wires": [
+            [
+                "88700a0ac035432a"
+            ]
+        ]
+    },
+    {
+        "id": "73c8292b08ced613",
+        "type": "victron-input-battery",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.battery/512",
+        "path": "/Soc",
+        "serviceObj": {
+            "service": "com.victronenergy.battery/512",
+            "name": "BasenVT"
+        },
+        "pathObj": {
+            "path": "/Soc",
+            "type": "float",
+            "name": "State of charge (%)"
+        },
+        "initial": "",
+        "name": "BasenVT | State of Charge (%)",
+        "onlyChanges": true,
+        "roundValues": "1",
+        "x": 170,
+        "y": 920,
+        "wires": [
+            [
+                "7b96f665eb122495"
+            ]
+        ]
+    },
+    {
+        "id": "e697e78dd2476445",
+        "type": "victron-input-battery",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.battery/512",
+        "path": "/Dc/0/Voltage",
+        "serviceObj": {
+            "service": "com.victronenergy.battery/512",
+            "name": "BasenVT"
+        },
+        "pathObj": {
+            "path": "/Dc/0/Voltage",
+            "type": "float",
+            "name": "Battery voltage (V)"
+        },
+        "initial": "",
+        "name": "BasenVT | Voltage",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 130,
+        "y": 960,
+        "wires": [
+            [
+                "615522e20c187a0e"
+            ]
+        ]
+    },
+    {
+        "id": "f684634197238553",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "Actual Battery Capacity",
+        "func": "let soc = msg.payload;\nmsg.payload = (context.global.batt_capacity / 100) * soc;\nmsg.topic = \"batt_capacity\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 320,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "3ec85e9cbf9159e7",
+        "type": "delay",
+        "z": "11c15729dad50c39",
+        "g": "c8c0c009930503ea",
+        "name": "Rate Limit",
+        "pauseType": "timed",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "10",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1200,
+        "y": 160,
+        "wires": [
+            [
+                "7a46db4de7d2a6f8"
+            ]
+        ]
+    },
+    {
+        "id": "0ad09ce64e47abdc",
+        "type": "victron-input-battery",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.battery/512",
+        "path": "/Dc/0/Current",
+        "serviceObj": {
+            "service": "com.victronenergy.battery/512",
+            "name": "BasenVT"
+        },
+        "pathObj": {
+            "path": "/Dc/0/Current",
+            "type": "float",
+            "name": "Battery current (A)"
+        },
+        "initial": "",
+        "name": "BasenVT | current (A)",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 140,
+        "y": 1000,
+        "wires": [
+            [
+                "07067fa9860f9e2f"
+            ]
+        ]
+    },
+    {
+        "id": "0cc4ffd6af2c92ed",
+        "type": "link out",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "ToMQTT",
+        "mode": "link",
+        "links": [
+            "04b33f5ed2e152e1"
+        ],
+        "x": 725,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "04b33f5ed2e152e1",
+        "type": "link in",
+        "z": "11c15729dad50c39",
+        "g": "c8c0c009930503ea",
+        "name": "ToMQTT-Limit",
+        "links": [
+            "0cc4ffd6af2c92ed",
+            "88700a0ac035432a",
+            "b6dfbbd90ef362fd",
+            "bb2045292b7784e9",
+            "c526dba98b24ed05",
+            "954eafb592ded153",
+            "9f57393bfcc1edd5"
+        ],
+        "x": 855,
+        "y": 160,
+        "wires": [
+            [
+                "c1e616f1b0178c12"
+            ]
+        ]
+    },
+    {
+        "id": "88700a0ac035432a",
+        "type": "link out",
+        "z": "11c15729dad50c39",
+        "g": "1bf2cbfd211c76f8",
+        "name": "ToMQTT",
+        "mode": "link",
+        "links": [
+            "04b33f5ed2e152e1"
+        ],
+        "x": 395,
+        "y": 1900,
+        "wires": []
+    },
+    {
+        "id": "ec8aec609d3dbf27",
+        "type": "link out",
+        "z": "11c15729dad50c39",
+        "g": "118adc3f7ab8b995",
+        "name": "ToMQTT-Direct",
+        "mode": "link",
+        "links": [
+            "032e3829752acb0f"
+        ],
+        "x": 1225,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "032e3829752acb0f",
+        "type": "link in",
+        "z": "11c15729dad50c39",
+        "g": "c8c0c009930503ea",
+        "name": "ToMQTT-Direct",
+        "links": [
+            "7a46db4de7d2a6f8",
+            "c89b03edc9d07f32",
+            "ec8aec609d3dbf27"
+        ],
+        "x": 855,
+        "y": 220,
+        "wires": [
+            [
+                "2a3edab64145a089",
+                "c6aa46b57ccb73e5"
+            ]
+        ]
+    },
+    {
+        "id": "7a46db4de7d2a6f8",
+        "type": "link out",
+        "z": "11c15729dad50c39",
+        "g": "c8c0c009930503ea",
+        "name": "ToMQTT-Direct",
+        "mode": "link",
+        "links": [
+            "032e3829752acb0f"
+        ],
+        "x": 1305,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "c89b03edc9d07f32",
+        "type": "link out",
+        "z": "11c15729dad50c39",
+        "g": "c8c0c009930503ea",
+        "name": "ToMQTT-Direct",
+        "mode": "link",
+        "links": [
+            "032e3829752acb0f"
+        ],
+        "x": 1155,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "45117e09372083fa",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "Send All",
+        "func": "let data_msg = context.global.data || {};\nlet data_timestamp = context.global.timetamp || {};\n\nlet atime = Date.now();\n\nfor (var key in data_msg)\n{\n    let timestamp = 0;\n    if (data_timestamp.hasOwnProperty(key)) {\n        timestamp = data_timestamp[key];\n    }\n    if (data_msg.hasOwnProperty(key))\n    {\n        let timediff = (atime - timestamp) / 1000;\n        if (timediff < 60)\n            continue;\n        //node.warn(\"key: \" + key + \", value: \" + data_msg[key] + \", time: \"  + timestamp);\n        msg.topic = key;\n        msg.payload = data_msg[key];\n        msg.sendnow = true;\n        node.send(msg);\n    }\n}\nreturn;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 1520,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "9afa29835011a413",
+        "type": "inject",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "Timer 60s",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 350,
+        "y": 1520,
+        "wires": [
+            [
+                "45117e09372083fa"
+            ]
+        ]
+    },
+    {
+        "id": "7a446c7d181c7c70",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "4173e8883e32011b",
+        "name": "IF ( SP <=0 && SOC < min_soc)  THEN  SP = 100",
+        "func": "let data = context.global.data || {};\nlet soc = data[\"batt_soc\"];\nlet ess_setpoint = data[\"ess_setpoint\"];\n\nif (ess_setpoint <=0 && soc < context.global.min_soc){\n    msg.payload = 100;\n    return msg;    \n}\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 1660,
+        "wires": [
+            [
+                "186a96fe60498683"
+            ]
+        ]
+    },
+    {
+        "id": "5b7b8103806efc12",
+        "type": "mqtt in",
+        "z": "11c15729dad50c39",
+        "g": "1bf2cbfd211c76f8",
+        "name": "Battery State",
+        "topic": "my_victron/set/batt_state",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ee1bb25c871ce5fc",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 1980,
+        "wires": [
+            [
+                "26c547fb7bc88cee"
+            ]
+        ]
+    },
+    {
+        "id": "26c547fb7bc88cee",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "1bf2cbfd211c76f8",
+        "name": "Battety State",
+        "func": "msg.topic = \"batt_state\";\nmsg.sendnow = true;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 1980,
+        "wires": [
+            [
+                "b6dfbbd90ef362fd"
+            ]
+        ]
+    },
+    {
+        "id": "b6dfbbd90ef362fd",
+        "type": "link out",
+        "z": "11c15729dad50c39",
+        "g": "1bf2cbfd211c76f8",
+        "name": "ToMQTT",
+        "mode": "link",
+        "links": [
+            "04b33f5ed2e152e1"
+        ],
+        "x": 395,
+        "y": 1980,
+        "wires": []
+    },
+    {
+        "id": "57447ed22f5a3c27",
+        "type": "victron-input-battery",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.battery/279",
+        "path": "/History/ChargedEnergy",
+        "serviceObj": {
+            "service": "com.victronenergy.battery/279",
+            "name": "SmartShunt 500A/50mV"
+        },
+        "pathObj": {
+            "path": "/History/ChargedEnergy",
+            "type": "float",
+            "name": "Charged Energy (kWh)"
+        },
+        "initial": "",
+        "name": "SmartShunt | Battery Charged (kWh)",
+        "onlyChanges": true,
+        "roundValues": "3",
+        "x": 180,
+        "y": 480,
+        "wires": [
+            [
+                "c08db8232c5fd37d"
+            ]
+        ]
+    },
+    {
+        "id": "c375d87f6ea3bb74",
+        "type": "victron-input-battery",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.battery/279",
+        "path": "/History/DischargedEnergy",
+        "serviceObj": {
+            "service": "com.victronenergy.battery/279",
+            "name": "SmartShunt 500A/50mV"
+        },
+        "pathObj": {
+            "path": "/History/DischargedEnergy",
+            "type": "float",
+            "name": "Discharged Energy (kWh)"
+        },
+        "initial": "",
+        "name": "SmartShunt | Battery Discharged (kWh)",
+        "onlyChanges": true,
+        "roundValues": "3",
+        "x": 190,
+        "y": 520,
+        "wires": [
+            [
+                "e0aa73f0d9258546"
+            ]
+        ]
+    },
+    {
+        "id": "f6bbde458a85b6c6",
+        "type": "victron-input-battery",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.battery/279",
+        "path": "/Dc/0/Power",
+        "serviceObj": {
+            "service": "com.victronenergy.battery/279",
+            "name": "SmartShunt 500A/50mV"
+        },
+        "pathObj": {
+            "path": "/Dc/0/Power",
+            "type": "float",
+            "name": "Battery power (W)"
+        },
+        "initial": "",
+        "name": "SmartShunt | Battery Power (W)",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 170,
+        "y": 560,
+        "wires": [
+            [
+                "0e11460ee019f369"
+            ]
+        ]
+    },
+    {
+        "id": "0e11460ee019f369",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "PwrDist",
+        "func": "let msg2 = RED.util.cloneMessage(msg);\nmsg2.payload = 0;\nif (msg.payload < 0)\n{\n    msg2.payload = Math.abs(msg.payload);\n    msg.payload = 0;\n}\nreturn [msg, msg2];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 560,
+        "wires": [
+            [
+                "426454ccf5f41ce9"
+            ],
+            [
+                "44af7ae1d270db90"
+            ]
+        ]
+    },
+    {
+        "id": "3f96fb98555546bc",
+        "type": "comment",
+        "z": "11c15729dad50c39",
+        "name": "Version 1.13",
+        "info": "2025-11-23 Version 1.13\n- Added more status MQTT outputs\n- Made most flow.context variables global\n- Moved the Meter Grid part to another flow\n\n2025-08-26 Version 1.12\n- Added MPPT stats\n\n2025-03-21 Version 1.11\n- charge_state, if unknown, add payload ID\n\n2025-03-16\n- Added separate Smartshunt SOC reporting\n\n2025-03-08\n- MQTT Sensors, more compatible with HASS (device class/measurement)\n\n2024-06-08\n- Added Multiplus AC-In Power/Energy sensor\n\n2024-04-27\n- Fixed Basen Batt Temp",
+        "x": 890,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "404abbe7e621dc1f",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Voltage",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_voltage",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 400,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "60ddd275525b3f49",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Amps",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_amps",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 440,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "c08db8232c5fd37d",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Charged kWh",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_charged_kwh",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 540,
+        "y": 480,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "e0aa73f0d9258546",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Disharged kWh",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_discharged_kwh",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 530,
+        "y": 520,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "7d54a1b3cffc67b4",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Setpoint",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "ess_setpoint",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "sendnow",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 220,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "175c74606259bb38",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=SOC",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_soc",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "sendnow",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 280,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "426454ccf5f41ce9",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Charged W",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_charged_w",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 540,
+        "y": 560,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "44af7ae1d270db90",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Dischardwd W",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_discharged_w",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 530,
+        "y": 580,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "b56ef4d4767031c5",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Temp 1",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "temp_1",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 680,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "37ea20bd42d9fef6",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Temp 2",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "temp_2",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 720,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "379778cec535f398",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Temp 3",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "temp_3",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 760,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "7b96f665eb122495",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Basen SOC",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "basenvt_soc",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "sendnow",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 540,
+        "y": 920,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "615522e20c187a0e",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Basen Voltage",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "basenvt_voltage",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 530,
+        "y": 960,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "07067fa9860f9e2f",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Basen Amps",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "basenvt_amps",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 540,
+        "y": 1000,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "2fde97888a47cbe5",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=BTemp",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "batt_temp",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 620,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "4265710cca04214d",
+        "type": "debug",
+        "z": "11c15729dad50c39",
+        "g": "118adc3f7ab8b995",
+        "name": "debug 58",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1300,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "29bf06e828834f98",
+        "type": "victron-input-battery",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.battery/279",
+        "path": "/Soc",
+        "serviceObj": {
+            "service": "com.victronenergy.battery/279",
+            "name": "SmartShunt 500A/50mV"
+        },
+        "pathObj": {
+            "path": "/Soc",
+            "type": "float",
+            "name": "State of charge (%)"
+        },
+        "initial": "",
+        "name": "SmartShunt | State of Charge (%s)",
+        "onlyChanges": true,
+        "roundValues": "1",
+        "x": 180,
+        "y": 360,
+        "wires": [
+            [
+                "ef39bdefab74d1dd"
+            ]
+        ]
+    },
+    {
+        "id": "7e6bb5e97122dcb5",
+        "type": "victron-input-system",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.system/0",
+        "path": "/Dc/Battery/Soc",
+        "serviceObj": {
+            "service": "com.victronenergy.system/0",
+            "name": "Venus system"
+        },
+        "pathObj": {
+            "path": "/Dc/Battery/Soc",
+            "type": "float",
+            "name": "Battery State of Charge (%)"
+        },
+        "name": "Venus Battery | State of Charge (%)",
+        "onlyChanges": true,
+        "roundValues": "1",
+        "x": 180,
+        "y": 280,
+        "wires": [
+            [
+                "f684634197238553",
+                "57b85b918dc8b58a",
+                "175c74606259bb38"
+            ]
+        ]
+    },
+    {
+        "id": "ef39bdefab74d1dd",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=Smart SOC",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "smartshunt_soc",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "sendnow",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 540,
+        "y": 360,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "6cde60b4c7585891",
+        "type": "victron-input-solarcharger",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.solarcharger/278",
+        "path": "/Pv/V",
+        "serviceObj": {
+            "service": "com.victronenergy.solarcharger/278",
+            "name": "SmartSolar Charger MPPT 150/45 rev3"
+        },
+        "pathObj": {
+            "path": "/Pv/V",
+            "type": "float",
+            "name": "PV voltage"
+        },
+        "name": "MPPT Voltage",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 110,
+        "y": 1040,
+        "wires": [
+            [
+                "6f28f251feaec99c"
+            ]
+        ]
+    },
+    {
+        "id": "5747688d3b58b44f",
+        "type": "victron-input-solarcharger",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.solarcharger/278",
+        "path": "/Yield/Power",
+        "serviceObj": {
+            "service": "com.victronenergy.solarcharger/278",
+            "name": "SmartSolar Charger MPPT 150/45 rev3"
+        },
+        "pathObj": {
+            "path": "/Yield/Power",
+            "type": "float",
+            "name": "PV Power (W)"
+        },
+        "name": "MPPT Watt",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 110,
+        "y": 1160,
+        "wires": [
+            [
+                "840c6a167c2978d4"
+            ]
+        ]
+    },
+    {
+        "id": "f23d66c23430238c",
+        "type": "victron-input-solarcharger",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.solarcharger/278",
+        "path": "/Yield/User",
+        "serviceObj": {
+            "service": "com.victronenergy.solarcharger/278",
+            "name": "SmartSolar Charger MPPT 150/45 rev3"
+        },
+        "pathObj": {
+            "path": "/Yield/User",
+            "type": "string",
+            "name": "Yield since reset (kWh)"
+        },
+        "name": "MPPT kWh",
+        "onlyChanges": true,
+        "x": 110,
+        "y": 1200,
+        "wires": [
+            [
+                "a8359c3bb7176b44"
+            ]
+        ]
+    },
+    {
+        "id": "6f28f251feaec99c",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=MPPT Voltage",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mppt_voltage",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 530,
+        "y": 1040,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "840c6a167c2978d4",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=MPPT W",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mppt_w",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 1160,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "a8359c3bb7176b44",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=MPPT kWh",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mppt_kwh",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 540,
+        "y": 1200,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "3ba65bd50d3c2520",
+        "type": "victron-input-solarcharger",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.solarcharger/278",
+        "path": "/Dc/0/Current",
+        "serviceObj": {
+            "service": "com.victronenergy.solarcharger/278",
+            "name": "SmartSolar Charger MPPT 150/45 rev3"
+        },
+        "pathObj": {
+            "path": "/Dc/0/Current",
+            "type": "float",
+            "name": "Battery current (A)"
+        },
+        "name": "MPPT Battery Amps",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 130,
+        "y": 1080,
+        "wires": [
+            [
+                "e6571047b98d4d18"
+            ]
+        ]
+    },
+    {
+        "id": "e6571047b98d4d18",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=MPPT Batt Amps",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mppt_batt_amps",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 530,
+        "y": 1080,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "f9cde63fa478af22",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=MPPT Batt Voltage",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mppt_batt_voltage",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 520,
+        "y": 1120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e36bd2ef40431b8e",
+        "type": "victron-input-solarcharger",
+        "z": "11c15729dad50c39",
+        "service": "com.victronenergy.solarcharger/278",
+        "path": "/Dc/0/Voltage",
+        "serviceObj": {
+            "service": "com.victronenergy.solarcharger/278",
+            "name": "SmartSolar Charger MPPT 150/45 rev3"
+        },
+        "pathObj": {
+            "path": "/Dc/0/Voltage",
+            "type": "float",
+            "name": "Battery voltage (V)"
+        },
+        "name": "MPPT Battery Voltage",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 140,
+        "y": 1120,
+        "wires": [
+            [
+                "f9cde63fa478af22"
+            ]
+        ]
+    },
+    {
+        "id": "bfa92a18fea9f6db",
+        "type": "join",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 370,
+        "y": 1300,
+        "wires": [
+            [
+                "08d57892154c3cb4"
+            ]
+        ]
+    },
+    {
+        "id": "a6423dd0f1e82e68",
+        "type": "victron-input-pvinverter",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.pvinverter/100",
+        "path": "/Ac/Power",
+        "serviceObj": {
+            "service": "com.victronenergy.pvinverter/100",
+            "name": "Enphase PV"
+        },
+        "pathObj": {
+            "path": "/Ac/Power",
+            "type": "float",
+            "name": "Total Power (W)"
+        },
+        "name": "Enphase Total W",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 120,
+        "y": 1260,
+        "wires": [
+            [
+                "541f06a9d0f87b5d"
+            ]
+        ]
+    },
+    {
+        "id": "4ada7c9f8dd3d3c1",
+        "type": "victron-input-solarcharger",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.solarcharger/278",
+        "path": "/Yield/Power",
+        "serviceObj": {
+            "service": "com.victronenergy.solarcharger/278",
+            "name": "SmartSolar Charger MPPT 150/45 rev3"
+        },
+        "pathObj": {
+            "path": "/Yield/Power",
+            "type": "float",
+            "name": "PV Power (W)"
+        },
+        "name": "MPPT Total W",
+        "onlyChanges": true,
+        "roundValues": "2",
+        "x": 110,
+        "y": 1300,
+        "wires": [
+            [
+                "b49b296aba2f2640"
+            ]
+        ]
+    },
+    {
+        "id": "08d57892154c3cb4",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "Sum",
+        "func": "if (\n    (msg.payload.hasOwnProperty(\"enphase_w\"))\n    && (msg.payload.hasOwnProperty(\"mptt_w\"))\n    )\n{\n    msg.payload = Math.round( parseFloat(msg.payload[\"enphase_w\"] + msg.payload[\"mptt_w\"]) * 100 + Number.EPSILON ) / 100;\n    return msg;\n}\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 1280,
+        "wires": [
+            [
+                "ede92800fa8827c8"
+            ]
+        ]
+    },
+    {
+        "id": "a7c4e9efa7a9ad71",
+        "type": "victron-input-pvinverter",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.pvinverter/100",
+        "path": "/Ac/L1/Energy/Forward",
+        "serviceObj": {
+            "service": "com.victronenergy.pvinverter/100",
+            "name": "Enphase PV"
+        },
+        "pathObj": {
+            "path": "/Ac/L1/Energy/Forward",
+            "type": "float",
+            "name": "L1 Energy (kWh)"
+        },
+        "name": "Enphase Total kWh",
+        "onlyChanges": true,
+        "roundValues": "3",
+        "x": 130,
+        "y": 1400,
+        "wires": [
+            [
+                "52635842ffb1ac5d"
+            ]
+        ]
+    },
+    {
+        "id": "62d135e4024d12da",
+        "type": "victron-input-solarcharger",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "service": "com.victronenergy.solarcharger/278",
+        "path": "/Yield/System",
+        "serviceObj": {
+            "service": "com.victronenergy.solarcharger/278",
+            "name": "MPPT Schuur"
+        },
+        "pathObj": {
+            "path": "/Yield/System",
+            "type": "string",
+            "name": "Yield since last update (kWh)"
+        },
+        "name": "MPPT Total kWh",
+        "onlyChanges": true,
+        "roundValues": "3",
+        "x": 120,
+        "y": 1440,
+        "wires": [
+            [
+                "62ad99913dec0ba2"
+            ]
+        ]
+    },
+    {
+        "id": "b55619ca5fa84624",
+        "type": "join",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 390,
+        "y": 1420,
+        "wires": [
+            [
+                "6f2b84af6c198677"
+            ]
+        ]
+    },
+    {
+        "id": "6f2b84af6c198677",
+        "type": "function",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "Sum",
+        "func": "if (\n    (msg.payload.hasOwnProperty(\"enphase_kwh\"))\n    && (msg.payload.hasOwnProperty(\"mptt_kwh\"))\n    )\n{\n    msg.payload = Math.round( parseFloat(msg.payload[\"enphase_kwh\"] + msg.payload[\"mptt_kwh\"]) * 1000 + Number.EPSILON ) / 1000;\n    return msg;        \n}\nreturn null;\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 1380,
+        "wires": [
+            [
+                "77168ea5a5341a8e"
+            ]
+        ]
+    },
+    {
+        "id": "ede92800fa8827c8",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=TotPV W",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "totpv_w",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 650,
+        "y": 1280,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed"
+            ]
+        ]
+    },
+    {
+        "id": "77168ea5a5341a8e",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=TotPV kWh",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "totpv_kwh",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 640,
+        "y": 1400,
+        "wires": [
+            [
+                "0cc4ffd6af2c92ed",
+                "f26bbe4dd29ec42c"
+            ]
+        ]
+    },
+    {
+        "id": "f26bbe4dd29ec42c",
+        "type": "debug",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 1440,
+        "wires": []
+    },
+    {
+        "id": "52635842ffb1ac5d",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=enphase_kwh",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "enphase_kwh",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 320,
+        "y": 1380,
+        "wires": [
+            [
+                "b55619ca5fa84624"
+            ]
+        ]
+    },
+    {
+        "id": "62ad99913dec0ba2",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=mptt_kwh",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mptt_kwh",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 1460,
+        "wires": [
+            [
+                "b55619ca5fa84624"
+            ]
+        ]
+    },
+    {
+        "id": "541f06a9d0f87b5d",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=enphase_kwh",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "enphase_w",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 320,
+        "y": 1260,
+        "wires": [
+            [
+                "bfa92a18fea9f6db"
+            ]
+        ]
+    },
+    {
+        "id": "b49b296aba2f2640",
+        "type": "change",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "T=mptt_w",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mptt_w",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 300,
+        "y": 1340,
+        "wires": [
+            [
+                "bfa92a18fea9f6db"
+            ]
+        ]
+    },
+    {
+        "id": "e81ad5b0626f8dda",
+        "type": "ui_slider",
+        "z": "11c15729dad50c39",
+        "g": "89166bbe87877070",
+        "name": "",
+        "label": "Setpoint Slider",
+        "tooltip": "Changes the Setpoint",
+        "group": "963cc6570d12d537",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": "-4200",
+        "max": "4200",
+        "step": "50",
+        "className": "",
+        "x": 315.7142791748047,
+        "y": 125.71427345275879,
+        "wires": [
+            [
+                "80fb86b547b55555"
+            ]
+        ]
+    },
+    {
+        "id": "f6ccfa7a490be396",
+        "type": "ui_numeric",
+        "z": "11c15729dad50c39",
+        "g": "89166bbe87877070",
+        "name": "Setpoint-Num",
+        "label": "Setpoint",
+        "tooltip": "Change Setpoint",
+        "group": "963cc6570d12d537",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "wrap": false,
+        "passthru": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "format": "{{value}}",
+        "min": "-4200",
+        "max": "4200",
+        "step": "50",
+        "className": "",
+        "x": 115.71427917480469,
+        "y": 125.71427345275879,
+        "wires": [
+            [
+                "80fb86b547b55555"
+            ]
+        ]
+    },
+    {
+        "id": "49c367a2ee0ccd43",
+        "type": "ui_text",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "group": "963cc6570d12d537",
+        "order": 5,
+        "width": 6,
+        "height": 1,
+        "name": "Voltage",
+        "label": "",
+        "format": "{{msg.payload}} Volt",
+        "layout": "row-center",
+        "className": "",
+        "style": true,
+        "font": "Verdana,Verdana,Geneva,sans-serif",
+        "fontSize": 16,
+        "color": "#4fb4f3",
+        "x": 380,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "57b85b918dc8b58a",
+        "type": "ui_gauge",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "",
+        "group": "963cc6570d12d537",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "SOC",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#d41138",
+            "#e6e600",
+            "#37e14b"
+        ],
+        "seg1": "30",
+        "seg2": "80",
+        "diff": false,
+        "className": "",
+        "x": 405.7142791748047,
+        "y": 265.7142734527588,
+        "wires": []
+    },
+    {
+        "id": "45921ca6fe73540e",
+        "type": "ui_chart",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "",
+        "group": "963cc6570d12d537",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "label": "Battery Voltage",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm",
+        "interpolate": "bezier",
+        "nodata": "No data",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f7ec1",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 400,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1dfbf5b367b5886e",
+        "type": "ui_button",
+        "z": "11c15729dad50c39",
+        "g": "89166bbe87877070",
+        "name": "",
+        "group": "963cc6570d12d537",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Setpoint 0",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "0",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 495.7142791748047,
+        "y": 125.71427345275879,
+        "wires": [
+            [
+                "80fb86b547b55555"
+            ]
+        ]
+    },
+    {
+        "id": "00e033553ab89f04",
+        "type": "ui_multistate_switch",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "Mode Switch",
+        "group": "963cc6570d12d537",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "label": "ESS Mode",
+        "stateField": "payload",
+        "enableField": "enable",
+        "passthroughField": "passthrough",
+        "inputMsgField": "inputmsg",
+        "rounded": true,
+        "useThemeColors": false,
+        "hideSelectedLabel": false,
+        "multilineLabel": false,
+        "passThrough": "never",
+        "inputMsg": "all",
+        "userInput": "disabled",
+        "options": [
+            {
+                "label": "Mode 1",
+                "value": "1",
+                "valueType": "num",
+                "color": "#ef4d4d"
+            },
+            {
+                "label": "Mode 2",
+                "value": "2",
+                "valueType": "num",
+                "color": "#0bfecd"
+            }
+        ],
+        "topic": "",
+        "x": 290,
+        "y": 840,
+        "wires": [
+            [
+                "4a2b5c0c4430540b"
+            ]
+        ]
+    },
+    {
+        "id": "fbf67a6f4252ba21",
+        "type": "ui_multistate_switch",
+        "z": "11c15729dad50c39",
+        "g": "538434f8ada5abb4",
+        "name": "MP2 On/Off",
+        "group": "963cc6570d12d537",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "label": "MP2 On/Off",
+        "stateField": "payload",
+        "enableField": "enable",
+        "passthroughField": "passthrough",
+        "inputMsgField": "inputmsg",
+        "rounded": true,
+        "useThemeColors": false,
+        "hideSelectedLabel": false,
+        "multilineLabel": false,
+        "passThrough": "never",
+        "inputMsg": "all",
+        "userInput": "disabled",
+        "options": [
+            {
+                "label": "Off",
+                "value": "4",
+                "valueType": "num",
+                "color": "#ef4d4d"
+            },
+            {
+                "label": "On",
+                "value": "3",
+                "valueType": "num",
+                "color": "#0bfecd"
+            }
+        ],
+        "topic": "",
+        "x": 350,
+        "y": 880,
+        "wires": [
+            [
+                "c7f7c335facd37dc",
+                "c98824900c31e120"
+            ]
+        ]
+    },
+    {
+        "id": "ee1bb25c871ce5fc",
+        "type": "mqtt-broker",
+        "name": "HomeNas",
+        "broker": "192.168.0.90",
+        "port": "8883",
+        "tls": "",
+        "clientid": "Victron-NodeRed",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "963cc6570d12d537",
+        "type": "ui_group",
+        "name": "Basic",
+        "tab": "b662aef846bc41cd",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b662aef846bc41cd",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
