@@ -1,0 +1,388 @@
+<div ng-app="domoticz" ng-controller="myCtrl">
+	<highchart ng-show="energy_price_today.length>0" config="chartDefinitionToday" style="display: block; width: 100%; height: 250px;"></highchart>
+	<center><h1 ng-show="energy_price_today.length==0">No Today forecast!</h1></center>
+	<br/>
+	<highchart ng-show="energy_price_tomorrow.length>0" config="chartDefinitionTomorrow" style="display: block; width: 100%; height: 250px;"></highchart>
+	<center><h1 ng-show="energy_price_tomorrow.length==0">No Tomorrow forecast!</h1></center>
+</div>
+
+<script>
+
+var app = angular.module(['myApp'], []);
+app.controller('myCtrl', function($scope, $element, $rootScope, $location, $http, $interval, livesocket) {
+
+	$scope.debug = false;
+	
+	$scope.dummy_today = {
+		"result" : 
+		[
+			{
+				"LastUpdate" : "2025-12-01 00:01:01",
+				"Name" : "charge_scheme_today",
+				"Type" : "2",
+				"Value" : '{"status":true,"datum":"2025-12-01","data":[{"datum":"2025-12-01 00:00:00","hour_price":0.2488,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 00:15:00","hour_price":0.2411,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 00:30:00","hour_price":0.2324,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 00:45:00","hour_price":0.2302,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 01:00:00","hour_price":0.2351,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 01:15:00","hour_price":0.229,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 01:30:00","hour_price":0.2286,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 01:45:00","hour_price":0.2278,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 02:00:00","hour_price":0.2295,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 02:15:00","hour_price":0.2293,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 02:30:00","hour_price":0.2282,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 02:45:00","hour_price":0.2242,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 03:00:00","hour_price":0.2288,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 03:15:00","hour_price":0.2277,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 03:30:00","hour_price":0.2247,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 03:45:00","hour_price":0.2195,"level":"CHEAP","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 04:00:00","hour_price":0.2264,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 04:15:00","hour_price":0.2275,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 04:30:00","hour_price":0.2292,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 04:45:00","hour_price":0.226,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 05:00:00","hour_price":0.2327,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 05:15:00","hour_price":0.2315,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 05:30:00","hour_price":0.236,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 05:45:00","hour_price":0.2382,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 06:00:00","hour_price":0.2314,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 06:15:00","hour_price":0.2332,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 06:30:00","hour_price":0.2371,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 06:45:00","hour_price":0.2413,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 07:00:00","hour_price":0.2341,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 07:15:00","hour_price":0.233,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 07:30:00","hour_price":0.24,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 07:45:00","hour_price":0.2448,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 08:00:00","hour_price":0.2381,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 08:15:00","hour_price":0.2459,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 08:30:00","hour_price":0.243,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 08:45:00","hour_price":0.2445,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 09:00:00","hour_price":0.2477,"level":"NORMAL","forecast":443,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 09:15:00","hour_price":0.248,"level":"NORMAL","forecast":443,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 09:30:00","hour_price":0.2471,"level":"NORMAL","forecast":443,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 09:45:00","hour_price":0.2403,"level":"NORMAL","forecast":443,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 10:00:00","hour_price":0.2525,"level":"NORMAL","forecast":851,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 10:15:00","hour_price":0.2487,"level":"NORMAL","forecast":851,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 10:30:00","hour_price":0.2469,"level":"NORMAL","forecast":851,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 10:45:00","hour_price":0.243,"level":"NORMAL","forecast":851,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 11:00:00","hour_price":0.2403,"level":"NORMAL","forecast":1134,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 11:15:00","hour_price":0.2411,"level":"NORMAL","forecast":1134,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 11:30:00","hour_price":0.2464,"level":"NORMAL","forecast":1134,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 11:45:00","hour_price":0.2464,"level":"NORMAL","forecast":1134,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 12:00:00","hour_price":0.2423,"level":"NORMAL","forecast":1253,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 12:15:00","hour_price":0.2392,"level":"NORMAL","forecast":1253,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 12:30:00","hour_price":0.2475,"level":"NORMAL","forecast":1253,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 12:45:00","hour_price":0.2489,"level":"NORMAL","forecast":1253,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 13:00:00","hour_price":0.2406,"level":"NORMAL","forecast":1204,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 13:15:00","hour_price":0.2451,"level":"NORMAL","forecast":1204,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 13:30:00","hour_price":0.2458,"level":"NORMAL","forecast":1204,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 13:45:00","hour_price":0.2499,"level":"NORMAL","forecast":1204,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 14:00:00","hour_price":0.2402,"level":"NORMAL","forecast":991,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 14:15:00","hour_price":0.2484,"level":"NORMAL","forecast":991,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 14:30:00","hour_price":0.2515,"level":"NORMAL","forecast":991,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 14:45:00","hour_price":0.2612,"level":"NORMAL","forecast":991,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 15:00:00","hour_price":0.2429,"level":"NORMAL","forecast":620,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 15:15:00","hour_price":0.2506,"level":"NORMAL","forecast":620,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 15:30:00","hour_price":0.2667,"level":"NORMAL","forecast":620,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 15:45:00","hour_price":0.2661,"level":"NORMAL","forecast":620,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 16:00:00","hour_price":0.2467,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 16:15:00","hour_price":0.2494,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 16:30:00","hour_price":0.2665,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 16:45:00","hour_price":0.2696,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 17:00:00","hour_price":0.27,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 17:15:00","hour_price":0.2708,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 17:30:00","hour_price":0.2736,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 17:45:00","hour_price":0.2745,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 18:00:00","hour_price":0.2751,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 18:15:00","hour_price":0.2742,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 18:30:00","hour_price":0.2744,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 18:45:00","hour_price":0.2783,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 19:00:00","hour_price":0.2723,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 19:15:00","hour_price":0.2747,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 19:30:00","hour_price":0.2725,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 19:45:00","hour_price":0.2747,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 20:00:00","hour_price":0.2665,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 20:15:00","hour_price":0.2663,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 20:30:00","hour_price":0.2652,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 20:45:00","hour_price":0.2665,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 21:00:00","hour_price":0.2647,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 21:15:00","hour_price":0.2653,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 21:30:00","hour_price":0.2567,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 21:45:00","hour_price":0.2529,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 22:00:00","hour_price":0.2626,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 22:15:00","hour_price":0.2591,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 22:30:00","hour_price":0.2563,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 22:45:00","hour_price":0.2546,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 23:00:00","hour_price":0.2538,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 23:15:00","hour_price":0.2507,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 23:30:00","hour_price":0.2522,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 23:45:00","hour_price":0.2521,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0}]}',
+				"idx" : "40"
+			}
+		],
+		"status" : "OK",
+		"title" : "GetUserVariable"
+	};
+
+	$scope.dummy_tomorrow = {
+		"result" : 
+		[
+			{
+				"LastUpdate" : "2025-09-26 00:01:01",
+				"Name" : "charge_scheme_tomorrow",
+				"Type" : "2",
+				"Value" : '{"status":true,"datum":"2025-12-01","data":[{"datum":"2025-12-01 00:00:00","hour_price":0.2488,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 00:15:00","hour_price":0.2411,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 00:30:00","hour_price":0.2324,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 00:45:00","hour_price":0.2302,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 01:00:00","hour_price":0.2351,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 01:15:00","hour_price":0.229,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 01:30:00","hour_price":0.2286,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 01:45:00","hour_price":0.2278,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 02:00:00","hour_price":0.2295,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 02:15:00","hour_price":0.2293,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 02:30:00","hour_price":0.2282,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 02:45:00","hour_price":0.2242,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 03:00:00","hour_price":0.2288,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 03:15:00","hour_price":0.2277,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 03:30:00","hour_price":0.2247,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 03:45:00","hour_price":0.2195,"level":"CHEAP","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 04:00:00","hour_price":0.2264,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 04:15:00","hour_price":0.2275,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 04:30:00","hour_price":0.2292,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 04:45:00","hour_price":0.226,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 05:00:00","hour_price":0.2327,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 05:15:00","hour_price":0.2315,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 05:30:00","hour_price":0.236,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 05:45:00","hour_price":0.2382,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 06:00:00","hour_price":0.2314,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 06:15:00","hour_price":0.2332,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 06:30:00","hour_price":0.2371,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 06:45:00","hour_price":0.2413,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 07:00:00","hour_price":0.2341,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 07:15:00","hour_price":0.233,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 07:30:00","hour_price":0.24,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 07:45:00","hour_price":0.2448,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 08:00:00","hour_price":0.2381,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 08:15:00","hour_price":0.2459,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 08:30:00","hour_price":0.243,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 08:45:00","hour_price":0.2445,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 09:00:00","hour_price":0.2477,"level":"NORMAL","forecast":443,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 09:15:00","hour_price":0.248,"level":"NORMAL","forecast":443,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 09:30:00","hour_price":0.2471,"level":"NORMAL","forecast":443,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 09:45:00","hour_price":0.2403,"level":"NORMAL","forecast":443,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 10:00:00","hour_price":0.2525,"level":"NORMAL","forecast":851,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 10:15:00","hour_price":0.2487,"level":"NORMAL","forecast":851,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 10:30:00","hour_price":0.2469,"level":"NORMAL","forecast":851,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 10:45:00","hour_price":0.243,"level":"NORMAL","forecast":851,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 11:00:00","hour_price":0.2403,"level":"NORMAL","forecast":1134,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 11:15:00","hour_price":0.2411,"level":"NORMAL","forecast":1134,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 11:30:00","hour_price":0.2464,"level":"NORMAL","forecast":1134,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 11:45:00","hour_price":0.2464,"level":"NORMAL","forecast":1134,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 12:00:00","hour_price":0.2423,"level":"NORMAL","forecast":1253,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 12:15:00","hour_price":0.2392,"level":"NORMAL","forecast":1253,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 12:30:00","hour_price":0.2475,"level":"NORMAL","forecast":1253,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 12:45:00","hour_price":0.2489,"level":"NORMAL","forecast":1253,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 13:00:00","hour_price":0.2406,"level":"NORMAL","forecast":1204,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 13:15:00","hour_price":0.2451,"level":"NORMAL","forecast":1204,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 13:30:00","hour_price":0.2458,"level":"NORMAL","forecast":1204,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 13:45:00","hour_price":0.2499,"level":"NORMAL","forecast":1204,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 14:00:00","hour_price":0.2402,"level":"NORMAL","forecast":991,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 14:15:00","hour_price":0.2484,"level":"NORMAL","forecast":991,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 14:30:00","hour_price":0.2515,"level":"NORMAL","forecast":991,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 14:45:00","hour_price":0.2612,"level":"NORMAL","forecast":991,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 15:00:00","hour_price":0.2429,"level":"NORMAL","forecast":620,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 15:15:00","hour_price":0.2506,"level":"NORMAL","forecast":620,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 15:30:00","hour_price":0.2667,"level":"NORMAL","forecast":620,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 15:45:00","hour_price":0.2661,"level":"NORMAL","forecast":620,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 16:00:00","hour_price":0.2467,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 16:15:00","hour_price":0.2494,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 16:30:00","hour_price":0.2665,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 16:45:00","hour_price":0.2696,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 17:00:00","hour_price":0.27,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 17:15:00","hour_price":0.2708,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 17:30:00","hour_price":0.2736,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 17:45:00","hour_price":0.2745,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 18:00:00","hour_price":0.2751,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 18:15:00","hour_price":0.2742,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 18:30:00","hour_price":0.2744,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 18:45:00","hour_price":0.2783,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 19:00:00","hour_price":0.2723,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 19:15:00","hour_price":0.2747,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 19:30:00","hour_price":0.2725,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 19:45:00","hour_price":0.2747,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 20:00:00","hour_price":0.2665,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 20:15:00","hour_price":0.2663,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 20:30:00","hour_price":0.2652,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 20:45:00","hour_price":0.2665,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 21:00:00","hour_price":0.2647,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 21:15:00","hour_price":0.2653,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 21:30:00","hour_price":0.2567,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 21:45:00","hour_price":0.2529,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 22:00:00","hour_price":0.2626,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 22:15:00","hour_price":0.2591,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 22:30:00","hour_price":0.2563,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 22:45:00","hour_price":0.2546,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 23:00:00","hour_price":0.2538,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 23:15:00","hour_price":0.2507,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 23:30:00","hour_price":0.2522,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0},{"datum":"2025-12-01 23:45:00","hour_price":0.2521,"level":"NORMAL","forecast":0,"hour_type":"idle","setpoint":110,"battery_capacity_watt":4630,"battery_capacity_percentage":10,"earned_money":0}]}',
+				"idx" : "41"
+			}
+		],
+		"status" : "OK",
+		"title" : "GetUserVariable"
+	};
+
+
+	$scope.UVTodayIdx = 40;
+	$scope.UVTomorrowIdx = 41;
+	
+	$scope.$firstName = '';
+	$scope.$lastName = '';
+
+	$scope.energy_price_today = [];
+	$scope.earned_money_today = [];
+	$scope.forecast_today = [];
+	$scope.battery_percentage_today = [];
+
+	$scope.energy_price_tomorrow = [];
+	$scope.earned_money_tomorrow = [];
+	$scope.forecast_tomorrow = [];
+	$scope.battery_percentage_tomorrow = [];
+	
+	$scope.plotbandHour = {
+		color: '#FFFFFF30', // Color value
+		from: 3, // Start of the plot band
+		to: 4 // End of the plot band
+	};
+
+	$scope.chartSeriesEnergyPrice = {
+		id: 'energyprice',
+		name: 'Energy Price',
+		type: 'area',
+		yAxis: 0,
+		color: 'rgba(120,120,240,0.8)',
+		tooltip: {
+			valueDecimals: 4
+		}
+	};
+	
+	$scope.chartSeriesSolarForecast = {
+		id: "forecast",
+		name: 'Solar Forecast',
+		type: 'column',
+		dashStyle: 'shortdot',			
+		yAxis: 2,
+		color: 'orange',
+		tooltip: {
+			valueSuffix: ' Watt',
+		}					
+	}
+	
+	$scope.chartSeriesEarnedMoney = {
+		id: 'earnedmoney',
+		name: 'Earned Money',
+		type: 'line',
+		yAxis: 1,
+		color: 'rgba(255,255,0,1)',
+		tooltip: {
+			valueDecimals: 4
+		}
+	}
+
+	$scope.chartSeriesBatteryPercentage = {
+		id: 'batpercentage',
+		name: 'Battery Percentage',
+		type: 'spline',
+		yAxis: 3,
+		color: Highcharts.getOptions().colors[1],
+		tooltip: {
+			valueSuffix: ' %',
+			valueDecimals: 2
+		}
+	}
+	
+	$scope.chartDefinitionBase = {
+		chart: {
+			zooming: {
+				type: 'xy'
+			}
+		},
+		title: {
+			text: 'Today Hourly forecast Energy Price/PV'
+		},
+		tooltip: {
+			shared: true
+		},
+		xAxis: {
+            type: 'datetime',
+        },		
+		yAxis: [{
+			min: 0,
+			labels: {
+				format: '{value} €',
+				valueDecimals: 2,
+				style: {
+					color: Highcharts.getOptions().colors[0]
+				}
+			},
+			title: {
+				text: 'Hour Price (€)',
+				style: {
+					color: Highcharts.getOptions().colors[0]
+				}
+			},
+		}, {			
+			labels: {
+				format: '{value} €',
+				style: {
+					color: 'rgba(255,255,0,1)'
+				}
+			},
+			title: {
+				text: 'Earned Money (€)',
+				style: {
+					color: 'rgba(255,255,0,1)'
+				}
+			},
+		}, {
+			labels: {
+				format: '{value} Watt',
+				style: {
+					color: Highcharts.getOptions().colors[2]
+				}
+			},
+			title: {
+				text: 'Solar Forecast (W)',
+				style: {
+					color: Highcharts.getOptions().colors[2]
+				}
+			},
+			opposite: true
+		}, {
+			labels: {
+				format: '{value} %',
+				style: {
+					color: Highcharts.getOptions().colors[1]
+				}
+			},
+			title: {
+				text: 'Battery Percentage (%)',
+				style: {
+					color: Highcharts.getOptions().colors[1]
+				}
+			},
+			min: 0,
+			max: 100,
+			alignTicks: false,
+			opposite: true
+		}
+		],
+		plotOptions: {
+			column: {
+				pointWidth: 4,
+				pointPadding: 0.2,
+				borderWidth: 0
+			},
+			spline: {
+				lineWidth: 2,
+				states: {
+					hover: {
+						lineWidth: 3
+					}
+				},
+				marker: {
+					enabled: false
+				}
+			},
+			line: {
+				marker: {
+					enabled: false,
+				}
+			},
+			area: {
+				marker: {
+					enabled: false,
+					symbol: 'circle',
+					radius: 2,
+					states: {
+						hover: {
+							enabled: true
+						}
+					}
+				}
+			}			
+		}
+	};
+	
+	$scope.chartDefinitionToday = {};
+	$scope.chartDefinitionTomorrow = {};
+	
+	$scope.parseTodayStats = function(data) {
+		//console.log(data);
+		if (typeof data.result != 'undefined') {
+			if (typeof data.status != 'undefined') {
+				if (data.status == "OK") {
+					data = JSON.parse(data.result[0].Value);
+					if (data.status == true) {
+						//get first date
+						if (data.data.length > 0) {
+							const actHour = new Date().getHours();
+							//console.log('actHour: ' + actHour);
+
+							var pb_date = new Date(data.data[0].datum);
+							
+							const currentHourStart = new Date(pb_date.getFullYear(), pb_date.getMonth(), pb_date.getDate(), actHour + 1, 0, 0, 0);
+							const currentHourEnd = new Date(currentHourStart.getTime() + 60 * 60 * 1000);
+							
+							$scope.plotbandHour.from = currentHourStart;
+							$scope.plotbandHour.to = currentHourEnd;
+
+							$.each(data.data, function (i, item) {
+								$scope.energy_price_today[i] = [ item.datum, item.hour_price ];
+								$scope.earned_money_today[i] = [ item.datum, item.earned_money ];
+								$scope.forecast_today[i] = [ item.datum, item.forecast ];
+								$scope.battery_percentage_today[i] = [ item.datum, item.battery_capacity_percentage ];
+							});
+						}
+						return;
+					}
+				}
+			}
+		}
+		$scope.energy_price_today = [];
+		$scope.earned_money_today = [];
+		$scope.forecast_today = [];
+		$scope.battery_percentage_today = [];
+	}
+
+	$scope.parseTomorrowStats = function(data) {
+		//console.log(data);
+		if (typeof data.result != 'undefined') {
+			if (typeof data.status != 'undefined') {
+				if (data.status == "OK") {
+					data = JSON.parse(data.result[0].Value);
+					if (data.status == true) {
+						const today = new Date();
+						today.setDate(today.getDate() + 1);
+						$.each(data.data, function (i, item) {
+							var ddate = Date.UTC(today.getFullYear(),today.getMonth(),today.getDate(),i / 4, (i % 4) * 15,0,0);
+							$scope.energy_price_tomorrow[i] = [ ddate, item.hour_price ];
+							$scope.earned_money_tomorrow[i] = [ ddate, item.earned_money ];
+							$scope.forecast_tomorrow[i] = [ ddate, item.forecast ];
+							$scope.battery_percentage_tomorrow[i] = [ ddate, item.battery_capacity_percentage ];
+						});
+						return;
+					}
+				}
+			}
+		}
+		$scope.energy_price_tomorrow = [];
+		$scope.earned_money_tomorrow = [];
+		$scope.forecast_today_tomorrow = [];
+		$scope.battery_percentage_tomorrow = [];
+	}
+
+	$scope.getStats = function() {
+		if ($scope.debug == true) {
+			$scope.parseTodayStats($scope.dummy_today);
+			$scope.parseTomorrowStats($scope.dummy_tomorrow);
+			return;
+		}
+		$http({
+			url: "json.htm?type=command&param=getuservariable&idx=" + $scope.UVTodayIdx,
+			async: false,
+			dataType: 'json'
+		}).then(function successCallback(response) {
+			$scope.parseTodayStats(response.data);
+		}, function errorCallback(response) {
+			$scope.parseTodayStats([]);
+		});
+		$http({
+			url: "json.htm?type=command&param=getuservariable&idx=" + $scope.UVTomorrowIdx,
+			async: false,
+			dataType: 'json'
+		}).then(function successCallback(response) {
+			$scope.parseTomorrowStats(response.data);
+		}, function errorCallback(response) {
+			$scope.parseTomorrowStats([]);
+		});
+	}
+
+	init();
+	
+	function init() {
+		$scope.firstName = "John";
+		$scope.lastName = "Doe";
+
+		$scope.chartDefinitionToday = {
+				...$scope.chartDefinitionBase,
+		        series: [
+					$scope.chartSeriesEnergyPrice,
+					$scope.chartSeriesEarnedMoney,
+					$scope.chartSeriesSolarForecast,
+					$scope.chartSeriesBatteryPercentage
+				]
+		};
+
+		$scope.chartDefinitionTomorrow = JSON.parse(JSON.stringify($scope.chartDefinitionBase));
+		$scope.chartDefinitionTomorrow.series = [
+			JSON.parse(JSON.stringify($scope.chartSeriesEnergyPrice)),
+			JSON.parse(JSON.stringify($scope.chartSeriesEarnedMoney)),
+			JSON.parse(JSON.stringify($scope.chartSeriesSolarForecast)),
+			JSON.parse(JSON.stringify($scope.chartSeriesBatteryPercentage))
+		];
+		$scope.chartDefinitionTomorrow.title.text = 'Tomorrow Hourly forecast Energy Price/PV';
+
+		const self = this;
+
+		$scope.chartDefinitionToday.series[0].data = $scope.energy_price_today;
+		$scope.chartDefinitionToday.series[1].data = $scope.earned_money_today;
+		$scope.chartDefinitionToday.series[2].data = $scope.forecast_today;
+		$scope.chartDefinitionToday.series[3].data = $scope.battery_percentage_today;
+		
+		$scope.chartDefinitionToday.xAxis.plotBands = [
+			$scope.plotbandHour
+		];
+
+		$scope.chartDefinitionTomorrow.series[0].data = $scope.energy_price_tomorrow;
+		$scope.chartDefinitionTomorrow.series[1].data = $scope.earned_money_tomorrow;
+		$scope.chartDefinitionTomorrow.series[2].data = $scope.forecast_tomorrow;
+		$scope.chartDefinitionTomorrow.series[3].data = $scope.battery_percentage_tomorrow;
+
+		//series.setData([]);
+		
+		$scope.getStats();
+		
+		//$scope.mytimer = $interval(function () { $scope.RandomNeedle(); }, 1000);
+	}
+
+	$scope.RandomNeedle = function () {
+		let chart = $scope.myChart;
+		
+		if (chart && !chart.renderer.forExport) {
+			const point = $scope.myChart.series[0].points[0];
+			let newVal = 100 + Math.round((Math.random() - 0.5) * 40);
+			point.update(newVal);
+		}
+	}
+	
+	$scope.$on('$destroy', function () {
+		//stop timers and cleanup here
+		if (typeof $scope.mytimer !== "undefined") {
+			$interval.cancel($scope.mytimer);
+			$scope.mytimer = undefined;
+		}
+	});
+});
+</script>
