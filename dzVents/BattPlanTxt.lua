@@ -38,7 +38,7 @@ return {
                     local hhmm = string.match(v.datum, "%d%d:%d%d")
                     if (last_state ~= "") then
                         -- Finish current line using the last item of the finished block
-                        day_str = day_str .. string.format(" -> %s (%.2f%%)", hhmm, prev_v.battery_capacity_percentage)
+                        day_str = day_str .. string.format(" -> %s (%.2f%%)", hhmm, prev_v.battery_capacity_percentage) .. "\n"
                     end
                     if (v.hour_type ~= "idle") then
                         day_str = day_str .. dStr .. string.format(": %s %s", hhmm, v.hour_type)
